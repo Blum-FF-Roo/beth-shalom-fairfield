@@ -11,15 +11,6 @@ interface PostCardProps {
 }
 
 export default function PostCard({ post, onDelete, onTogglePublish }: PostCardProps) {
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(date);
-  };
 
   const getCategoryColor = (category: string) => {
     return category === 'parshah' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800';

@@ -10,7 +10,8 @@ import {
   where, 
   orderBy,
   serverTimestamp,
-  Timestamp
+  DocumentSnapshot,
+  DocumentData
 } from 'firebase/firestore';
 import { db } from './firebase';
 import { Post, PostFormData, PostCategory } from '@/types';
@@ -18,8 +19,11 @@ import { Post, PostFormData, PostCategory } from '@/types';
 const POSTS_COLLECTION = 'posts';
 
 // Convert Firestore document to Post interface
-function convertFirestorePost(doc: any): Post {
+function convertFirestorePost(doc: DocumentSnapshot<DocumentData>): Post {
   const data = doc.data();
+  if (!data) {
+    throw new Error('Document data is undefined');
+  }
   return {
     id: doc.id,
     title: data.title,

@@ -9,12 +9,11 @@ interface ShareButtonProps {
   className?: string;
 }
 
-export default function ShareButton({ url, title, className = '' }: ShareButtonProps) {
+export default function ShareButton({ url, className = '' }: ShareButtonProps) {
   const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
     const shareUrl = url || window.location.href;
-    const shareTitle = title || document.title;
 
     try {
       await navigator.clipboard.writeText(shareUrl);

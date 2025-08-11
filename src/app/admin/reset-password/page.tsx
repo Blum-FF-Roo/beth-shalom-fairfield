@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { Lock, AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react';
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -57,7 +57,7 @@ export default function ResetPasswordPage() {
       setTimeout(() => {
         router.push('/admin/login');
       }, 2000);
-    } catch (err: any) {
+    } catch {
       setError('Failed to reset password. The link may have expired or is invalid.');
     } finally {
       setLoading(false);
@@ -192,5 +192,17 @@ export default function ResetPasswordPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2" style={{borderColor: '#F58C28'}}></div>
+      </div>
+    }>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }

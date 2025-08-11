@@ -3,13 +3,15 @@ import {
   doc, 
   getDocs, 
   getDoc, 
-  addDoc, 
+ 
   updateDoc,
   setDoc,
   deleteDoc, 
   query, 
   orderBy,
-  serverTimestamp
+  serverTimestamp,
+  DocumentSnapshot,
+  DocumentData
 } from 'firebase/firestore';
 import { createUserWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { auth, db } from './firebase';
@@ -27,8 +29,11 @@ export interface UserData {
 }
 
 // Convert Firestore document to UserData interface
-function convertFirestoreUser(doc: any): UserData {
+function convertFirestoreUser(doc: DocumentSnapshot<DocumentData>): UserData {
   const data = doc.data();
+  if (!data) {
+    throw new Error('Document data is undefined');
+  }
   return {
     uid: doc.id,
     email: data.email,

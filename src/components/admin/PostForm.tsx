@@ -62,7 +62,7 @@ export default function PostForm({ post, isEditing = false }: PostFormProps) {
       }
       
       router.push('/admin');
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(isEditing ? 'Failed to update post' : 'Failed to create post');
       console.error('Error saving post:', err);
     } finally {

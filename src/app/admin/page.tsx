@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { Plus, Filter, ArrowLeft } from 'lucide-react';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
@@ -15,12 +15,12 @@ export default function AdminDashboard() {
   const [selectedCategory, setSelectedCategory] = useState<'all' | PostCategory>('all');
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    loadPosts();
-  }, []);
-
-  useEffect(() => {
-    filterPosts();
+  const filterPosts = useCallback(() => {
+    if (selectedCategory === 'all') {
+      setFilteredPosts(posts);
+    } else {
+      setFilteredPosts(posts.filter(post => post.category === selectedCategory));
+    }
   }, [posts, selectedCategory]);
 
   const loadPosts = async () => {
@@ -36,13 +36,13 @@ export default function AdminDashboard() {
     }
   };
 
-  const filterPosts = () => {
-    if (selectedCategory === 'all') {
-      setFilteredPosts(posts);
-    } else {
-      setFilteredPosts(posts.filter(post => post.category === selectedCategory));
-    }
-  };
+  useEffect(() => {
+    loadPosts();
+  }, []);
+
+  useEffect(() => {
+    filterPosts();
+  }, [posts, selectedCategory, filterPosts]);
 
   const handleDeletePost = async (id: string) => {
     if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) {

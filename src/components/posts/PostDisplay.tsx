@@ -26,7 +26,7 @@ export default function PostDisplay({ post }: PostDisplayProps) {
       )
       .replace(/^- (.*$)/gm, '<li class="ml-4">$1</li>')
       .replace(
-        /(<li.*<\/li>)/s,
+        /(<li[\s\S]*?<\/li>)/g,
         '<ul class="list-disc pl-6 space-y-1 my-4">$1</ul>',
       )
       .split("\n\n")

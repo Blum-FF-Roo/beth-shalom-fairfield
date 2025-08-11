@@ -21,7 +21,7 @@ export default function ForgotPasswordPage() {
     try {
       await resetPassword(email);
       setMessage('Check your email for password reset instructions.');
-    } catch (err: any) {
+    } catch {
       setError('Failed to send reset email. Please check if the email is registered.');
     } finally {
       setLoading(false);

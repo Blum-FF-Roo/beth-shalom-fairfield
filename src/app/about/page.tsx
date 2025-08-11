@@ -1,4 +1,3 @@
-import { contactInfo } from '@/data/site-data';
 
 export const metadata = {
   title: 'About Us - Congregation Beth Shalom',

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Bold, Italic, List, Link as LinkIcon, Quote } from 'lucide-react';
+import { Bold, Italic, List, Quote } from 'lucide-react';
 
 interface RichTextEditorProps {
   value: string;
@@ -39,7 +39,7 @@ export default function RichTextEditor({ value, onChange, placeholder = "Write y
       .replace(/\*(.*?)\*/g, '<em>$1</em>')
       .replace(/^> (.*$)/gm, '<blockquote class="border-l-4 border-gray-300 pl-4 italic text-gray-600">$1</blockquote>')
       .replace(/^- (.*$)/gm, '<li>$1</li>')
-      .replace(/(<li>.*<\/li>)/s, '<ul class="list-disc pl-6">$1</ul>')
+      .replace(/(<li>[\s\S]*?<\/li>)/g, '<ul class="list-disc pl-6">$1</ul>')
       .replace(/\n\n/g, '</p><p>')
       .replace(/^(.*)$/gm, '<p>$1</p>')
       .replace(/<p><\/p>/g, '')

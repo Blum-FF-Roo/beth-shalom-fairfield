@@ -30,7 +30,7 @@ export default function LoginPage() {
     try {
       await signIn(email, password);
       // The auth context will automatically redirect via useEffect above
-    } catch (err: any) {
+    } catch {
       setError('Invalid email or password');
       setLoading(false);
     }

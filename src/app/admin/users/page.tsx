@@ -50,7 +50,7 @@ export default function UserManagementPage() {
       ));
       setSuccess(`User ${isActive ? 'activated' : 'deactivated'} successfully`);
       setTimeout(() => setSuccess(''), 3000);
-    } catch (err) {
+    } catch {
       setError('Failed to update user status');
       setTimeout(() => setError(''), 3000);
     }
@@ -66,7 +66,7 @@ export default function UserManagementPage() {
       ));
       setSuccess(`User role updated successfully`);
       setTimeout(() => setSuccess(''), 3000);
-    } catch (err) {
+    } catch {
       setError('Failed to update user role');
       setTimeout(() => setError(''), 3000);
     }
@@ -82,7 +82,7 @@ export default function UserManagementPage() {
       setUsers(users.filter(user => user.uid !== uid));
       setSuccess('User deleted successfully');
       setTimeout(() => setSuccess(''), 3000);
-    } catch (err) {
+    } catch {
       setError('Failed to delete user');
       setTimeout(() => setError(''), 3000);
     }
@@ -93,7 +93,7 @@ export default function UserManagementPage() {
       await sendUserPasswordReset(email);
       setSuccess(`Password reset email sent to ${email}`);
       setTimeout(() => setSuccess(''), 3000);
-    } catch (err) {
+    } catch {
       setError('Failed to send password reset email');
       setTimeout(() => setError(''), 3000);
     }
@@ -128,8 +128,8 @@ export default function UserManagementPage() {
       setNewUserRole('admin');
       setShowAddUser(false);
       setTimeout(() => setSuccess(''), 3000);
-    } catch (err: any) {
-      setError(err.message || 'Failed to create user');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to create user');
       setTimeout(() => setError(''), 3000);
     } finally {
       setAddingUser(false);

@@ -28,7 +28,7 @@ export const navigationMenu: MenuItem[] = [
   {
     id: "high-holy-days",
     title: "High Holy Day Sermons", 
-    href: "/coming-soon"
+    href: "/high-holy-day"
   },
   {
     id: "about",
@@ -38,19 +38,14 @@ export const navigationMenu: MenuItem[] = [
       {
         id: "history",
         title: "History",
-        href: "/coming-soon"
+        href: "/about/history"
       }
     ]
   },
   {
     id: "parashah",
     title: "Parashah",
-    href: "/coming-soon"
-  },
-  {
-    id: "parashah-archives", 
-    title: "Parashah Archives",
-    href: "/coming-soon"
+    href: "/parshah"
   },
   {
     id: "membership",
@@ -65,12 +60,12 @@ export const navigationMenu: MenuItem[] = [
   {
     id: "judaism",
     title: "All About Judaism",
-    href: "/coming-soon"
+    href: "/judaism"
   },
   {
     id: "articles",
     title: "Articles of Interest", 
-    href: "/coming-soon"
+    href: "/articles"
   },
   {
     id: "contact",
@@ -82,9 +77,9 @@ export const navigationMenu: MenuItem[] = [
 export const heroSlides: SlideItem[] = [
   {
     id: "1",
-    title: "Beth Shalom Fairfield",
-    subtitle: "Welcome",
-    description: "We are a warm and welcoming Jewish community in Fairfield, Iowa, home to Maharishi International University.",
+    title: "Congregation Beth Shalom",
+    subtitle: "House of Peace",
+    description: "Welcome to our warm and welcoming Jewish community in Fairfield, Iowa. Located at 308 South B Street.",
     imageUrl: "/images/pexels-cottonbro-5974346.jpg",
     linkUrl: "/about",
     linkText: "Learn More"
@@ -101,20 +96,20 @@ export const heroSlides: SlideItem[] = [
   {
     id: "3",
     title: "Become a Member", 
-    subtitle: "Community",
-    description: "Join our vibrant Jewish community and be part of something special in Fairfield.",
+    subtitle: "Support Our Community",
+    description: "Become a member of Congregation Beth Shalom and support the Synagogue with your dues.",
     imageUrl: "/images/pexels-cottonbro-5974866.jpg",
     linkUrl: "/membership",
     linkText: "Join Us"
   },
   {
     id: "4",
-    title: "All About Judaism",
-    subtitle: "Learn",
-    description: "Discover the beauty and wisdom of Jewish traditions, teachings, and practices.",
+    title: "Tzedakah",
+    subtitle: "Give Back",
+    description: "Support our wonderful programs and ensure the vitality of our congregation through Tzedakah.",
     imageUrl: "/images/pexels-cottonbro-5985982.jpg", 
-    linkUrl: "/coming-soon",
-    linkText: "Learn More"
+    linkUrl: "/tzedakah",
+    linkText: "Donate Now"
   }
 ];
 
@@ -123,13 +118,13 @@ export const programs: ProgramItem[] = [
     id: "1",
     title: "High Holy Day Services",
     imageUrl: "/images/gettyimages-1869577249-612x612.jpg",
-    linkUrl: "/coming-soon"
+    linkUrl: "/high-holy-day"
   },
   {
     id: "2",
     title: "Parashah Study",
     imageUrl: "/images/pexels-cottonbro-5986499.jpg", 
-    linkUrl: "/coming-soon"
+    linkUrl: "/parshah"
   },
   {
     id: "3", 
@@ -185,13 +180,29 @@ export const actionItems: ActionItem[] = [
 ];
 
 export const aboutText = `
-Welcome to Beth Shalom Fairfield, a warm and welcoming Jewish community located in Fairfield, Iowa. 
+WELCOME TO
+CONGREGATION BETH SHALOM
+House of Peace
+Location: 308 South "B" Street, Fairfield, Iowa 52556
+Mailing address: 200 W. Washington Street, Fairfield, Iowa 52556
 
-We serve the Jewish community in and around Fairfield, which is home to Maharishi International University and known for its sustainable community efforts and diverse international population.
+Beth Shalom Resources:
+Membership: To become a member of Congregation Beth Shalom, go to the "BECOME A MEMBER" page for information.
 
-Our congregation offers a place for Jewish families, couples, and individuals to come together for worship, learning, and community. Whether you're a longtime resident or new to the area, we invite you to be part of our inclusive and caring community.
+Beth Shalom Newsletter
+To receive the weekly Beth Shalom Newsletter or to update your newsletter email address contact us at bethshalomfairfield@gmail.com
 
-Located in a city known for its progressive values and commitment to sustainability, we strive to bring Jewish wisdom and traditions to life in a modern context.
+The Hebrew Wink (Ben Winkler e-newsletter): reports news, on-going issues and editorials affecting our Jewish community locally, as well as regionally, nationally, internationally and from Israel. To request free subscription, contact Ben Winkler at HBWink@gmail.com
+
+Minyan Club: contact Dean Draznin at dean@drazninpr.com
+
+Yahrzeit plaque: to honor the departed, contact Marc Berkowitz at bethshalomfairfield@gmail.com
+
+Yahrzeit candles: are often available at the synagogue for a small donation.
+
+For further Beth Shalom Information: Call Marc Berkowitz at 472-9509 or email bethshalomfairfield@gmail.com.
+
+Special THANKS to Steven Emanuel Blum for helping to make this website happen. He is a man of many talents.
 `;
 
 // Community photos

@@ -28,7 +28,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen py-12 bg-gray-50">
+    <div className="min-h-screen pt-32 pb-12 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4">
         {/* Page Header */}
         <div className="text-center mb-12">
@@ -110,24 +110,6 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* Special Programs Contact */}
-            <div className="bg-blue-50 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Special Programs
-              </h3>
-              <p className="text-gray-700 mb-4">
-                For information about our Minyan Club, contact:
-              </p>
-              <p className="text-gray-700">
-                <strong>Dean Draznin</strong><br />
-                <a 
-                  href="mailto:dean@drazninpr.com"
-                  className="text-blue-600 hover:text-blue-800"
-                >
-                  dean@drazninpr.com
-                </a>
-              </p>
-            </div>
           </div>
 
           {/* Contact Form */}

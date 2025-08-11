@@ -2,14 +2,25 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Settings, LogOut, Plus, Users } from 'lucide-react';
 import { siteConfig, navigationMenu } from '@/data/site-data';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, userData, logout } = useAuth();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toggleMenu();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
 
   return (
     <>
@@ -62,8 +73,7 @@ export default function Header() {
         )}>
           <div className="flex flex-col h-full">
             {/* Menu Header */}
-            <div className="flex items-center justify-between p-6 border-b">
-              <h2 className="text-lg font-semibold text-gray-900">Menu</h2>
+            <div className="flex items-center justify-end p-6 border-b">
               <button
                 onClick={toggleMenu}
                 className="text-gray-600 hover:text-gray-900"
@@ -106,24 +116,59 @@ export default function Header() {
               </nav>
             </div>
 
-            {/* Menu Footer */}
+            {/* Admin/Login Section */}
             <div className="border-t p-6">
-              <div className="flex flex-col space-y-3">
-                <Link
-                  href="/about"
-                  className="text-gray-600 hover:text-blue-600 transition-colors duration-200"
-                  onClick={toggleMenu}
-                >
-                  About
-                </Link>
-                <Link
-                  href="/contact"
-                  className="text-gray-600 hover:text-blue-600 transition-colors duration-200"
-                  onClick={toggleMenu}
-                >
-                  Contact
-                </Link>
-              </div>
+              {!user ? (
+                /* Not logged in - show login button */
+                <div className="flex flex-col space-y-3">
+                  <Link
+                    href="/admin/login"
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                    style={{backgroundColor: '#F58C28'}}
+                    onClick={toggleMenu}
+                  >
+                    <Settings className="h-4 w-4 mr-2" />
+                    Admin Login
+                  </Link>
+                </div>
+              ) : (
+                /* Logged in - show admin options */
+                <div className="flex flex-col space-y-3">
+                  <Link
+                    href="/admin"
+                    className="inline-flex items-center text-gray-600 hover:text-blue-600 transition-colors duration-200"
+                    onClick={toggleMenu}
+                  >
+                    <Settings className="h-4 w-4 mr-2" />
+                    Manage Posts
+                  </Link>
+                  <Link
+                    href="/admin/posts/new"
+                    className="inline-flex items-center text-gray-600 hover:text-blue-600 transition-colors duration-200"
+                    onClick={toggleMenu}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Create New Post
+                  </Link>
+                  {userData?.role === 'super-admin' && (
+                    <Link
+                      href="/admin/users"
+                      className="inline-flex items-center text-gray-600 hover:text-blue-600 transition-colors duration-200"
+                      onClick={toggleMenu}
+                    >
+                      <Users className="h-4 w-4 mr-2" />
+                      Manage Users
+                    </Link>
+                  )}
+                  <button
+                    onClick={handleLogout}
+                    className="inline-flex items-center text-gray-600 hover:text-red-600 transition-colors duration-200 text-left"
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

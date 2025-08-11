@@ -52,3 +52,23 @@ export interface ContactInfo {
   email: string;
   facebook?: string;
 }
+
+export type PostCategory = 'parshah' | 'high-holy-day';
+
+export interface Post {
+  id: string;
+  title: string;
+  content: string;
+  category: PostCategory;
+  isPublished: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  authorId: string;
+}
+
+export interface PostFormData {
+  title: string;
+  content: string;
+  category: PostCategory;
+  isPublished: boolean;
+}

@@ -83,6 +83,12 @@ export default function UserCard({
               {user.updatedAt.getTime() !== user.createdAt.getTime() && (
                 <p>Updated: {formatDate(user.updatedAt)}</p>
               )}
+              {user.lastLogin && (
+                <p>Last Login: {formatDate(user.lastLogin)}</p>
+              )}
+              {!user.lastLogin && (
+                <p>Last Login: Never</p>
+              )}
             </div>
           </div>
         </div>

@@ -11,6 +11,7 @@ import {
 } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
+import { updateLastLogin } from '@/lib/users';
 
 export type UserRole = 'admin' | 'super-admin';
 
@@ -19,6 +20,9 @@ export interface UserData {
   email: string;
   role: UserRole;
   isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  lastLogin?: Date;
 }
 
 interface AuthContextType {
@@ -62,8 +66,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 uid: user.uid,
                 email: user.email!,
                 role: data.role,
-                isActive: data.isActive
+                isActive: data.isActive,
+                createdAt: data.createdAt?.toDate() || new Date(),
+                updatedAt: data.updatedAt?.toDate() || new Date(),
+                lastLogin: data.lastLogin?.toDate()
               });
+              
+              // If login time is not set (e.g., browser refresh), set it now
+              if (!localStorage.getItem('loginTime')) {
+                localStorage.setItem('loginTime', Date.now().toString());
+              }
             } else {
               // User is deactivated, sign them out
               await signOut(auth);
@@ -92,11 +104,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return unsubscribe;
   }, []);
 
+  // Session expiry checking - logout after 24 hours
+  useEffect(() => {
+    const checkSessionExpiry = () => {
+      const loginTime = localStorage.getItem('loginTime');
+      if (loginTime && user) {
+        const timeElapsed = Date.now() - parseInt(loginTime);
+        const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+        
+        if (timeElapsed > twentyFourHours) {
+          logout();
+        }
+      }
+    };
+
+    // Check immediately when user is authenticated
+    if (user) {
+      checkSessionExpiry();
+    }
+
+    // Set up interval to check every minute
+    const interval = setInterval(checkSessionExpiry, 60000);
+
+    return () => clearInterval(interval);
+  }, [user]);
+
   const signIn = async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    // Update last login timestamp
+    if (result.user) {
+      try {
+        await updateLastLogin(result.user.uid);
+        // Store login time in localStorage for session expiry checking
+        localStorage.setItem('loginTime', Date.now().toString());
+      } catch (error) {
+        console.error('Error updating last login:', error);
+      }
+    }
   };
 
   const logout = async () => {
+    // Clear login time from localStorage
+    localStorage.removeItem('loginTime');
     await signOut(auth);
   };
 

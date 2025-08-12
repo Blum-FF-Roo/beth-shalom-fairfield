@@ -26,6 +26,7 @@ export interface UserData {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+  lastLogin?: Date;
 }
 
 // Convert Firestore document to UserData interface
@@ -40,7 +41,8 @@ function convertFirestoreUser(doc: DocumentSnapshot<DocumentData>): UserData {
     role: data.role,
     isActive: data.isActive,
     createdAt: data.createdAt?.toDate() || new Date(),
-    updatedAt: data.updatedAt?.toDate() || new Date()
+    updatedAt: data.updatedAt?.toDate() || new Date(),
+    lastLogin: data.lastLogin?.toDate ? data.lastLogin.toDate() : undefined
   };
 }
 
@@ -148,6 +150,20 @@ export async function sendUserPasswordReset(email: string): Promise<void> {
     await sendPasswordResetEmail(auth, email);
   } catch (error) {
     console.error('Error sending password reset:', error);
+    throw error;
+  }
+}
+
+// Update last login timestamp
+export async function updateLastLogin(uid: string): Promise<void> {
+  try {
+    const userRef = doc(db, USERS_COLLECTION, uid);
+    await updateDoc(userRef, {
+      lastLogin: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    });
+  } catch (error) {
+    console.error('Error updating last login:', error);
     throw error;
   }
 }

@@ -146,9 +146,9 @@ export const programs: ProgramItem[] = [
   },
   {
     id: "6",
-    title: "Educational Programs",
+    title: "Media Archive",
     imageUrl: "/images/john and alice.jpg",
-    linkUrl: "/coming-soon"
+    linkUrl: "/media-archive"
   }
 ];
 
@@ -156,26 +156,26 @@ export const actionItems: ActionItem[] = [
   {
     id: "1",
     title: "Donate",
-    iconUrl: "/images/icons/donate.png",
+    iconUrl: "/images/icons/donate.svg",
     linkUrl: "/tzedakah"
   },
   {
     id: "2", 
     title: "Connect",
-    iconUrl: "/images/icons/connect.png",
+    iconUrl: "/images/icons/connect.svg",
     linkUrl: "/contact"
   },
   {
     id: "3",
     title: "Get Involved", 
-    iconUrl: "/images/icons/involved.png",
+    iconUrl: "/images/icons/involved.svg",
     linkUrl: "/membership"
   },
   {
     id: "4",
-    title: "Learn Online",
-    iconUrl: "/images/icons/learn.png",
-    linkUrl: "/coming-soon"
+    title: "Media Archive",
+    iconUrl: "/images/icons/movie.svg",
+    linkUrl: "/media-archive"
   }
 ];
 

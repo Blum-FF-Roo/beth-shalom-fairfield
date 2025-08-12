@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Heart, MessageCircle, Users, BookOpen } from 'lucide-react';
+import { Heart, MessageCircle, Users, Film } from 'lucide-react';
 import { actionItems } from '@/data/site-data';
 
 // Icon mapping for action items
@@ -7,7 +7,7 @@ const iconMap = {
   'Donate': Heart,
   'Connect': MessageCircle,
   'Get Involved': Users,
-  'Learn Online': BookOpen,
+  'Media Archive': Film,
 };
 
 export default function ActionItemsSection() {

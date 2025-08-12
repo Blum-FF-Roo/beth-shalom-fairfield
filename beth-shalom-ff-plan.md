@@ -699,3 +699,66 @@ dean@drazninpr.com
 
 # instead of this add the bottom of the header/sidebar:
 
+            {/* Menu Footer */}
+            <div className="border-t p-6">
+              <div className="flex flex-col space-y-3">
+                <Link
+                  href="/about"
+                  className="text-gray-600 hover:text-blue-600 transition-colors duration-200"
+                  onClick={toggleMenu}
+                >
+                  About
+                </Link>
+                <Link
+                  href="/contact"
+                  className="text-gray-600 hover:text-blue-600 transition-colors duration-200"
+                  onClick={toggleMenu}
+                >
+                  Contact
+                </Link>
+              </div>
+            </div>
+
+I want to create an admin section. it should have manage posts, logout, create new post, and manage users (only for super admin) links.
+
+when user is not logged in:
+this should be a login button.
+the login button should go to a login page.
+this should have a forget my password button that went clicked, after the user enters a verified email in the system, sends and email to the user with a reset password link.
+this reset password link should take the user to the reset password page and then after resetting the password back to the login page.
+
+after the user logs in they should be directed to the admin panel page.
+this page should have a list of all posts and a toggle between the categories of posts. there are two categories of posts: parshah posts and high holy day sermon posts.
+the admin panel page should contain a list with a card for each post. each card should have the title of the post, date of creation, the category, edit button, delete button, publish/unpublish toggle.
+the user should be able to click the title and go to that post's individual page. all posts should be listed on the parshah page or the high holy day page according to their category. 
+each post on that page should have a share (copy to system clipboard button that flashes the word copied! when clicked)
+also we need to create a new/edit post form page. this needs to handle both the editing and creation of new posts. everything needs to be hooked up to firebase.
+
+then you can create a super user admin. this super user admin will have access to the manage users page where they can add a new user, disable a user, delete a user.
+
+## Media Archive
+
+create a Media Archive page. use the youtube links listed below. embed the youtube videos in the media archive page. create a separate card for each one. the description should be below the video.
+
+you can replace the educational programs and the learn online on the main page with the media archive link.
+
+Video talk by Rabbi Alan Green 3/15/2015
+https://youtu.be/hVjelAehCu0
+
+Video talk by Bob Rabinoff
+The Skype session from 12/04/2015 is on YouTube at :   http://youtu.be/fGOaJfO5tCU
+
+Video Talk by Gedaliah Gurfein 12/14/2014
+The Skype session from 12/14/2014 is on YouTube at :   http://youtu.be/tSJveZvnE6Q
+
+Video talk by Abe Shainberg 5/17/2015
+Skype session from 11/18/2012 with Abe Shainberg   http://youtu.be/cjpG9nN1sBw
+
+Video Talk by Vernon Katz at Beth Shalom
+http://youtu.be/NjsGdDPoukw
+
+Video Talk by Gedaliah Gurfein 10/21/2012
+The Skype session from 10/21/2012 is on YouTube at      http://youtu.be/WrcI_hiRU6A
+
+
+

@@ -128,7 +128,7 @@ export default function Header() {
                     onClick={toggleMenu}
                   >
                     <Settings className="h-4 w-4 mr-2" />
-                    Admin Login
+                    Login
                   </Link>
                 </div>
               ) : (

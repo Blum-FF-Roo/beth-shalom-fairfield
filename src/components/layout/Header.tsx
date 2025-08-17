@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Menu, X, Settings, LogOut, Plus, Users } from 'lucide-react';
 import { siteConfig, navigationMenu } from '@/data/site-data';
 import { cn } from '@/lib/utils';
@@ -10,6 +11,8 @@ import { useAuth } from '@/contexts/AuthContext';
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, userData, logout } = useAuth();
+  const pathname = usePathname();
+  const isMainPage = pathname === '/';
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -41,6 +44,73 @@ export default function Header() {
                   </h1>
                   <p className="text-sm" style={{color: '#F58C28'}}>{siteConfig.subtitle}</p>
                 </div>
+              </Link>
+            </div>
+
+            {/* Desktop Navigation Links */}
+            <div className="hidden lg:flex items-center space-x-6 mr-4">
+              <Link 
+                href="/about"
+                className={`font-medium transition-colors duration-200 ${
+                  isMainPage 
+                    ? 'text-white hover:text-orange-200' 
+                    : 'hover:text-orange-300'
+                }`}
+                style={!isMainPage ? {color: '#F58C28'} : {}}
+              >
+                About Us
+              </Link>
+              <Link 
+                href="/high-holy-day"
+                className={`font-medium transition-colors duration-200 ${
+                  isMainPage 
+                    ? 'text-white hover:text-orange-200' 
+                    : 'hover:text-orange-300'
+                }`}
+                style={!isMainPage ? {color: '#F58C28'} : {}}
+              >
+                Synagogue Services
+              </Link>
+              <Link 
+                href="/high-holy-day"
+                className={`font-medium transition-colors duration-200 ${
+                  isMainPage 
+                    ? 'text-white hover:text-orange-200' 
+                    : 'hover:text-orange-300'
+                }`}
+                style={!isMainPage ? {color: '#F58C28'} : {}}
+              >
+                High Holidays
+              </Link>
+              <Link 
+                href="/media-archive"
+                className={`font-medium transition-colors duration-200 ${
+                  isMainPage 
+                    ? 'text-white hover:text-orange-200' 
+                    : 'hover:text-orange-300'
+                }`}
+                style={!isMainPage ? {color: '#F58C28'} : {}}
+              >
+                Photos
+              </Link>
+              <Link 
+                href="/tzedakah"
+                className={`font-medium px-4 py-2 rounded-lg border-2 transition-colors duration-200 ${
+                  isMainPage 
+                    ? 'text-white hover:text-orange-200' 
+                    : 'hover:text-orange-300'
+                }`}
+                style={!isMainPage ? {borderColor: '#F58C28', color: '#F58C28'} : {borderColor: '#F58C28'}}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#F58C28';
+                  e.currentTarget.style.color = 'white';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = isMainPage ? 'white' : '#F58C28';
+                }}
+              >
+                Donate
               </Link>
             </div>
 

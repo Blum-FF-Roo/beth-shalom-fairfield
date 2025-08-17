@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay, EffectFade } from 'swiper/modules';
-import { heroSlides } from '@/data/site-data';
+import Link from "next/link";
+import Image from "next/image";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay, EffectFade } from "swiper/modules";
+import { heroSlides } from "@/data/site-data";
 
 // Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/effect-fade';
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/effect-fade";
 
 export default function HeroSlider() {
   if (heroSlides.length === 0) {
@@ -24,11 +24,11 @@ export default function HeroSlider() {
         spaceBetween={0}
         slidesPerView={1}
         navigation={{
-          nextEl: '.hero-button-next',
-          prevEl: '.hero-button-prev',
+          nextEl: ".hero-button-next",
+          prevEl: ".hero-button-prev",
         }}
         pagination={{
-          el: '.hero-pagination',
+          el: ".hero-pagination",
           clickable: true,
         }}
         autoplay={{
@@ -46,8 +46,8 @@ export default function HeroSlider() {
           <SwiperSlide key={slide.id}>
             <div className="relative w-full h-full">
               {/* Background Image */}
-              <Image 
-                src={slide.imageUrl} 
+              <Image
+                src={slide.imageUrl}
                 alt={slide.title}
                 fill
                 className="object-cover z-0"
@@ -58,11 +58,17 @@ export default function HeroSlider() {
               <div className="absolute inset-0 flex items-center justify-center z-20">
                 <div className="max-w-4xl mx-auto px-4 text-center text-white">
                   <div className="space-y-4">
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold" style={{color: '#F58C28'}}>
+                    <h2
+                      className="text-4xl md:text-5xl lg:text-6xl font-bold"
+                      style={{ color: "#F58C28" }}
+                    >
                       {slide.title}
                     </h2>
                     {slide.subtitle && (
-                      <h3 className="text-xl md:text-2xl lg:text-3xl font-medium" style={{color: '#F58C28'}}>
+                      <h3
+                        className="text-xl md:text-2xl lg:text-3xl font-medium"
+                        style={{ color: "#F58C28" }}
+                      >
                         {slide.subtitle}
                       </h3>
                     )}
@@ -72,11 +78,15 @@ export default function HeroSlider() {
                     <div className="pt-6">
                       <Link
                         href={slide.linkUrl}
-                        target={slide.linkTarget || '_self'}
+                        target={slide.linkTarget || "_self"}
                         className="inline-block text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
-                        style={{backgroundColor: '#F58C28'}}
-                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E67C1F'}
-                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#F58C28'}
+                        style={{ backgroundColor: "#F58C28" }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.backgroundColor = "#E67C1F")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.backgroundColor = "#F58C28")
+                        }
                       >
                         {slide.linkText}
                       </Link>
@@ -89,15 +99,39 @@ export default function HeroSlider() {
         ))}
 
         {/* Custom Navigation Buttons */}
-        <div className="hero-button-prev absolute left-4 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-3 rounded-full transition-all duration-200 z-30 cursor-pointer">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <div className="hero-button-prev absolute left-4 top-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-3 rounded-full transition-all duration-200 z-30 cursor-pointer">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15 18L9 12L15 6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         </div>
-        
-        <div className="hero-button-next absolute right-4 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-3 rounded-full transition-all duration-200 z-30 cursor-pointer">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+
+        <div className="hero-button-next absolute right-4 top-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-3 rounded-full transition-all duration-200 z-30 cursor-pointer">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M9 18L15 12L9 6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         </div>
 
@@ -114,10 +148,15 @@ export default function HeroSlider() {
           border-radius: 50%;
           transition: all 0.2s;
         }
-        
+
         .hero-pagination .swiper-pagination-bullet-active {
           background: white;
           transform: scale(1.2);
+        }
+
+        .hero-button-prev,
+        .hero-button-next {
+          transform: translateY(-50%);
         }
         
         .hero-button-prev:hover,

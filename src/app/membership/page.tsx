@@ -1,5 +1,7 @@
 'use client';
 
+import MembershipCart from '@/components/MembershipCart';
+
 export default function MembershipPage() {
   return (
     <div className="min-h-screen pt-32 pb-12 bg-gray-50">
@@ -23,22 +25,8 @@ export default function MembershipPage() {
           </div>
         </div>
 
-        {/* PayPal Button */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Donate Now</h2>
-          <p className="text-gray-600 mb-6">Click the button below to make your membership donation via PayPal:</p>
-          <a 
-            href="https://www.paypal.com/donate?token=hsH2uwZFHognhuQoj5d1pS0Kwb2oiMZKliLaNm9DYbNauXp37DR9HbLi0CX5qJ0q4dVwj6baRoRxycHz"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block text-white font-semibold px-8 py-4 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl text-lg"
-            style={{backgroundColor: '#F58C28'}}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E67C1F'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#F58C28'}
-          >
-            Donate with PayPal
-          </a>
-        </div>
+        {/* Membership Cart */}
+        <MembershipCart />
 
         {/* Membership Information */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
@@ -58,22 +46,6 @@ export default function MembershipPage() {
           </div>
         </div>
 
-        {/* Membership Categories */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Membership Categories</h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <p className="text-gray-700"><strong>Sustaining Membership:</strong> $1000</p>
-              <p className="text-gray-700"><strong>Sponsoring Membership:</strong> $500</p>
-              <p className="text-gray-700"><strong>Family Membership:</strong> $295</p>
-            </div>
-            <div className="space-y-2">
-              <p className="text-gray-700"><strong>Single Membership:</strong> $165</p>
-              <p className="text-gray-700"><strong>College Faculty, Staff Family:</strong> $145</p>
-              <p className="text-gray-700"><strong>College Faculty, Staff Single:</strong> $95</p>
-            </div>
-          </div>
-        </div>
 
         {/* Community Message */}
         <div className="bg-white rounded-lg shadow-lg p-8">

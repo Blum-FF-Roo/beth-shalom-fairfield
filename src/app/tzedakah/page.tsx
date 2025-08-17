@@ -1,5 +1,7 @@
 'use client';
 
+import PayPalDonation from '@/components/PayPalDonation';
+
 export default function TzedakahPage() {
   return (
     <div className="min-h-screen pt-32 pb-12 bg-gray-50">
@@ -31,21 +33,13 @@ export default function TzedakahPage() {
           <p className="text-gray-700">Holidays and festivals, births, namings, first school days, Bar/Bat Mitzvahs, graduations, weddings, funerals, yahrtzeits, wedding anniversaries (one's own or friends'), birthdays, housewarmings, congratulations on job promotions, achievements, good wishes on undertaking new ventures, get well wishes, and so on.</p>
         </div>
 
-        {/* PayPal Button */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Donate Now</h2>
-          <p className="text-gray-600 mb-6">To donate now on-line, click the Donate button:</p>
-          <a 
-            href="https://www.paypal.com/donate?token=hsH2uwZFHognhuQoj5d1pS0Kwb2oiMZKliLaNm9DYbNauXp37DR9HbLi0CX5qJ0q4dVwj6baRoRxycHz"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block text-white font-semibold px-8 py-4 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl text-lg"
-            style={{backgroundColor: '#F58C28'}}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E67C1F'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#F58C28'}
-          >
-            Donate with PayPal
-          </a>
+        {/* PayPal Donation */}
+        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Donate Now</h2>
+            <p className="text-gray-600">Support our congregation with a secure online donation through PayPal</p>
+          </div>
+          <PayPalDonation defaultAmount="18" />
         </div>
 
         {/* Donation Funds */}

@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { AuthProvider } from "@/contexts/AuthContext";
+import PayPalProvider from "@/components/PayPalProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -31,11 +32,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
-        <AuthProvider>
-          <Header />
-          <main>{children}</main>
-          <Footer />
-        </AuthProvider>
+        <PayPalProvider>
+          <AuthProvider>
+            <Header />
+            <main>{children}</main>
+            <Footer />
+          </AuthProvider>
+        </PayPalProvider>
       </body>
     </html>
   );

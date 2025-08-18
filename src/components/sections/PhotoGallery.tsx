@@ -76,7 +76,6 @@ export default function PhotoGallery() {
                   sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 16vw"
                 />
                 {/* Overlay */}
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity duration-300" />
               </div>
             </div>
           ))}

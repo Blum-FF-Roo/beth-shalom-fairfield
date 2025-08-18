@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Plus, Filter, ArrowLeft, Edit, Settings, FileText, Globe } from 'lucide-react';
+import { Plus, Filter, ArrowLeft, Edit, Settings, FileText, Globe, Users } from 'lucide-react';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import PostCard from '@/components/admin/PostCard';
 import ConfirmationModal from '@/components/ui/ConfirmationModal';
@@ -10,13 +10,16 @@ import { Post, PostCategory } from '@/types';
 import { getAllPosts, deletePost, togglePublishStatus } from '@/lib/posts';
 import { useToast } from '@/contexts/ToastContext';
 import { ContentSection } from '@/types/content';
-import { getAllContentSections, initializeContentSections } from '@/lib/content';
+import { getAllContentSections, initializeContentSections, userHasContentPermission } from '@/lib/content';
+import { getUserById, UserData } from '@/lib/users';
+import { useAuth } from '@/contexts/AuthContext';
 
 type TabType = 'articles' | 'content';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<TabType>('articles');
   const { showSuccess, showError } = useToast();
+  const { user, userData } = useAuth();
 
   // Handle URL params for tab switching
   useEffect(() => {
@@ -36,11 +39,15 @@ export default function AdminDashboard() {
 
   // Content state
   const [contentSections, setContentSections] = useState<ContentSection[]>([]);
+  const [authorizedContentSections, setAuthorizedContentSections] = useState<ContentSection[]>([]);
   const [selectedContentCategory, setSelectedContentCategory] = useState<string>('all');
 
   // Loading state
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  // User data cache for display names
+  const [usersCache, setUsersCache] = useState<Record<string, UserData>>({});
 
   const contentCategories = [
     { value: 'all', label: 'All Sections' },
@@ -76,10 +83,58 @@ export default function AdminDashboard() {
       
       const sections = await getAllContentSections();
       setContentSections(sections);
+
+      // Filter sections based on user permissions
+      if (user && userData) {
+        // Super admins can see all sections
+        if (userData.role === 'super-admin') {
+          setAuthorizedContentSections(sections);
+        } else {
+          // Regular admins only see sections they have permission to edit
+          const authorizedSections = [];
+          for (const section of sections) {
+            try {
+              const hasPermission = await userHasContentPermission(user.uid, section.id);
+              if (hasPermission) {
+                authorizedSections.push(section);
+              }
+            } catch (error) {
+              console.error(`Error checking permission for section ${section.id}:`, error);
+            }
+          }
+          setAuthorizedContentSections(authorizedSections);
+        }
+      } else {
+        // No user, show no sections
+        setAuthorizedContentSections([]);
+      }
+
+      // Cache user data for display names
+      const uniqueUserIds = [...new Set(sections.map(s => s.updatedBy).filter(id => id && id !== 'system'))];
+      const userPromises = uniqueUserIds.map(async (userId) => {
+        try {
+          const userData = await getUserById(userId);
+          return userData ? { [userId]: userData } : {};
+        } catch (error) {
+          console.error(`Error fetching user ${userId}:`, error);
+          return {};
+        }
+      });
+      
+      const userResults = await Promise.all(userPromises);
+      const newUsersCache = userResults.reduce((acc, userObj) => ({ ...acc, ...userObj }), {});
+      setUsersCache(prev => ({ ...prev, ...newUsersCache }));
     } catch (error) {
       console.error('Error loading content sections:', error);
       showError('Load Failed', 'Failed to load content sections. Please try again.');
     }
+  };
+
+  // Helper function to get display name for a user ID
+  const getUserDisplayName = (userId: string): string => {
+    if (userId === 'system') return 'System';
+    const user = usersCache[userId];
+    return user ? user.email : userId;
   };
 
   useEffect(() => {
@@ -97,6 +152,13 @@ export default function AdminDashboard() {
   useEffect(() => {
     filterPosts();
   }, [posts, selectedCategory, filterPosts]);
+
+  // Reload content sections when user data changes
+  useEffect(() => {
+    if (user && userData) {
+      loadContentSections();
+    }
+  }, [user, userData]);
 
   const handleDeletePost = (id: string) => {
     setPostToDelete(id);
@@ -162,8 +224,21 @@ export default function AdminDashboard() {
   };
 
   const filteredContentSections = selectedContentCategory === 'all' 
-    ? contentSections 
-    : contentSections.filter(section => section.category === selectedContentCategory);
+    ? authorizedContentSections 
+    : authorizedContentSections.filter(section => section.category === selectedContentCategory);
+
+  // Filter content categories to only show those with authorized sections
+  const availableContentCategories = contentCategories.filter(category => {
+    if (category.value === 'all') return true; // Always show "All Sections"
+    return authorizedContentSections.some(section => section.category === category.value);
+  });
+
+  // Reset selected category if it's no longer available
+  useEffect(() => {
+    if (!availableContentCategories.some(cat => cat.value === selectedContentCategory)) {
+      setSelectedContentCategory('all');
+    }
+  }, [availableContentCategories, selectedContentCategory]);
 
   if (loading) {
     return (
@@ -204,6 +279,15 @@ export default function AdminDashboard() {
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Create New Post
+                  </Link>
+                )}
+                {userData?.role === 'super-admin' && (
+                  <Link
+                    href="/admin/users"
+                    className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 shadow-sm"
+                  >
+                    <Users className="h-4 w-4 mr-2" />
+                    Manage Users
                   </Link>
                 )}
               </div>
@@ -331,7 +415,7 @@ export default function AdminDashboard() {
               {/* Category Filter */}
               <div className="mb-6">
                 <div className="flex flex-wrap gap-2">
-                  {contentCategories.map((category) => (
+                  {availableContentCategories.map((category) => (
                     <button
                       key={category.value}
                       onClick={() => setSelectedContentCategory(category.value)}
@@ -385,7 +469,7 @@ export default function AdminDashboard() {
                               </p>
                               <div className="flex items-center space-x-4 text-xs text-gray-500">
                                 <span>Updated: {section.updatedAt.toLocaleDateString()}</span>
-                                <span>By: {section.updatedBy}</span>
+                                <span>By: {getUserDisplayName(section.updatedBy)}</span>
                                 <span>
                                   {section.type === 'slide_array' ? (
                                     `${Array.isArray(section.content) ? section.content.length : 0} slides`

@@ -132,7 +132,7 @@ export default function Header() {
       )}>
         {/* Backdrop */}
         <div 
-          className="absolute inset-0 bg-black bg-opacity-50"
+          className=""
           onClick={toggleMenu}
         />
         
@@ -210,15 +210,7 @@ export default function Header() {
                     onClick={toggleMenu}
                   >
                     <Settings className="h-4 w-4 mr-2" />
-                    Manage Posts
-                  </Link>
-                  <Link
-                    href="/admin/posts/new"
-                    className="inline-flex items-center text-gray-600 hover:text-blue-600 transition-colors duration-200"
-                    onClick={toggleMenu}
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Create New Post
+                    Admin Dashboard
                   </Link>
                   {userData?.role === 'super-admin' && (
                     <Link

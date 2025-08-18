@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import LazyImage from '@/components/ui/LazyImage';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { latestPhotos } from '@/data/site-data';
 
@@ -66,12 +67,13 @@ export default function PhotoGallery() {
               className="group cursor-pointer"
               onClick={() => openLightbox(index)}
             >
-              <div className="aspect-square bg-gray-300 rounded-lg overflow-hidden">
-                <div
-                  className="w-full h-full bg-cover bg-center bg-no-repeat group-hover:scale-105 transition-transform duration-300"
-                  style={{
-                    backgroundImage: `url('${photo.imageUrl}')`
-                  }}
+              <div className="aspect-square bg-gray-300 rounded-lg overflow-hidden relative">
+                <LazyImage
+                  src={photo.imageUrl}
+                  alt={photo.title}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 16vw"
                 />
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity duration-300" />

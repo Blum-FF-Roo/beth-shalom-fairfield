@@ -1,24 +1,32 @@
 'use client';
 
+import { useState } from 'react';
 import { UserData } from '@/lib/users';
-import { Shield, ShieldCheck, Mail, Trash2, ToggleLeft, ToggleRight } from 'lucide-react';
+import { ContentSection } from '@/types/content';
+import { Shield, ShieldCheck, Mail, Trash2, ToggleLeft, ToggleRight, Settings } from 'lucide-react';
 
 interface UserCardProps {
   user: UserData;
   currentUserUid: string;
+  contentSections: ContentSection[];
+  userPermissions: string[]; // Array of content section IDs the user has permission for
   onToggleStatus: (uid: string, isActive: boolean) => void;
   onToggleRole: (uid: string, role: 'admin' | 'super-admin') => void;
   onDelete: (uid: string) => void;
   onSendPasswordReset: (email: string) => void;
+  onToggleContentPermission: (userId: string, contentSectionId: string, hasPermission: boolean) => void;
 }
 
 export default function UserCard({ 
   user, 
   currentUserUid,
+  contentSections,
+  userPermissions,
   onToggleStatus, 
   onToggleRole,
   onDelete, 
-  onSendPasswordReset 
+  onSendPasswordReset,
+  onToggleContentPermission
 }: UserCardProps) {
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
@@ -31,6 +39,18 @@ export default function UserCard({
   };
 
   const isCurrentUser = user.uid === currentUserUid;
+  const [showPermissions, setShowPermissions] = useState(false);
+
+  const getCategoryColor = (category: string) => {
+    const colors: Record<string, string> = {
+      'home': 'bg-blue-100 text-blue-800',
+      'hero': 'bg-purple-100 text-purple-800',
+      'about': 'bg-green-100 text-green-800',
+      'contact': 'bg-yellow-100 text-yellow-800',
+      'membership': 'bg-red-100 text-red-800'
+    };
+    return colors[category] || 'bg-gray-100 text-gray-800';
+  };
 
   return (
     <div className={`bg-white rounded-lg shadow-md border transition-all duration-200 ${
@@ -94,6 +114,52 @@ export default function UserCard({
         </div>
 
         <div className="pt-4 border-t border-gray-200 space-y-3">
+          {/* Content Permissions (only for regular admins and super-admin viewing) */}
+          {user.role === 'admin' && !isCurrentUser && (
+            <div className="border border-gray-200 rounded-lg p-4">
+              <button
+                onClick={() => setShowPermissions(!showPermissions)}
+                className="flex items-center justify-between w-full text-left"
+              >
+                <div className="flex items-center">
+                  <Settings className="h-4 w-4 mr-2 text-gray-500" />
+                  <span className="text-sm font-medium text-gray-700">
+                    Content Permissions ({userPermissions.length}/{contentSections.length})
+                  </span>
+                </div>
+                <span className="text-gray-400">
+                  {showPermissions ? '−' : '+'}
+                </span>
+              </button>
+              
+              {showPermissions && (
+                <div className="mt-3 space-y-2 border-t border-gray-100 pt-3">
+                  {contentSections.map((section) => {
+                    const hasPermission = userPermissions.includes(section.id);
+                    return (
+                      <div key={section.id} className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-xs">{section.title}</span>
+                          <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium ${getCategoryColor(section.category)}`}>
+                            {section.category}
+                          </span>
+                        </div>
+                        <label className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={hasPermission}
+                            onChange={(e) => onToggleContentPermission(user.uid, section.id, e.target.checked)}
+                            className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+                          />
+                        </label>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* First row - Password reset (always available) */}
           <div className="flex justify-center">
             <button

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import LazyImage from "@/components/ui/LazyImage";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay, EffectFade } from "swiper/modules";
 import { heroSlides } from "@/data/site-data";
@@ -61,12 +61,13 @@ export default function HeroSlider() {
           <SwiperSlide key={slide.id}>
             <div className="relative w-full h-full">
               {/* Background Image */}
-              <Image
+              <LazyImage
                 src={slide.imageUrl}
                 alt={slide.title}
                 fill
                 className="object-cover z-0"
                 priority={slide.id === "1"}
+                sizes="100vw"
               />
 
               {/* Content Overlay */}

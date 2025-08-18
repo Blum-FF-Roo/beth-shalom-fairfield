@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+import LazyImage from '@/components/ui/LazyImage';
 import { programs } from '@/data/site-data';
 
 export default function ProgramsSection() {
@@ -29,14 +29,13 @@ export default function ProgramsSection() {
               >
                 {/* Image Container */}
                 <div className="relative h-48 overflow-hidden">
-                  <Image 
+                  <LazyImage 
                     src={program.imageUrl}
                     alt={program.title}
                     fill
                     className="object-cover z-10"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
-                  
                 </div>
 
                 {/* Content */}

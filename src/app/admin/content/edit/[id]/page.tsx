@@ -54,7 +54,7 @@ export default function EditContentPage({ params }: Props) {
       
       if (!section) {
         showError('Not Found', 'Content section not found.');
-        router.push('/admin/content');
+        router.push('/admin');
         return;
       }
 
@@ -124,7 +124,7 @@ export default function EditContentPage({ params }: Props) {
 
       await updateContentSection(contentSection.id, contentToSave, userData.uid);
       showSuccess('Content Updated', 'Content section has been successfully updated.');
-      router.push('/admin/content');
+      router.push('/admin?tab=content');
     } catch (error) {
       console.error('Error updating content section:', error);
       showError('Update Failed', 'Failed to update content section. Please try again.');
@@ -186,8 +186,8 @@ export default function EditContentPage({ params }: Props) {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-900">Content section not found</h2>
-            <Link href="/admin/content" className="mt-4 text-blue-600 hover:text-blue-800">
-              Return to Content Management
+            <Link href="/admin" className="mt-4 text-blue-600 hover:text-blue-800">
+              Return to Admin Dashboard
             </Link>
           </div>
         </div>
@@ -202,8 +202,8 @@ export default function EditContentPage({ params }: Props) {
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-900">Access Denied</h2>
             <p className="mt-2 text-gray-600">You don't have permission to edit this content section.</p>
-            <Link href="/admin/content" className="mt-4 text-blue-600 hover:text-blue-800">
-              Return to Content Management
+            <Link href="/admin" className="mt-4 text-blue-600 hover:text-blue-800">
+              Return to Admin Dashboard
             </Link>
           </div>
         </div>
@@ -219,11 +219,11 @@ export default function EditContentPage({ params }: Props) {
           <div className="mb-8">
             <div className="mb-4">
               <Link
-                href="/admin/content"
+                href="/admin"
                 className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors duration-200"
               >
                 <ArrowLeft className="h-5 w-5 mr-1" />
-                Back to Content Management
+                Back to Admin Dashboard
               </Link>
             </div>
             <div className="flex items-center justify-between">

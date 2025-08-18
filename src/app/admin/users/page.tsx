@@ -10,10 +10,19 @@ import { useAuth } from '@/contexts/AuthContext';
 import { UserData, getAllUsers, updateUser, deleteUser, sendUserPasswordReset, createUser } from '@/lib/users';
 import { UserRole } from '@/contexts/AuthContext';
 import { useToast } from '@/contexts/ToastContext';
+import { ContentSection } from '@/types/content';
+import { 
+  getAllContentSections, 
+  grantContentPermission, 
+  revokeContentPermission,
+  getUserContentPermissions 
+} from '@/lib/content';
 
 export default function UserManagementPage() {
   const { userData } = useAuth();
   const [users, setUsers] = useState<UserData[]>([]);
+  const [contentSections, setContentSections] = useState<ContentSection[]>([]);
+  const [userPermissions, setUserPermissions] = useState<Record<string, string[]>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -35,8 +44,23 @@ export default function UserManagementPage() {
   const loadUsers = async () => {
     try {
       setLoading(true);
-      const fetchedUsers = await getAllUsers();
+      const [fetchedUsers, fetchedContentSections] = await Promise.all([
+        getAllUsers(),
+        getAllContentSections()
+      ]);
+      
       setUsers(fetchedUsers);
+      setContentSections(fetchedContentSections);
+
+      // Load permissions for each user
+      const permissions: Record<string, string[]> = {};
+      for (const user of fetchedUsers) {
+        if (user.role === 'admin') {
+          const userPerms = await getUserContentPermissions(user.uid);
+          permissions[user.uid] = userPerms.map(p => p.contentSectionId);
+        }
+      }
+      setUserPermissions(permissions);
     } catch (err) {
       setError('Failed to load users');
       console.error('Error loading users:', err);
@@ -104,6 +128,32 @@ export default function UserManagementPage() {
     } catch {
       setError('Failed to send password reset email');
       setTimeout(() => setError(''), 3000);
+    }
+  };
+
+  const handleToggleContentPermission = async (userId: string, contentSectionId: string, hasPermission: boolean) => {
+    try {
+      if (hasPermission) {
+        await grantContentPermission(userId, contentSectionId, userData?.uid || '');
+      } else {
+        await revokeContentPermission(userId, contentSectionId);
+      }
+
+      // Update local state
+      setUserPermissions(prev => ({
+        ...prev,
+        [userId]: hasPermission 
+          ? [...(prev[userId] || []), contentSectionId]
+          : (prev[userId] || []).filter(id => id !== contentSectionId)
+      }));
+
+      showSuccess(
+        'Permission Updated', 
+        `Content permission ${hasPermission ? 'granted' : 'revoked'} successfully.`
+      );
+    } catch (error) {
+      console.error('Error updating content permission:', error);
+      showError('Update Failed', 'Failed to update content permission. Please try again.');
     }
   };
 
@@ -336,10 +386,13 @@ export default function UserManagementPage() {
                   key={user.uid}
                   user={user}
                   currentUserUid={userData?.uid || ''}
+                  contentSections={contentSections}
+                  userPermissions={userPermissions[user.uid] || []}
                   onToggleStatus={handleToggleStatus}
                   onToggleRole={handleToggleRole}
                   onDelete={handleDeleteUser}
                   onSendPasswordReset={handleSendPasswordReset}
+                  onToggleContentPermission={handleToggleContentPermission}
                 />
               ))}
             </div>

@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { PayPalButtons } from "@paypal/react-paypal-js";
-import { Plus, Minus, ShoppingCart, X } from 'lucide-react';
+import { Plus, Minus, ShoppingCart, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { useToast } from '@/contexts/ToastContext';
 
 interface MembershipOption {
   id: string;
@@ -58,6 +59,7 @@ export default function MembershipCart() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showCart, setShowCart] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const { showSuccess, showError } = useToast();
 
   useEffect(() => {
     setIsMounted(true);
@@ -138,10 +140,11 @@ export default function MembershipCart() {
             <h3 className="text-lg font-semibold text-gray-900">Your Cart ({cartItemCount} items)</h3>
             <button
               onClick={() => setShowCart(!showCart)}
-              className="flex items-center text-orange-600 hover:text-orange-700"
+              className="flex items-center text-gray-600 hover:text-gray-700 transition-colors"
             >
               <ShoppingCart className="w-5 h-5 mr-2" />
               {showCart ? 'Hide' : 'Show'} Details
+              {showCart ? <ChevronUp className="w-4 h-4 ml-1" /> : <ChevronDown className="w-4 h-4 ml-1" />}
             </button>
           </div>
 
@@ -164,12 +167,14 @@ export default function MembershipCart() {
                     <button
                       onClick={() => updateQuantity(item.id, item.quantity + 1)}
                       className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center"
+                      data-testid="plus-button"
                     >
                       <Plus className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => removeFromCart(item.id)}
                       className="w-8 h-8 rounded-full bg-red-100 hover:bg-red-200 text-red-600 flex items-center justify-center ml-2"
+                      data-testid="remove-button"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -203,7 +208,7 @@ export default function MembershipCart() {
                 shape: "rect",
                 label: "pay"
               }}
-              createOrder={(data, actions) => {
+              createOrder={(_data, actions) => {
                 return actions.order.create({
                   purchase_units: [{
                     amount: {
@@ -230,25 +235,18 @@ export default function MembershipCart() {
                   intent: "CAPTURE"
                 });
               }}
-              onApprove={async (data, actions) => {
+              onApprove={async (_data, actions) => {
                 if (actions.order) {
                   try {
                     const details = await actions.order.capture();
                     
                     // Handle successful membership purchase
-                    const membershipDetails = cart.map(item => 
-                      `${item.name} (Qty: ${item.quantity}) - $${item.price * item.quantity}`
-                    ).join('\n');
 
-                    alert(`Thank you for your membership purchase, ${details.payer?.name?.given_name || 'Anonymous'}!
-
-Transaction ID: ${details.id}
-Total: $${cartTotal}
-
-Memberships purchased:
-${membershipDetails}
-
-Welcome to Congregation Beth Shalom! You will receive a confirmation email shortly with your membership details.`);
+                    showSuccess(
+                      'Membership Purchase Successful!',
+                      `Thank you ${details.payer?.name?.given_name || 'Anonymous'}! Your membership has been processed. Transaction ID: ${details.id}. Welcome to Congregation Beth Shalom!`,
+                      8000
+                    );
                     
                     // Clear cart after successful purchase
                     setCart([]);
@@ -256,13 +254,19 @@ Welcome to Congregation Beth Shalom! You will receive a confirmation email short
                     
                   } catch (error) {
                     console.error("Error capturing order:", error);
-                    alert("There was an error processing your membership purchase. Please try again.");
+                    showError(
+                      'Payment Processing Error',
+                      'There was an error processing your membership purchase. Please try again or contact us for assistance.'
+                    );
                   }
                 }
               }}
               onError={(err) => {
                 console.error("PayPal error:", err);
-                alert("There was an error with PayPal. Please try again or contact us directly.");
+                showError(
+                  'PayPal Error',
+                  'There was an error with PayPal. Please try again or contact us directly for assistance.'
+                );
               }}
               onCancel={() => {
                 console.log("Membership purchase cancelled by user");

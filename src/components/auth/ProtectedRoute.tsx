@@ -10,6 +10,17 @@ interface ProtectedRouteProps {
   requiredRole?: UserRole;
 }
 
+// Helper function to check if user has required role
+function hasRequiredRole(userRole: UserRole, requiredRole: UserRole): boolean {
+  // Super-admin can access everything
+  if (userRole === 'super-admin') {
+    return true;
+  }
+  
+  // Exact role match
+  return userRole === requiredRole;
+}
+
 export default function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
   const { user, userData, loading } = useAuth();
   const router = useRouter();
@@ -27,7 +38,7 @@ export default function ProtectedRoute({ children, requiredRole }: ProtectedRout
         return;
       }
 
-      if (requiredRole && userData.role !== requiredRole) {
+      if (requiredRole && !hasRequiredRole(userData.role, requiredRole)) {
         // User doesn't have required role
         router.push('/admin');
         return;
@@ -55,7 +66,7 @@ export default function ProtectedRoute({ children, requiredRole }: ProtectedRout
     return null;
   }
 
-  if (requiredRole && userData.role !== requiredRole) {
+  if (requiredRole && !hasRequiredRole(userData.role, requiredRole)) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">

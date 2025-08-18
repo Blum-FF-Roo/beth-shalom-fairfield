@@ -2,6 +2,7 @@
 
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import { useState, useEffect } from "react";
+import { useToast } from '@/contexts/ToastContext';
 
 interface PayPalDonationProps {
   defaultAmount?: string;
@@ -11,6 +12,7 @@ export default function PayPalDonation({ defaultAmount = "25.00" }: PayPalDonati
   const [donationAmount, setDonationAmount] = useState(defaultAmount);
   const [isCustomAmount, setIsCustomAmount] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const { showSuccess, showError } = useToast();
 
   useEffect(() => {
     setIsMounted(true);
@@ -90,7 +92,7 @@ export default function PayPalDonation({ defaultAmount = "25.00" }: PayPalDonati
           shape: "rect",
           label: "donate"
         }}
-        createOrder={(data, actions) => {
+        createOrder={(_data, actions) => {
           return actions.order.create({
             purchase_units: [{
               amount: {
@@ -102,18 +104,17 @@ export default function PayPalDonation({ defaultAmount = "25.00" }: PayPalDonati
             intent: "CAPTURE"
           });
         }}
-        onApprove={async (data, actions) => {
+        onApprove={async (_data, actions) => {
           if (actions.order) {
             try {
               const details = await actions.order.capture();
               
               // Handle successful donation
-              alert(`Thank you for your donation, ${details.payer?.name?.given_name || 'Anonymous'}! 
-              
-Transaction ID: ${details.id}
-Amount: $${donationAmount}
-
-Your generosity helps support our congregation and community programs.`);
+              showSuccess(
+                'Donation Successful!',
+                `Thank you for your generous donation of $${donationAmount}, ${details.payer?.name?.given_name || 'Anonymous'}! Your support helps our congregation and community programs. Transaction ID: ${details.id}`,
+                8000
+              );
               
               // Here you could also:
               // - Send confirmation email
@@ -123,13 +124,19 @@ Your generosity helps support our congregation and community programs.`);
               
             } catch (error) {
               console.error("Error capturing order:", error);
-              alert("There was an error processing your donation. Please try again.");
+              showError(
+                'Donation Processing Error',
+                'There was an error processing your donation. Please try again or contact us for assistance.'
+              );
             }
           }
         }}
         onError={(err) => {
           console.error("PayPal error:", err);
-          alert("There was an error with PayPal. Please try again or contact us directly.");
+          showError(
+            'PayPal Error',
+            'There was an error with PayPal. Please try again or contact us directly for assistance.'
+          );
         }}
         onCancel={() => {
           console.log("Donation cancelled by user");

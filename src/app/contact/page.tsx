@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { contactInfo } from '@/data/site-data';
 import { Phone, Mail, MapPin, Facebook } from 'lucide-react';
+import { useToast } from '@/contexts/ToastContext';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -11,13 +12,29 @@ export default function ContactPage() {
     subject: '',
     message: ''
   });
+  const { showSuccess, showError } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
-    alert('Thank you for your message! We will get back to you soon.');
-    setFormData({ name: '', email: '', subject: '', message: '' });
+    try {
+      // Handle form submission
+      console.log('Form submitted:', formData);
+      
+      // In a real app, you would send this to your backend API
+      // For now, we'll just simulate success
+      showSuccess(
+        'Message Sent Successfully!',
+        `Thank you ${formData.name}! We have received your message and will get back to you soon.`
+      );
+      
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      showError(
+        'Message Send Failed',
+        'There was an error sending your message. Please try again or contact us directly.'
+      );
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

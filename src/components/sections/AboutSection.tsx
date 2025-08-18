@@ -1,7 +1,31 @@
+'use client';
+
 import Link from 'next/link';
 import { aboutText } from '@/data/site-data';
+import { useContent } from '@/hooks/useContent';
 
 export default function AboutSection() {
+  const { content: dynamicAboutText, loading } = useContent('aboutText', aboutText);
+
+  if (loading) {
+    return (
+      <section className="py-12 bg-white">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="bg-gray-50 rounded-lg p-8 md:p-12">
+            <div className="animate-pulse">
+              <div className="h-8 bg-gray-300 rounded mb-4 w-32"></div>
+              <div className="space-y-3">
+                <div className="h-4 bg-gray-300 rounded"></div>
+                <div className="h-4 bg-gray-300 rounded"></div>
+                <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-12 bg-white">
       <div className="max-w-4xl mx-auto px-4">
@@ -16,7 +40,7 @@ export default function AboutSection() {
           {/* Content */}
           <div className="prose prose-lg max-w-none">
             <div className="text-gray-700 leading-relaxed space-y-4">
-              {aboutText.split('\n\n').map((paragraph, index) => (
+              {(dynamicAboutText as string).split('\n\n').map((paragraph: string, index: number) => (
                 <p key={index} className="mb-4">
                   {paragraph.trim()}
                 </p>

@@ -5,8 +5,10 @@ import Link from 'next/link';
 import { Plus, Filter, ArrowLeft } from 'lucide-react';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import PostCard from '@/components/admin/PostCard';
+import ConfirmationModal from '@/components/ui/ConfirmationModal';
 import { Post, PostCategory } from '@/types';
 import { getAllPosts, deletePost, togglePublishStatus } from '@/lib/posts';
+import { useToast } from '@/contexts/ToastContext';
 
 export default function AdminDashboard() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -14,6 +16,9 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<'all' | PostCategory>('all');
   const [error, setError] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [postToDelete, setPostToDelete] = useState<string | null>(null);
+  const { showSuccess, showError } = useToast();
 
   const filterPosts = useCallback(() => {
     if (selectedCategory === 'all') {
@@ -44,17 +49,24 @@ export default function AdminDashboard() {
     filterPosts();
   }, [posts, selectedCategory, filterPosts]);
 
-  const handleDeletePost = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
-      return;
-    }
+  const handleDeletePost = (id: string) => {
+    setPostToDelete(id);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeletePost = async () => {
+    if (!postToDelete) return;
 
     try {
-      await deletePost(id);
-      setPosts(posts.filter(post => post.id !== id));
+      await deletePost(postToDelete);
+      setPosts(posts.filter(post => post.id !== postToDelete));
+      showSuccess('Post Deleted', 'The post has been successfully deleted.');
     } catch (err) {
       setError('Failed to delete post');
+      showError('Delete Failed', 'There was an error deleting the post. Please try again.');
       console.error('Error deleting post:', err);
+    } finally {
+      setPostToDelete(null);
     }
   };
 
@@ -102,14 +114,22 @@ export default function AdminDashboard() {
                 <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
                 <p className="mt-2 text-gray-600">Manage your posts and content</p>
               </div>
-              <Link
-                href="/admin/posts/new"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 shadow-sm"
-                style={{backgroundColor: '#F58C28'}}
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Create New Post
-              </Link>
+              <div className="flex items-center space-x-3">
+                <Link
+                  href="/admin/content"
+                  className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                >
+                  Content Management
+                </Link>
+                <Link
+                  href="/admin/posts/new"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 shadow-sm"
+                  style={{backgroundColor: '#F58C28'}}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create New Post
+                </Link>
+              </div>
             </div>
           </div>
 
@@ -190,6 +210,21 @@ export default function AdminDashboard() {
           )}
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setPostToDelete(null);
+        }}
+        onConfirm={confirmDeletePost}
+        title="Delete Post"
+        message="Are you sure you want to delete this post? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        isDestructive={true}
+      />
     </ProtectedRoute>
   );
 }

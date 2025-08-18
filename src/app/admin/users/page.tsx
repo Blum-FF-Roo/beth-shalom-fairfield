@@ -5,9 +5,11 @@ import Link from 'next/link';
 import { ArrowLeft, Plus, Users as UsersIcon, CheckCircle, AlertCircle, ShieldCheck } from 'lucide-react';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import UserCard from '@/components/admin/UserCard';
+import ConfirmationModal from '@/components/ui/ConfirmationModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { UserData, getAllUsers, updateUser, deleteUser, sendUserPasswordReset, createUser } from '@/lib/users';
 import { UserRole } from '@/contexts/AuthContext';
+import { useToast } from '@/contexts/ToastContext';
 
 export default function UserManagementPage() {
   const { userData } = useAuth();
@@ -16,6 +18,9 @@ export default function UserManagementPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [showAddUser, setShowAddUser] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<string | null>(null);
+  const { showSuccess, showError } = useToast();
   
   // Add user form state
   const [newUserEmail, setNewUserEmail] = useState('');
@@ -72,19 +77,22 @@ export default function UserManagementPage() {
     }
   };
 
-  const handleDeleteUser = async (uid: string) => {
-    if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
-      return;
-    }
+  const handleDeleteUser = (uid: string) => {
+    setUserToDelete(uid);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteUser = async () => {
+    if (!userToDelete) return;
 
     try {
-      await deleteUser(uid);
-      setUsers(users.filter(user => user.uid !== uid));
-      setSuccess('User deleted successfully');
-      setTimeout(() => setSuccess(''), 3000);
+      await deleteUser(userToDelete);
+      setUsers(users.filter(user => user.uid !== userToDelete));
+      showSuccess('User Deleted', 'The user has been successfully deleted.');
     } catch {
-      setError('Failed to delete user');
-      setTimeout(() => setError(''), 3000);
+      showError('Delete Failed', 'There was an error deleting the user. Please try again.');
+    } finally {
+      setUserToDelete(null);
     }
   };
 
@@ -338,6 +346,21 @@ export default function UserManagementPage() {
           )}
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setUserToDelete(null);
+        }}
+        onConfirm={confirmDeleteUser}
+        title="Delete User"
+        message="Are you sure you want to delete this user? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        isDestructive={true}
+      />
     </ProtectedRoute>
   );
 }

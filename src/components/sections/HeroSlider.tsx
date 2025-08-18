@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay, EffectFade } from "swiper/modules";
 import { heroSlides } from "@/data/site-data";
+import { useContent } from "@/hooks/useContent";
+import { SlideItem } from "@/types/content";
 
 // Import Swiper styles
 import "swiper/css";
@@ -13,7 +15,20 @@ import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 
 export default function HeroSlider() {
-  if (heroSlides.length === 0) {
+  const { content: dynamicSlides, loading } = useContent('heroSlides', heroSlides);
+  const slides = dynamicSlides as SlideItem[];
+
+  if (loading) {
+    return (
+      <section className="relative w-full h-screen overflow-hidden bg-gray-200">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2" style={{borderColor: '#F58C28'}}></div>
+        </div>
+      </section>
+    );
+  }
+
+  if (!slides || slides.length === 0) {
     return null;
   }
 
@@ -42,7 +57,7 @@ export default function HeroSlider() {
         loop={true}
         className="w-full h-full"
       >
-        {heroSlides.map((slide) => (
+        {slides.map((slide) => (
           <SwiperSlide key={slide.id}>
             <div className="relative w-full h-full">
               {/* Background Image */}

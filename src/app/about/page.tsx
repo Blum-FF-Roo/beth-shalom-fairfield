@@ -1,10 +1,81 @@
 
-export const metadata = {
-  title: 'About Us - Congregation Beth Shalom',
-  description: 'Learn about Congregation Beth Shalom, our administration, board members, and community in Fairfield, Iowa.',
-};
+'use client';
+
+import { useMultipleContent } from '@/hooks/useContent';
 
 export default function AboutPage() {
+  const { content, loading } = useMultipleContent([
+    'aboutAdministration',
+    'aboutBoardMembers', 
+    'aboutCommittees',
+    'aboutResources',
+    'aboutCommunityMessage'
+  ], {
+    aboutAdministration: `<h2>ADMINISTRATION</h2>
+<div class="grid md:grid-cols-2 gap-4">
+<p><strong>President:</strong> Marc Berkowitz</p>
+<p><strong>Administrator:</strong> Susan Berkowitz</p>
+<p><strong>Vice President:</strong> Dean Draznin</p>
+<p><strong>Vice President:</strong> Sol Waksman</p>
+<p><strong>Secretary:</strong> Lisa Cohen</p>
+<p><strong>Treasurer:</strong> Fred Swartz</p>
+</div>`,
+    aboutBoardMembers: [
+      'Marc Berkowitz',
+      'Dean Draznin', 
+      'Sol Waksman',
+      'Lisa Cohen',
+      'Fred Swartz',
+      'Danella Lubar',
+      'Steve Sufian',
+      'Brian Teitzman',
+      'Scott Terry'
+    ],
+    aboutCommittees: `<p><strong>Building:</strong> Sol Waksman, Bill Pollak</p>
+<p><strong>High Holiday:</strong> Lewis Denbaum – Aliyot and Honors</p>
+<p><strong>Torah Service:</strong> Lewis Denbaum and Marc Berkowitz</p>
+<p><strong>Newsletter:</strong> Marc Berkowitz, Editor-In-Chief</p>
+<p><strong>Religious Committee:</strong> David Matt, Bob Rabinoff</p>
+<p><strong>Set-up:</strong> Lisa and David Cohen (and family)</p>
+<p><strong>Volunteers:</strong> Brian Teitzman</p>`,
+    aboutResources: `<p><strong>Beth Shalom Newsletter:</strong> To receive the weekly Beth Shalom Newsletter or to update your newsletter email address contact us at bethshalomfairfield@gmail.com</p>
+<p><strong>The Hebrew Wink (Ben Winkler e-newsletter):</strong> reports news, on-going issues and editorials affecting our Jewish community locally, as well as regionally, nationally, internationally and from Israel. To request free subscription, contact Ben Winkler at HBWink@gmail.com</p>
+<p><strong>Minyan Club:</strong> contact Dean Draznin at dean@drazninpr.com</p>
+<p><strong>Yahrzeit plaque:</strong> to honor the departed, contact Marc Berkowitz at 472-9509 or email bethshalomfairfield@gmail.com</p>
+<p><strong>Yahrzeit candles:</strong> are available at the synagogue for a small donation.</p>
+<p><strong>Information:</strong> Contact Marc Berkowitz at 472-9509 or email bethshalomfairfield@gmail.com</p>`,
+    aboutCommunityMessage: `<p>On these special occasions, where we come together as a Jewish community, we particularly appreciate being able to have our own Synagogue, a place to pray to together, to celebrate together, and to affirm our faith. Even though we know that God is everywhere, when we come together to pray just as our ancestors have done for thousands of years, we are enlivening Abraham's covenant with God, for all Jews for all time, and enlivening our own relationship with God.</p>
+
+<p>Having our own Synagogue makes a statement that we honor and support our tradition and will preserve it for generations to come. It dignifies our experience of our rituals in a place of holiness maintained through prayer and the Ark containing the Torahs. It also provides a place for our library, our Sunday School, adult education classes, weddings, funerals, bar and bat mitzvah's, and holiday celebrations.</p>
+
+<p>This synagogue is maintained by volunteers who contribute their time and energy because they recognize the benefit of having our own house of worship and preserving our Jewish heritage. Our Synagogue is an important part of our Jewish community. The Board of Directors of the Synagogue encourages each of you to become a member of Congregation Beth Shalom. Even if you pay the membership dues in installments over the year, becoming a member supports our community. We are always asked by visitors, "How many members do you have?" because they know this is one measure of the strength of our group consciousness. This is one important way that you can help us continue to maintain the Synagogue, to continue our traditions which connect us to our forefathers, and help support our rare and precious Jewish community.</p>
+
+<p>Thank you to those of you who have already become members this year, and we invite everyone else to please join us in preserving what we enjoy here on all of these special occasions.</p>`
+  });
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-32 pb-12 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="animate-pulse">
+            <div className="h-12 bg-gray-300 rounded mb-8 w-96 mx-auto"></div>
+            <div className="space-y-8">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="bg-white rounded-lg shadow-lg p-8">
+                  <div className="h-6 bg-gray-300 rounded mb-4 w-32"></div>
+                  <div className="space-y-3">
+                    <div className="h-4 bg-gray-300 rounded"></div>
+                    <div className="h-4 bg-gray-300 rounded"></div>
+                    <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen pt-32 pb-12 bg-gray-50">
       <div className="max-w-4xl mx-auto px-4">
@@ -28,73 +99,48 @@ export default function AboutPage() {
 
         {/* Administration */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">ADMINISTRATION</h2>
-          <div className="grid md:grid-cols-2 gap-4 text-gray-700">
-            <p><strong>President:</strong> Marc Berkowitz</p>
-            <p><strong>Administrator:</strong> Susan Berkowitz</p>
-            <p><strong>Vice President:</strong> Dean Draznin</p>
-            <p><strong>Vice President:</strong> Sol Waksman</p>
-            <p><strong>Secretary:</strong> Lisa Cohen</p>
-            <p><strong>Treasurer:</strong> Fred Swartz</p>
-          </div>
+          <div 
+            className="text-gray-700"
+            dangerouslySetInnerHTML={{ __html: content.aboutAdministration || '' }}
+          />
         </div>
 
         {/* Board Members */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">BOARD MEMBERS</h2>
           <div className="grid md:grid-cols-3 gap-4 text-gray-700">
-            <p>Marc Berkowitz</p>
-            <p>Dean Draznin</p>
-            <p>Sol Waksman</p>
-            <p>Lisa Cohen</p>
-            <p>Fred Swartz</p>
-            <p>Danella Lubar</p>
-            <p>Steve Sufian</p>
-            <p>Brian Teitzman</p>
-            <p>Scott Terry</p>
+            {(content.aboutBoardMembers as string[] || []).map((member: string, index: number) => (
+              <p key={index}>{member}</p>
+            ))}
           </div>
         </div>
 
         {/* Committees */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">COMMITTEES</h2>
-          <div className="space-y-3 text-gray-700">
-            <p><strong>Building:</strong> Sol Waksman, Bill Pollak</p>
-            <p><strong>High Holiday:</strong> Lewis Denbaum – Aliyot and Honors</p>
-            <p><strong>Torah Service:</strong> Lewis Denbaum and Marc Berkowitz</p>
-            <p><strong>Newsletter:</strong> Marc Berkowitz, Editor-In-Chief</p>
-            <p><strong>Religious Committee:</strong> David Matt, Bob Rabinoff</p>
-            <p><strong>Set-up:</strong> Lisa and David Cohen (and family)</p>
-            <p><strong>Volunteers:</strong> Brian Teitzman</p>
-          </div>
+          <div 
+            className="space-y-3 text-gray-700"
+            dangerouslySetInnerHTML={{ __html: content.aboutCommittees || '' }}
+          />
         </div>
 
         {/* Resources */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Beth Shalom Resources</h2>
-          <div className="space-y-4 text-gray-700">
-            <p><strong>Beth Shalom Newsletter:</strong> To receive the weekly Beth Shalom Newsletter or to update your newsletter email address contact us at bethshalomfairfield@gmail.com</p>
-            <p><strong>The Hebrew Wink (Ben Winkler e-newsletter):</strong> reports news, on-going issues and editorials affecting our Jewish community locally, as well as regionally, nationally, internationally and from Israel. To request free subscription, contact Ben Winkler at HBWink@gmail.com</p>
-            <p><strong>Minyan Club:</strong> contact Dean Draznin at dean@drazninpr.com</p>
-            <p><strong>Yahrzeit plaque:</strong> to honor the departed, contact Marc Berkowitz at 472-9509 or email bethshalomfairfield@gmail.com</p>
-            <p><strong>Yahrzeit candles:</strong> are available at the synagogue for a small donation.</p>
-            <p><strong>Information:</strong> Contact Marc Berkowitz at 472-9509 or email bethshalomfairfield@gmail.com</p>
-          </div>
+          <div 
+            className="space-y-4 text-gray-700"
+            dangerouslySetInnerHTML={{ __html: content.aboutResources || '' }}
+          />
         </div>
 
         {/* Community Message */}
         <div className="bg-white rounded-lg shadow-lg p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Our Community</h2>
           <p className="text-sm text-gray-600 mb-4">By Fred Swartz</p>
-          <div className="text-gray-700 leading-relaxed space-y-4">
-            <p>On these special occasions, where we come together as a Jewish community, we particularly appreciate being able to have our own Synagogue, a place to pray to together, to celebrate together, and to affirm our faith. Even though we know that God is everywhere, when we come together to pray just as our ancestors have done for thousands of years, we are enlivening Abraham's covenant with God, for all Jews for all time, and enlivening our own relationship with God.</p>
-            
-            <p>Having our own Synagogue makes a statement that we honor and support our tradition and will preserve it for generations to come. It dignifies our experience of our rituals in a place of holiness maintained through prayer and the Ark containing the Torahs. It also provides a place for our library, our Sunday School, adult education classes, weddings, funerals, bar and bat mitzvah's, and holiday celebrations.</p>
-            
-            <p>This synagogue is maintained by volunteers who contribute their time and energy because they recognize the benefit of having our own house of worship and preserving our Jewish heritage. Our Synagogue is an important part of our Jewish community. The Board of Directors of the Synagogue encourages each of you to become a member of Congregation Beth Shalom. Even if you pay the membership dues in installments over the year, becoming a member supports our community. We are always asked by visitors, "How many members do you have?" because they know this is one measure of the strength of our group consciousness. This is one important way that you can help us continue to maintain the Synagogue, to continue our traditions which connect us to our forefathers, and help support our rare and precious Jewish community.</p>
-            
-            <p>Thank you to those of you who have already become members this year, and we invite everyone else to please join us in preserving what we enjoy here on all of these special occasions.</p>
-          </div>
+          <div 
+            className="text-gray-700 leading-relaxed space-y-4"
+            dangerouslySetInnerHTML={{ __html: content.aboutCommunityMessage || '' }}
+          />
         </div>
       </div>
     </div>

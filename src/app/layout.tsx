@@ -5,6 +5,8 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { AuthProvider } from "@/contexts/AuthContext";
 import PayPalProvider from "@/components/PayPalProvider";
+import { ToastProvider } from "@/contexts/ToastContext";
+import ToastContainer from "@/components/ui/ToastContainer";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -32,13 +34,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
-        <PayPalProvider>
-          <AuthProvider>
-            <Header />
-            <main>{children}</main>
-            <Footer />
-          </AuthProvider>
-        </PayPalProvider>
+        <ToastProvider>
+          <PayPalProvider>
+            <AuthProvider>
+              <Header />
+              <main>{children}</main>
+              <Footer />
+              <ToastContainer />
+            </AuthProvider>
+          </PayPalProvider>
+        </ToastProvider>
       </body>
     </html>
   );

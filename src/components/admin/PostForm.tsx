@@ -52,7 +52,7 @@ export default function PostForm({ post, isEditing = false }: PostFormProps) {
     try {
       const dataToSubmit = {
         ...formData,
-        isPublished: saveAndPublish || formData.isPublished
+        isPublished: saveAndPublish || (isEditing && formData.isPublished)
       };
 
       if (isEditing && post) {
@@ -151,19 +151,6 @@ export default function PostForm({ post, isEditing = false }: PostFormProps) {
                 />
               </div>
 
-              {/* Publish Status */}
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="isPublished"
-                  checked={formData.isPublished}
-                  onChange={(e) => handleInputChange('isPublished', e.target.checked)}
-                  className="h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
-                />
-                <label htmlFor="isPublished" className="ml-2 block text-sm text-gray-700">
-                  Publish immediately
-                </label>
-              </div>
             </div>
 
             {/* Form Actions */}

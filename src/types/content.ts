@@ -3,7 +3,7 @@ export interface ContentSection {
   key: string; // unique identifier for the content section
   title: string; // display name for admin
   description: string; // description of what this content is for
-  type: 'text' | 'rich_text' | 'list' | 'contact' | 'slide_array';
+  type: 'text' | 'rich_text' | 'list' | 'contact' | 'slide_array' | 'toggle';
   category: 'home' | 'about' | 'contact' | 'membership' | 'history' | 'hero';
   content: string | ContactInfo | SlideItem[] | string[]; // the actual content
   isEditable: boolean;

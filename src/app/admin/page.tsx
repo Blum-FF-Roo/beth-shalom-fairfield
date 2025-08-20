@@ -218,6 +218,8 @@ export default function AdminDashboard() {
         return '📞';
       case 'slide_array':
         return '🎞️';
+      case 'toggle':
+        return '🎛️';
       default:
         return '📄';
     }

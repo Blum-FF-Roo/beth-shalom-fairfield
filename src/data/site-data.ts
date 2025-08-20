@@ -26,19 +26,61 @@ export const navigationMenu: MenuItem[] = [
     href: "/"
   },
   {
-    id: "high-holy-days",
-    title: "High Holy Day Sermons", 
-    href: "/high-holy-day"
-  },
-  {
     id: "about",
     title: "About Us",
-    href: "/about",
+    href: "/about"
+  },
+  {
+    id: "services",
+    title: "Services",
+    href: "/services",
     subMenu: [
       {
-        id: "history",
-        title: "History",
-        href: "/about/history"
+        id: "shabbat",
+        title: "Shabbat",
+        href: "/shabbat"
+      },
+      {
+        id: "high-holy-days",
+        title: "High Holy Days",
+        href: "/high-holy-days"
+      },
+      {
+        id: "passover",
+        title: "Passover",
+        href: "/passover"
+      }
+    ]
+  },
+  {
+    id: "media-archive",
+    title: "Media Archive",
+    href: "/media-archive",
+    subMenu: [
+      {
+        id: "high-holy-days-sermons",
+        title: "High Holy Days Sermons",
+        href: "/high-holy-days-sermons"
+      },
+      {
+        id: "media-links",
+        title: "Media Links",
+        href: "/media-links"
+      },
+      {
+        id: "videos-audio",
+        title: "Videos/Audio",
+        href: "/media-archive"
+      },
+      {
+        id: "articles",
+        title: "Articles of Interest",
+        href: "/articles"
+      },
+      {
+        id: "judaism",
+        title: "All About Judaism",
+        href: "/judaism"
       }
     ]
   },
@@ -48,24 +90,26 @@ export const navigationMenu: MenuItem[] = [
     href: "/parshah"
   },
   {
-    id: "membership",
-    title: "Become a Member",
-    href: "/membership"
-  },
-  {
-    id: "tzedakah",
-    title: "Tzedakah-Donations",
-    href: "/tzedakah"
-  },
-  {
-    id: "judaism",
-    title: "All About Judaism",
-    href: "/judaism"
-  },
-  {
-    id: "articles",
-    title: "Articles of Interest", 
-    href: "/articles"
+    id: "donate",
+    title: "Donate",
+    href: "/tzedakah",
+    subMenu: [
+      {
+        id: "tzedakah",
+        title: "Tzedakah",
+        href: "/tzedakah"
+      },
+      {
+        id: "donate-beth-shalom",
+        title: "Donate to Beth Shalom",
+        href: "/tzedakah"
+      },
+      {
+        id: "membership",
+        title: "Become a Member",
+        href: "/membership"
+      }
+    ]
   },
   {
     id: "contact",
@@ -116,41 +160,27 @@ export const heroSlides: SlideItem[] = [
 export const programs: ProgramItem[] = [
   {
     id: "1",
-    title: "High Holy Day Services",
-    imageUrl: "/images/gettyimages-1869577249-612x612.jpg",
-    linkUrl: "/high-holy-day"
-  },
-  {
-    id: "2",
-    title: "Parashah Study",
-    imageUrl: "/images/pexels-cottonbro-5986499.jpg", 
-    linkUrl: "/parshah"
-  },
-  {
-    id: "3", 
-    title: "Contact Us",
-    imageUrl: "/images/pexels-cottonbro-5974346.jpg",
-    linkUrl: "/contact"
-  },
-  {
-    id: "4",
-    title: "Community Events",
-    imageUrl: "/images/pexels-cottonbro-5974866.jpg",
-    linkUrl: "/about"
-  },
-  {
-    id: "5",
-    title: "Tzedakah Projects", 
-    imageUrl: "/images/pexels-cottonbro-5985982.jpg",
-    linkUrl: "/tzedakah"
-  },
-  {
-    id: "6",
-    title: "Media Archive",
-    imageUrl: "/images/john and alice.jpg",
-    linkUrl: "/media-archive"
+    title: "Shabbat Services",
+    imageUrl: "/images/pexels-cottonbro-5986499.jpg",
+    linkUrl: "/shabbat"
   }
 ];
+
+// Default program options for the toggleable second program
+export const toggleablePrograms = {
+  highHolyDays: {
+    id: "2-hh",
+    title: "High Holy Days",
+    imageUrl: "/images/gettyimages-1869577249-612x612.jpg",
+    linkUrl: "/high-holy-days"
+  },
+  passover: {
+    id: "2-passover",
+    title: "Passover",
+    imageUrl: "/images/pexels-cottonbro-5974866.jpg",
+    linkUrl: "/passover"
+  }
+};
 
 export const actionItems: ActionItem[] = [
   {

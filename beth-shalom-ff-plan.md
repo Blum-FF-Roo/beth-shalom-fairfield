@@ -761,4 +761,47 @@ Video Talk by Gedaliah Gurfein 10/21/2012
 The Skype session from 10/21/2012 is on YouTube at      http://youtu.be/WrcI_hiRU6A
 
 
+### Latest Revisions
 
+Main page updates (remove unlisted areas):
+- hero slider
+- about section
+- programs section with the programs: shabbat services, high holy days or passover (this needs to be changeable by admin)
+- footer
+
+Hero slider:
+- three slides
+- each slide should have editable content: title, subtitle, content, button text, button link to page
+- change picture
+
+remove the menu hamburger drawer completely. change the menu to be only a header with these links:
+
+- small text at top right: login or admin links when logged in
+
+- main links(bigger text) (these are already implemented, they just need to be edited):
+# Home    ( also clicking on the upper left logo area take us to Home
+# About Us
+# Services
+## Shabat
+# High Holy Day
+## Passover
+# Media Archive
+## High Holy Day Sermons
+## Media Links
+## All the videos/audios  etc you have listed
+## Articles of Interest
+## All About Judaism
+# Parashah
+## do not change
+# Resources
+## do not change
+# Donate
+## Tzedakah
+## Donate to Beth Shalom
+# Contact Us
+
+the submenu links (##) should be a popover menu when hovering on a main link (#)
+
+all content areas need to be editable by admin (when given permission) and super admin
+
+the header needs to be sticky when the page scrolls. when it is at the top on the main page it should be transparent background. when scroll starts it should be opaque.

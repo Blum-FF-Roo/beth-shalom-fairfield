@@ -5,7 +5,7 @@ import PostList from '@/components/posts/PostList';
 import { Post } from '@/types';
 import { getPostsByCategory } from '@/lib/posts';
 
-export default function HighHolyDayPage() {
+export default function HighHolyDaysSermonsPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -20,8 +20,8 @@ export default function HighHolyDayPage() {
       const fetchedPosts = await getPostsByCategory('high-holy-day', true); // Only published posts
       setPosts(fetchedPosts);
     } catch (err) {
-      setError('Failed to load High Holy Day posts');
-      console.error('Error loading High Holy Day posts:', err);
+      setError('Failed to load High Holy Days sermons');
+      console.error('Error loading High Holy Days sermons:', err);
     } finally {
       setLoading(false);
     }
@@ -56,10 +56,10 @@ export default function HighHolyDayPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{color: '#F58C28'}}>
-            High Holy Day Sermons
+            High Holy Days Sermons
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Meaningful sermons and teachings from our High Holy Day services
+            Meaningful sermons and teachings from our High Holy Days services
           </p>
         </div>
 

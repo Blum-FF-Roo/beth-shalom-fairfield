@@ -8,7 +8,7 @@ import PostDisplay from '@/components/posts/PostDisplay';
 import { Post } from '@/types';
 import { getPostById } from '@/lib/posts';
 
-export default function HighHolyDayPostPage() {
+export default function HighHolyDaysPostPage() {
   const params = useParams();
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
@@ -65,12 +65,12 @@ export default function HighHolyDayPostPage() {
               {error || 'Post not found'}
             </h1>
             <Link
-              href="/high-holy-day"
+              href="/high-holy-days-sermons"
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
               style={{backgroundColor: '#F58C28'}}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to High Holy Days
+              Back to High Holy Days Sermons
             </Link>
           </div>
         </div>
@@ -84,11 +84,11 @@ export default function HighHolyDayPostPage() {
         {/* Back Link */}
         <div className="mb-8">
           <Link
-            href="/high-holy-day"
+            href="/high-holy-days-sermons"
             className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors duration-200"
           >
             <ArrowLeft className="h-5 w-5 mr-1" />
-            Back to High Holy Days
+            Back to High Holy Days Sermons
           </Link>
         </div>
 

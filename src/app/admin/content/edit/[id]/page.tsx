@@ -33,6 +33,7 @@ export default function EditContentPage({ params }: Props) {
   const [listContent, setListContent] = useState<string[]>([]);
   const [contactContent, setContactContent] = useState<ContactInfo | null>(null);
   const [slideContent, setSlideContent] = useState<SlideItem[]>([]);
+  const [toggleContent, setToggleContent] = useState('');
 
   useEffect(() => {
     // Resolve params promise
@@ -85,6 +86,9 @@ export default function EditContentPage({ params }: Props) {
         case 'slide_array':
           setSlideContent(section.content as SlideItem[]);
           break;
+        case 'toggle':
+          setToggleContent(section.content as string);
+          break;
       }
     } catch (error) {
       console.error('Error loading content section:', error);
@@ -117,6 +121,9 @@ export default function EditContentPage({ params }: Props) {
           break;
         case 'slide_array':
           contentToSave = slideContent;
+          break;
+        case 'toggle':
+          contentToSave = toggleContent;
           break;
         default:
           throw new Error('Unknown content type');
@@ -515,6 +522,41 @@ export default function EditContentPage({ params }: Props) {
                       </div>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {contentSection.type === 'toggle' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-4">
+                    {contentSection.title}
+                  </label>
+                  <div className="space-y-2">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="toggle-option"
+                        value="highHolyDays"
+                        checked={toggleContent === 'highHolyDays'}
+                        onChange={(e) => setToggleContent(e.target.value)}
+                        className="mr-3 h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300"
+                      />
+                      <span className="text-sm font-medium text-gray-900">High Holy Days</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="toggle-option"
+                        value="passover"
+                        checked={toggleContent === 'passover'}
+                        onChange={(e) => setToggleContent(e.target.value)}
+                        className="mr-3 h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300"
+                      />
+                      <span className="text-sm font-medium text-gray-900">Passover</span>
+                    </label>
+                  </div>
+                  <p className="mt-2 text-xs text-gray-500">
+                    This controls which program appears in the Programs section of the home page.
+                  </p>
                 </div>
               )}
             </div>

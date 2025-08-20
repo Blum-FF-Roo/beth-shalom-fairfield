@@ -46,6 +46,17 @@ Special THANKS to Steven Emanuel Blum for helping to make this website happen. H
     defaultContent: heroSlides
   },
 
+  // Programs section toggle
+  {
+    id: 'home-programs-toggle',
+    key: 'programsToggle',
+    title: 'Programs Toggle Setting',
+    description: 'Toggle between High Holy Days and Passover for the second program',
+    type: 'toggle',
+    category: 'home',
+    defaultContent: 'highHolyDays' // Options: 'highHolyDays' or 'passover'
+  },
+
   // About page sections
   {
     id: 'about-administration',

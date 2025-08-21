@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft, Save, Trash2, Plus } from 'lucide-react';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import RichTextEditor from '@/components/admin/RichTextEditor';
+import ImageUpload from '@/components/admin/ImageUpload';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/contexts/ToastContext';
 import { ContentSection, ContactInfo, SlideItem } from '@/types/content';
@@ -451,30 +452,34 @@ export default function EditContentPage({ params }: Props) {
                             <Trash2 className="h-4 w-4" />
                           </button>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Title
-                            </label>
-                            <input
-                              type="text"
-                              value={slide.title}
-                              onChange={(e) => updateSlide(index, 'title', e.target.value)}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                            />
+                        <div className="space-y-4">
+                          {/* Text Fields */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Title
+                              </label>
+                              <input
+                                type="text"
+                                value={slide.title}
+                                onChange={(e) => updateSlide(index, 'title', e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Subtitle
+                              </label>
+                              <input
+                                type="text"
+                                value={slide.subtitle || ''}
+                                onChange={(e) => updateSlide(index, 'subtitle', e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                              />
+                            </div>
                           </div>
+                          
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Subtitle
-                            </label>
-                            <input
-                              type="text"
-                              value={slide.subtitle || ''}
-                              onChange={(e) => updateSlide(index, 'subtitle', e.target.value)}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                            />
-                          </div>
-                          <div className="md:col-span-2">
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Description
                             </label>
@@ -485,38 +490,59 @@ export default function EditContentPage({ params }: Props) {
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                             />
                           </div>
+
+                          {/* Image Upload */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Image URL
+                              Slide Image
+                            </label>
+                            <ImageUpload
+                              currentImageUrl={slide.imageUrl}
+                              onImageChange={(imageUrl) => updateSlide(index, 'imageUrl', imageUrl)}
+                              onImageDelete={() => updateSlide(index, 'imageUrl', '')}
+                              disabled={saving}
+                            />
+                          </div>
+
+                          {/* Manual Image URL (fallback) */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Image URL (Manual Override)
+                              <span className="text-xs text-gray-500 ml-2">Optional: Enter URL directly if not using upload</span>
                             </label>
                             <input
                               type="url"
                               value={slide.imageUrl}
                               onChange={(e) => updateSlide(index, 'imageUrl', e.target.value)}
+                              placeholder="https://..."
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                             />
                           </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Link URL
-                            </label>
-                            <input
-                              type="url"
-                              value={slide.linkUrl}
-                              onChange={(e) => updateSlide(index, 'linkUrl', e.target.value)}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Link Text
-                            </label>
-                            <input
-                              type="text"
-                              value={slide.linkText}
-                              onChange={(e) => updateSlide(index, 'linkText', e.target.value)}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                            />
+
+                          {/* Link Fields */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Link URL
+                              </label>
+                              <input
+                                type="url"
+                                value={slide.linkUrl}
+                                onChange={(e) => updateSlide(index, 'linkUrl', e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Link Text
+                              </label>
+                              <input
+                                type="text"
+                                value={slide.linkText}
+                                onChange={(e) => updateSlide(index, 'linkText', e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                              />
+                            </div>
                           </div>
                         </div>
                       </div>

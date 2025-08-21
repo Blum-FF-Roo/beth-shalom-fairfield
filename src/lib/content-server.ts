@@ -1,9 +1,5 @@
-import { collection, doc, getDocs, getDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { getAllContentSections } from '@/lib/content-schema';
 import { ContentSection } from '@/types/content';
-import { contentSections } from '@/data/content-sections';
-
-const CONTENT_COLLECTION = 'content_sections';
 
 // Server-side content fetching (for Server Components)
 export async function getContentByKey(key: string): Promise<unknown> {
@@ -16,15 +12,13 @@ export async function getContentByKey(key: string): Promise<unknown> {
     if (section) {
       return section.content;
     }
-    // Fallback to default content from static data
-    const defaultSection = contentSections.find(s => s.key === key);
-    return defaultSection?.defaultContent || null;
+    
+    // No fallback - all content should be in database
+    console.warn(`Content section not found for key "${key}"`);
+    return null;
   } catch (error) {
     console.error(`Error fetching content for key "${key}":`, error);
-    
-    // Return static fallback on error
-    const defaultSection = contentSections.find(s => s.key === key);
-    return defaultSection?.defaultContent || null;
+    return null;
   }
 }
 
@@ -41,9 +35,8 @@ async function getCachedSections(): Promise<ContentSection[]> {
     return cachedQueryResult.sections;
   }
   
-  // Fetch fresh data
-  const querySnapshot = await getDocs(collection(db, CONTENT_COLLECTION));
-  const sections = querySnapshot.docs.map(doc => doc.data()) as ContentSection[];
+  // Fetch fresh data from database
+  const sections = await getAllContentSections();
   
   // Update cache
   cachedQueryResult = { sections, timestamp: now };
@@ -63,11 +56,8 @@ export async function getMultipleContentByKeys(keys: string[]): Promise<Record<s
       if (section) {
         contentMap[key] = section.content;
       } else {
-        // Use default content as fallback
-        const defaultSection = contentSections.find(s => s.key === key);
-        if (defaultSection) {
-          contentMap[key] = defaultSection.defaultContent;
-        }
+        console.warn(`Content section not found for key "${key}"`);
+        contentMap[key] = null;
       }
     }
     
@@ -75,13 +65,10 @@ export async function getMultipleContentByKeys(keys: string[]): Promise<Record<s
   } catch (error) {
     console.error('Error fetching multiple content sections:', error);
     
-    // Return static fallbacks on error
+    // Return nulls on error - no static fallbacks
     const contentMap: Record<string, unknown> = {};
     for (const key of keys) {
-      const defaultSection = contentSections.find(s => s.key === key);
-      if (defaultSection) {
-        contentMap[key] = defaultSection.defaultContent;
-      }
+      contentMap[key] = null;
     }
     return contentMap;
   }
@@ -90,11 +77,10 @@ export async function getMultipleContentByKeys(keys: string[]): Promise<Record<s
 // Lightweight function to check if content exists (for conditional rendering)
 export async function contentExists(key: string): Promise<boolean> {
   try {
-    const querySnapshot = await getDocs(collection(db, CONTENT_COLLECTION));
-    const sections = querySnapshot.docs.map(doc => doc.data()) as ContentSection[];
+    const sections = await getCachedSections();
     return sections.some(s => s.key === key);
   } catch (error) {
     console.error(`Error checking if content exists for key "${key}":`, error);
-    return contentSections.some(s => s.key === key);
+    return false;
   }
 }

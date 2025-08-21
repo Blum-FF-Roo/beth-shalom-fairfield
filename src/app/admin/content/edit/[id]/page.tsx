@@ -10,7 +10,7 @@ import ImageUpload from '@/components/admin/ImageUpload';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/contexts/ToastContext';
 import { ContentSection, ContactInfo, SlideItem } from '@/types/content';
-import { getContentSection, updateContentSection, userHasContentPermission } from '@/lib/content';
+import { getContentSectionById, updateContentSectionContent, userHasContentPermission } from '@/lib/content-schema';
 
 interface Props {
   params: Promise<{
@@ -53,7 +53,7 @@ export default function EditContentPage({ params }: Props) {
   const loadContentSection = async () => {
     try {
       setLoading(true);
-      const section = await getContentSection(paramsId);
+      const section = await getContentSectionById(paramsId);
       
       if (!section) {
         showError('Not Found', 'Content section not found.');
@@ -137,7 +137,7 @@ export default function EditContentPage({ params }: Props) {
           throw new Error('Unknown content type');
       }
 
-      await updateContentSection(contentSection.id, contentToSave, userData.uid);
+      await updateContentSectionContent(contentSection.id, contentToSave, userData.uid);
       showSuccess('Content Updated', 'Content section has been successfully updated.');
       router.push('/admin?tab=content');
     } catch (error) {

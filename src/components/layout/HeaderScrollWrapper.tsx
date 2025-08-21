@@ -15,7 +15,7 @@ interface HeaderScrollWrapperProps {
 
 export default function HeaderScrollWrapper({ logoUrl }: HeaderScrollWrapperProps) {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [, setActiveDropdown] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, userData, logout } = useAuth();
   const pathname = usePathname();

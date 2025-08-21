@@ -1,7 +1,7 @@
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { ContentSection, ContentPermission } from '@/types/content';
-import { getAllContentSections, initializeContentSections } from '@/lib/content';
+import { getAllContentSections as getAllContentSectionsFromSchema } from '@/lib/content-schema';
 import { getUserById, UserData } from '@/lib/users';
 
 // Optimized batch permission checking
@@ -77,14 +77,8 @@ export async function loadContentSectionsOptimized(userId?: string, userRole?: s
   usersCache: Record<string, UserData>;
 }> {
   try {
-    // Try to load existing sections first
-    let sections = await getAllContentSections();
-    
-    // Only initialize if we have very few sections (likely not initialized)
-    if (sections.length < 10) {
-      await initializeContentSections();
-      sections = await getAllContentSections();
-    }
+    // Load all sections from database (no initialization needed)
+    const sections = await getAllContentSectionsFromSchema();
     
     let authorizedSections: ContentSection[] = [];
     

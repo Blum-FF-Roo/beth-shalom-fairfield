@@ -407,23 +407,36 @@ export default function AdminDashboardOptimized() {
           {/* Website Sections Tab Content */}
           {activeTab === 'content' && (
             <>
-              {/* Category Filter */}
+              {/* Header with Category Filter and Create Button */}
               <div className="mb-6">
-                <div className="flex flex-wrap gap-2">
-                  {availableContentCategories.map((category) => (
-                    <button
-                      key={category.value}
-                      onClick={() => setSelectedContentCategory(category.value)}
-                      className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                        selectedContentCategory === category.value
-                          ? 'text-white shadow-sm'
-                          : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
-                      }`}
-                      style={selectedContentCategory === category.value ? {backgroundColor: '#F58C28'} : {}}
-                    >
-                      {category.label}
-                    </button>
-                  ))}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div className="flex flex-wrap gap-2">
+                    {availableContentCategories.map((category) => (
+                      <button
+                        key={category.value}
+                        onClick={() => setSelectedContentCategory(category.value)}
+                        className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                          selectedContentCategory === category.value
+                            ? 'text-white shadow-sm'
+                            : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                        }`}
+                        style={selectedContentCategory === category.value ? {backgroundColor: '#F58C28'} : {}}
+                      >
+                        {category.label}
+                      </button>
+                    ))}
+                  </div>
+                  
+                  {/* Create New Section Button (Super-admin only) */}
+                  {/* {userData?.role === 'super-admin' && ( */}
+                  {/*   <Link */}
+                  {/*     href="/admin/content/create" */}
+                  {/*     className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200" */}
+                  {/*   > */}
+                  {/*     <Plus className="w-4 h-4 mr-2" /> */}
+                  {/*     Create New Section */}
+                  {/*   </Link> */}
+                  {/* )} */}
                 </div>
               </div>
 

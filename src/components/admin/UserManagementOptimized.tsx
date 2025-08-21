@@ -15,7 +15,7 @@ import {
   getAllContentSections, 
   grantContentPermission, 
   revokeContentPermission
-} from '@/lib/content';
+} from '@/lib/content-schema';
 import { getBatchUserContentPermissions } from '@/lib/user-permissions-optimized';
 
 export default function UserManagementOptimized() {

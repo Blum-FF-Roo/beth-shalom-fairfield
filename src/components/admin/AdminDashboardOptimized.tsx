@@ -51,12 +51,20 @@ export default function AdminDashboardOptimized() {
 
   const contentCategories = [
     { value: 'all', label: 'All Sections' },
+    { value: 'logo', label: 'Site Logo' },
     { value: 'home', label: 'Home Page' },
     { value: 'hero', label: 'Hero Slider' },
     { value: 'about', label: 'About Page' },
     { value: 'contact', label: 'Contact Page' },
     { value: 'membership', label: 'Membership Page' },
-    { value: 'services', label: 'Services Pages' }
+    { value: 'services', label: 'Services Pages' },
+    { value: 'articles', label: 'Articles of Interest' },
+    { value: 'judaism', label: 'All About Judaism' },
+    { value: 'media', label: 'Media Archive' },
+    { value: 'parshah', label: 'Parshah' },
+    { value: 'tzedakah', label: 'Tzedakah/Donate' },
+    { value: 'sermons', label: 'High Holy Days Sermons' },
+    { value: 'links', label: 'Media Links' }
   ];
 
   const filterPosts = useCallback(() => {
@@ -160,12 +168,20 @@ export default function AdminDashboardOptimized() {
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
+      'logo': 'bg-slate-100 text-slate-800',
       'home': 'bg-blue-100 text-blue-800',
       'hero': 'bg-purple-100 text-purple-800',
       'about': 'bg-green-100 text-green-800',
       'contact': 'bg-yellow-100 text-yellow-800',
       'membership': 'bg-red-100 text-red-800',
-      'services': 'bg-indigo-100 text-indigo-800'
+      'services': 'bg-indigo-100 text-indigo-800',
+      'articles': 'bg-orange-100 text-orange-800',
+      'judaism': 'bg-teal-100 text-teal-800',
+      'media': 'bg-pink-100 text-pink-800',
+      'parshah': 'bg-cyan-100 text-cyan-800',
+      'tzedakah': 'bg-emerald-100 text-emerald-800',
+      'sermons': 'bg-violet-100 text-violet-800',
+      'links': 'bg-amber-100 text-amber-800'
     };
     return colors[category] || 'bg-gray-100 text-gray-800';
   };
@@ -184,6 +200,8 @@ export default function AdminDashboardOptimized() {
         return '🎞️';
       case 'toggle':
         return '🎛️';
+      case 'image':
+        return '🖼️';
       default:
         return '📄';
     }
@@ -389,23 +407,36 @@ export default function AdminDashboardOptimized() {
           {/* Website Sections Tab Content */}
           {activeTab === 'content' && (
             <>
-              {/* Category Filter */}
+              {/* Header with Category Filter and Create Button */}
               <div className="mb-6">
-                <div className="flex flex-wrap gap-2">
-                  {availableContentCategories.map((category) => (
-                    <button
-                      key={category.value}
-                      onClick={() => setSelectedContentCategory(category.value)}
-                      className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                        selectedContentCategory === category.value
-                          ? 'text-white shadow-sm'
-                          : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
-                      }`}
-                      style={selectedContentCategory === category.value ? {backgroundColor: '#F58C28'} : {}}
-                    >
-                      {category.label}
-                    </button>
-                  ))}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div className="flex flex-wrap gap-2">
+                    {availableContentCategories.map((category) => (
+                      <button
+                        key={category.value}
+                        onClick={() => setSelectedContentCategory(category.value)}
+                        className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                          selectedContentCategory === category.value
+                            ? 'text-white shadow-sm'
+                            : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                        }`}
+                        style={selectedContentCategory === category.value ? {backgroundColor: '#F58C28'} : {}}
+                      >
+                        {category.label}
+                      </button>
+                    ))}
+                  </div>
+                  
+                  {/* Create New Section Button (Super-admin only) */}
+                  {/* {userData?.role === 'super-admin' && ( */}
+                  {/*   <Link */}
+                  {/*     href="/admin/content/create" */}
+                  {/*     className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200" */}
+                  {/*   > */}
+                  {/*     <Plus className="w-4 h-4 mr-2" /> */}
+                  {/*     Create New Section */}
+                  {/*   </Link> */}
+                  {/* )} */}
                 </div>
               </div>
 

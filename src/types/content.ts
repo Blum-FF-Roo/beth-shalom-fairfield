@@ -3,12 +3,15 @@ export interface ContentSection {
   key: string; // unique identifier for the content section
   title: string; // display name for admin
   description: string; // description of what this content is for
-  type: 'text' | 'rich_text' | 'list' | 'contact' | 'slide_array' | 'toggle';
-  category: 'home' | 'about' | 'contact' | 'membership' | 'history' | 'hero' | 'services';
+  type: 'text' | 'rich_text' | 'list' | 'contact' | 'slide_array' | 'toggle' | 'image';
+  category: 'home' | 'about' | 'contact' | 'membership' | 'history' | 'hero' | 'logo' | 'services' | 'articles' | 'judaism' | 'media' | 'parshah' | 'tzedakah' | 'sermons' | 'links';
   content: string | ContactInfo | SlideItem[] | string[]; // the actual content
+  defaultContent?: string | ContactInfo | SlideItem[] | string[]; // fallback content (optional)
   isEditable: boolean;
+  createdAt: Date;
   updatedAt: Date;
   updatedBy: string; // user ID who last updated
+  createdBy: string; // user ID who created the section
 }
 
 export interface ContactInfo {
@@ -43,12 +46,4 @@ export interface ContentPermission {
   grantedBy: string; // super admin who granted permission
 }
 
-export interface ContentSectionDefinition {
-  id: string;
-  key: string;
-  title: string;
-  description: string;
-  type: ContentSection['type'];
-  category: ContentSection['category'];
-  defaultContent: string | ContactInfo | SlideItem[] | string[];
-}
+// ContentSectionDefinition removed - now using ContentSection directly with defaultContent field

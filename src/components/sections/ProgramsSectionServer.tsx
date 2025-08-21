@@ -1,28 +1,14 @@
-'use client';
-
 import Link from 'next/link';
 import Image from 'next/image';
-import { useContent } from '@/hooks/useContent';
+import { getContentByKey } from '@/lib/content-server';
 import { programs, toggleablePrograms } from '@/data/site-data';
 
-export default function ProgramsSectionServer() {
-  // Fetch toggle setting with real-time updates
-  const { content: toggleSetting, loading } = useContent('programsToggle', 'highHolyDays');
-  
-  if (loading) {
-    return (
-      <section className="py-12 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto" style={{borderColor: '#F58C28'}}></div>
-          </div>
-        </div>
-      </section>
-    );
-  }
+export default async function ProgramsSectionServer() {
+  // Load toggle setting server-side
+  const toggleSetting = await getContentByKey('programsToggle');
   
   // Select the second program based on toggle setting
-  const currentToggle = toggleSetting as string || 'highHolyDays';
+  const currentToggle = (toggleSetting as string) || 'highHolyDays';
   const secondProgram = currentToggle === 'passover' ? toggleablePrograms.passover : toggleablePrograms.highHolyDays;
   
   // Create the programs array with the toggle selection
@@ -55,8 +41,6 @@ export default function ProgramsSectionServer() {
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-black bg-opacity-20"></div>
                 </div>
                 
                 {/* Content */}

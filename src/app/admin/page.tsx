@@ -55,7 +55,8 @@ export default function AdminDashboard() {
     { value: 'hero', label: 'Hero Slider' },
     { value: 'about', label: 'About Page' },
     { value: 'contact', label: 'Contact Page' },
-    { value: 'membership', label: 'Membership Page' }
+    { value: 'membership', label: 'Membership Page' },
+    { value: 'services', label: 'Services Pages' }
   ];
 
   const filterPosts = useCallback(() => {
@@ -201,7 +202,8 @@ export default function AdminDashboard() {
       'hero': 'bg-purple-100 text-purple-800',
       'about': 'bg-green-100 text-green-800',
       'contact': 'bg-yellow-100 text-yellow-800',
-      'membership': 'bg-red-100 text-red-800'
+      'membership': 'bg-red-100 text-red-800',
+      'services': 'bg-indigo-100 text-indigo-800'
     };
     return colors[category] || 'bg-gray-100 text-gray-800';
   };

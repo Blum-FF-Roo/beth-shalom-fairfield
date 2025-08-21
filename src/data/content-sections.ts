@@ -213,5 +213,66 @@ Special THANKS to Steven Emanuel Blum for helping to make this website happen. H
 <p>This synagogue is maintained by volunteers who contribute their time and energy because they recognize the benefit of having our own house of worship and preserving our Jewish heritage. Our Synagogue is an important part of our Jewish community. The Board of Directors of the Synagogue encourages each of you to become a member of Congregation Beth Shalom. Even if you pay the membership dues in installments over the year, becoming a member supports our community. We are always asked by visitors, "How many members do you have?" because they know this is one measure of the strength of our group consciousness. This is one important way that you can help us continue to maintain the Synagogue, to continue our traditions which connect us to our forefathers, and help support our rare and precious Jewish community.</p>
 
 <p>Thank you to those of you who have already become members this year, and we invite everyone else to please join us in preserving what we enjoy here on all of these special occasions.</p>`
+  },
+
+  // Service pages content sections
+  {
+    id: 'shabbat-page-content',
+    key: 'shabbatPageContent',
+    title: 'Shabbat Services Page Content',
+    description: 'Main content for the Shabbat services page',
+    type: 'rich_text',
+    category: 'services',
+    defaultContent: `<h2>Welcome to Shabbat</h2>
+<p>Shabbat is the cornerstone of Jewish life, a weekly celebration that begins at sundown on Friday and continues until nightfall on Saturday. At Beth Shalom Fairfield, we welcome you to join us for this sacred time of rest, reflection, and community.</p>
+
+<h3>Friday Evening Services</h3>
+<p>Our Friday evening services welcome the Shabbat with prayers, songs, and the lighting of Shabbat candles. This intimate service creates a peaceful transition from the week's activities to the sanctity of Shabbat.</p>
+
+<h3>Saturday Morning Services</h3>
+<p>Saturday morning services include Torah reading, prayers, and often feature special celebrations such as Bar/Bat Mitzvahs, baby namings, and other lifecycle events. All are welcome to participate in this meaningful worship experience.</p>
+
+<h3>Service Times & Information</h3>
+<p>Service times may vary throughout the year. Please contact us for current schedule information and any special Shabbat programs or events.</p>`
+  },
+
+  {
+    id: 'high-holy-days-page-content',
+    key: 'highHolyDaysPageContent',
+    title: 'High Holy Days Page Content',
+    description: 'Main content for the High Holy Days page',
+    type: 'rich_text',
+    category: 'services',
+    defaultContent: `<h2>Rosh Hashanah & Yom Kippur</h2>
+<p>The High Holy Days, also known as the Days of Awe, are the holiest time of the Jewish year. At Beth Shalom Fairfield, we observe these sacred days with meaningful services, reflection, and community celebration.</p>
+
+<h3>Rosh Hashanah - The Jewish New Year</h3>
+<p>Rosh Hashanah marks the beginning of the Jewish year and is a time for reflection, repentance, and renewal. We gather to hear the sound of the shofar and celebrate the start of a new year with hope and intention.</p>
+
+<h3>Yom Kippur - The Day of Atonement</h3>
+<p>Yom Kippur is the holiest day of the Jewish year, a day of fasting, prayer, and atonement. We come together to seek forgiveness and make amends as we prepare for the year ahead.</p>
+
+<h3>Service Information</h3>
+<p>All are welcome to join us for High Holy Day services. Please contact us for specific service times and any special arrangements.</p>`
+  },
+
+  {
+    id: 'passover-page-content',
+    key: 'passoverPageContent',
+    title: 'Passover Page Content',
+    description: 'Main content for the Passover page',
+    type: 'rich_text',
+    category: 'services',
+    defaultContent: `<h2>Chag Pesach Sameach</h2>
+<p>Passover (Pesach) is one of the most significant holidays in the Jewish calendar, commemorating the liberation of the Israelites from slavery in Egypt. At Beth Shalom Fairfield, we celebrate this festival of freedom with community Seders and meaningful observances.</p>
+
+<h3>The Passover Story</h3>
+<p>The story of Passover tells of Moses leading the Hebrew people out of bondage in Egypt, guided by God through miraculous signs and wonders. This narrative of liberation continues to inspire people around the world in their own struggles for freedom and justice.</p>
+
+<h3>Community Seder</h3>
+<p>Join us for our annual community Seder, where we gather to retell the Passover story, enjoy traditional foods, and celebrate together as one family. Our Seder welcomes people of all backgrounds and levels of Jewish knowledge.</p>
+
+<h3>Passover Observance</h3>
+<p>During the eight days of Passover, we remember our ancestors' journey from slavery to freedom by avoiding chametz (leavened products) and eating matzah (unleavened bread), among other traditions that connect us to this pivotal moment in Jewish history.</p>`
   }
 ];

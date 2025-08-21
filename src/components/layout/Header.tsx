@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Settings, LogOut, Users, ChevronDown } from 'lucide-react';
+import { Settings, LogOut, Users, ChevronDown, Menu, X } from 'lucide-react';
 import { siteConfig, navigationMenu } from '@/data/site-data';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
@@ -11,6 +11,7 @@ import { useAuth } from '@/contexts/AuthContext';
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, userData, logout } = useAuth();
   const pathname = usePathname();
   const isMainPage = pathname === '/';
@@ -39,6 +40,14 @@ export default function Header() {
 
   const handleDropdownLeave = () => {
     setActiveDropdown(null);
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
   };
 
   const headerBgClass = isMainPage && !isScrolled 
@@ -157,7 +166,7 @@ export default function Header() {
                   onMouseLeave={(e) => {
                     if (item.id === 'donate') {
                       e.currentTarget.style.backgroundColor = 'transparent';
-                      e.currentTarget.style.color = isMainPage && !isScrolled ? 'white' : '#374151';
+                      e.currentTarget.style.color = ''; // Clear inline style to let CSS classes take over
                     }
                   }}
                 >
@@ -190,12 +199,134 @@ export default function Header() {
           </nav>
 
           {/* Mobile Menu Button */}
-          <div className="lg:hidden">
-            <div className={cn(
-              "text-xs px-3 py-1 rounded",
-              textColorClass
-            )}>
-              Menu coming soon
+          <button
+            onClick={toggleMobileMenu}
+            className={cn(
+              "lg:hidden p-2 rounded-md transition-colors duration-200",
+              textColorClass,
+              isMainPage && !isScrolled 
+                ? 'hover:bg-white hover:bg-opacity-20' 
+                : 'hover:bg-gray-100'
+            )}
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu Drawer */}
+      <div className={cn(
+        "fixed inset-0 z-40 lg:hidden",
+        isMobileMenuOpen ? "block" : "hidden"
+      )}>
+        {/* Backdrop */}
+        <div 
+          className="absolute inset-0 bg-black bg-opacity-50"
+          onClick={closeMobileMenu}
+        />
+        
+        {/* Drawer */}
+        <div className={cn(
+          "absolute top-0 right-0 h-full w-80 max-w-sm bg-white shadow-xl transform transition-transform duration-300 ease-in-out",
+          isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+        )}>
+          <div className="flex flex-col h-full">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-900">Menu</h2>
+              <button
+                onClick={closeMobileMenu}
+                className="p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Navigation */}
+            <nav className="flex-1 px-4 py-6 overflow-y-auto">
+              <div className="space-y-1">
+                {navigationMenu.map((item) => (
+                  <div key={item.id}>
+                    <Link
+                      href={item.href}
+                      onClick={closeMobileMenu}
+                      className={cn(
+                        "block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200",
+                        item.id === 'donate' 
+                          ? 'text-white bg-orange-500 hover:bg-orange-600' 
+                          : 'text-gray-700 hover:text-orange-600 hover:bg-gray-50'
+                      )}
+                    >
+                      {item.title}
+                    </Link>
+                    
+                    {/* Submenu items */}
+                    {item.subMenu && (
+                      <div className="ml-4 mt-1 space-y-1">
+                        {item.subMenu.map((subItem) => (
+                          <Link
+                            key={subItem.id}
+                            href={subItem.href}
+                            onClick={closeMobileMenu}
+                            className="block px-3 py-1 text-sm text-gray-600 hover:text-orange-600 hover:bg-gray-50 rounded-md transition-colors duration-200"
+                          >
+                            {subItem.title}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </nav>
+
+            {/* Bottom section with auth links */}
+            <div className="border-t border-gray-200 p-4">
+              {!user ? (
+                <Link
+                  href="/admin/login"
+                  onClick={closeMobileMenu}
+                  className="block px-3 py-2 text-sm text-gray-700 hover:text-orange-600 hover:bg-gray-50 rounded-md transition-colors duration-200"
+                >
+                  Login
+                </Link>
+              ) : (
+                <div className="space-y-1">
+                  <Link
+                    href="/admin"
+                    onClick={closeMobileMenu}
+                    className="flex items-center px-3 py-2 text-sm text-gray-700 hover:text-orange-600 hover:bg-gray-50 rounded-md transition-colors duration-200"
+                  >
+                    <Settings className="h-4 w-4 mr-2" />
+                    Admin
+                  </Link>
+                  {userData?.role === 'super-admin' && (
+                    <Link
+                      href="/admin/users"
+                      onClick={closeMobileMenu}
+                      className="flex items-center px-3 py-2 text-sm text-gray-700 hover:text-orange-600 hover:bg-gray-50 rounded-md transition-colors duration-200"
+                    >
+                      <Users className="h-4 w-4 mr-2" />
+                      Users
+                    </Link>
+                  )}
+                  <button
+                    onClick={() => {
+                      closeMobileMenu();
+                      handleLogout();
+                    }}
+                    className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:text-orange-600 hover:bg-gray-50 rounded-md transition-colors duration-200"
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

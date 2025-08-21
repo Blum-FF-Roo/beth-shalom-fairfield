@@ -1,18 +1,20 @@
-'use client';
+import { getContentByKey } from '@/lib/content-server';
+import HoverButton from '@/components/ui/HoverButton';
 
-import Link from 'next/link';
-import { useContent } from '@/hooks/useContent';
+export default async function ShabbatPage() {
+  // Fetch content server-side with fallback
+  const shabbatContent = await getContentByKey('shabbatPageContent') as string || 
+    `<h2>Welcome to Shabbat</h2>
+<p>Shabbat is the cornerstone of Jewish life, a weekly celebration that begins at sundown on Friday and continues until nightfall on Saturday. At Beth Shalom Fairfield, we welcome you to join us for this sacred time of rest, reflection, and community.</p>
 
-export default function ShabbatPage() {
-  const { content: shabbatContent, loading } = useContent('shabbatPageContent', '');
+<h3>Friday Evening Services</h3>
+<p>Our Friday evening services welcome the Shabbat with prayers, songs, and the lighting of Shabbat candles. This intimate service creates a peaceful transition from the week's activities to the sanctity of Shabbat.</p>
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 pt-32 pb-12 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{borderColor: '#F58C28'}}></div>
-      </div>
-    );
-  }
+<h3>Saturday Morning Services</h3>
+<p>Saturday morning services include Torah reading, prayers, and often feature special celebrations such as Bar/Bat Mitzvahs, baby namings, and other lifecycle events. All are welcome to participate in this meaningful worship experience.</p>
+
+<h3>Service Times & Information</h3>
+<p>Service times may vary throughout the year. Please contact us for current schedule information and any special Shabbat programs or events.</p>`;
   return (
     <div className="min-h-screen bg-gray-50 pt-32 pb-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,40 +36,19 @@ export default function ShabbatPage() {
             {/* Links */}
             <div className="mt-8 pt-6 border-t border-gray-200">
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="/about"
-                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white transition-colors duration-200"
-                  style={{ backgroundColor: '#F58C28' }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E67C1F'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#F58C28'}
-                >
+                <HoverButton href="/about" variant="primary">
                   About Our Community
                   <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
-                </Link>
+                </HoverButton>
                 
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center px-6 py-3 border-2 text-base font-medium rounded-md transition-colors duration-200"
-                  style={{ 
-                    borderColor: '#F58C28', 
-                    color: '#F58C28' 
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#F58C28';
-                    e.currentTarget.style.color = 'white';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = '#F58C28';
-                  }}
-                >
+                <HoverButton href="/contact" variant="secondary">
                   Contact Us
                   <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
-                </Link>
+                </HoverButton>
               </div>
             </div>
           </div>

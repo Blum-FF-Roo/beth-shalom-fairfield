@@ -1,18 +1,18 @@
-import HeroSlider from "@/components/sections/HeroSlider";
-import AboutSection from "@/components/sections/AboutSection";
-import ProgramsSection from "@/components/sections/ProgramsSection";
+import HeroSliderServer from "@/components/sections/HeroSliderServer";
+import AboutSectionServer from "@/components/sections/AboutSectionServer";
+import ProgramsSectionServer from "@/components/sections/ProgramsSectionServer";
 
 export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <HeroSlider />
+      <HeroSliderServer />
       
       {/* About Section */}
-      <AboutSection />
+      <AboutSectionServer />
       
       {/* Programs Section */}
-      <ProgramsSection />
+      <ProgramsSectionServer />
     </div>
   );
 }

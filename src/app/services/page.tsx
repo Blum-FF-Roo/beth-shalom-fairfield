@@ -1,6 +1,4 @@
-'use client';
-
-import Link from 'next/link';
+import HoverButton from '@/components/ui/HoverButton';
 
 export default function ServicesPage() {
   const services = [
@@ -40,10 +38,10 @@ export default function ServicesPage() {
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service) => (
-            <Link
+            <a
               key={service.href}
               href={service.href}
-              className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-200 group"
+              className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-200 group block"
             >
               <div className="text-center">
                 <div className="text-4xl mb-4">{service.icon}</div>
@@ -60,7 +58,7 @@ export default function ServicesPage() {
                   </svg>
                 </div>
               </div>
-            </Link>
+            </a>
           ))}
         </div>
 
@@ -76,18 +74,12 @@ export default function ServicesPage() {
               inclusivity and spiritual growth for all who wish to participate.
             </p>
             <div className="mt-8">
-              <Link
-                href="/contact"
-                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white transition-colors duration-200"
-                style={{ backgroundColor: '#F58C28' }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E67C1F'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#F58C28'}
-              >
+              <HoverButton href="/contact" variant="primary">
                 Contact Us for More Information
                 <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
-              </Link>
+              </HoverButton>
             </div>
           </div>
         </div>

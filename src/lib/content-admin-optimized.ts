@@ -77,15 +77,14 @@ export async function loadContentSectionsOptimized(userId?: string, userRole?: s
   usersCache: Record<string, UserData>;
 }> {
   try {
-    // Initialize if needed (but don't await unless necessary)
-    const initPromise = initializeContentSections();
+    // Try to load existing sections first
+    let sections = await getAllContentSections();
     
-    // Start loading content sections
-    const sectionsPromise = getAllContentSections();
-    
-    // Wait for both
-    await initPromise;
-    const sections = await sectionsPromise;
+    // Only initialize if we have very few sections (likely not initialized)
+    if (sections.length < 10) {
+      await initializeContentSections();
+      sections = await getAllContentSections();
+    }
     
     let authorizedSections: ContentSection[] = [];
     

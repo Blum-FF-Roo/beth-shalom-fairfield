@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { getContentSectionByKey, initializeContentSections } from '@/lib/content';
 import { ContentSection } from '@/types/content';
 
+// Global flag to track if initialization has completed in this session
+let initializationPromise: Promise<void> | null = null;
+
 // Hook to get content by key with fallback to static data
 export function useContent(key: string, fallbackContent?: unknown) {
   const [content, setContent] = useState<unknown>(fallbackContent);
@@ -16,8 +19,11 @@ export function useContent(key: string, fallbackContent?: unknown) {
         setLoading(true);
         setError(null);
         
-        // Initialize content sections if they don't exist
-        await initializeContentSections();
+        // Initialize content sections if they don't exist (shared across all hooks)
+        if (!initializationPromise) {
+          initializationPromise = initializeContentSections();
+        }
+        await initializationPromise;
         
         // Get content section by key
         const section = await getContentSectionByKey(key);

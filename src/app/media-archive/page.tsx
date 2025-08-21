@@ -1,3 +1,5 @@
+import LazyYouTubeEmbed from '@/components/LazyYouTubeEmbed';
+
 export const metadata = {
   title: 'Media Archive - Congregation Beth Shalom',
   description: 'Watch video talks and presentations from rabbis and speakers at Congregation Beth Shalom.',
@@ -66,14 +68,11 @@ const videos: VideoData[] = [
 function VideoCard({ video }: { video: VideoData }) {
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-      <div className="aspect-video">
-        <iframe
-          src={`https://www.youtube.com/embed/${video.youtubeId}`}
+      <div className="aspect-video relative">
+        <LazyYouTubeEmbed
+          videoId={video.youtubeId}
           title={video.title}
           className="w-full h-full"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
         />
       </div>
       <div className="p-6">

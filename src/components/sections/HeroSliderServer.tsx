@@ -9,15 +9,8 @@ export default function HeroSliderServer() {
   const { content: dynamicSlides, loading } = useContent('heroSlides', heroSlides);
   const slides = dynamicSlides as SlideItem[];
 
-  if (loading) {
-    return (
-      <section className="relative w-full h-screen overflow-hidden bg-gray-200">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{borderColor: '#F58C28'}}></div>
-        </div>
-      </section>
-    );
-  }
+  // Show static slides immediately, then update with dynamic slides once loaded
+  // This prevents the 3-second loading screen
 
   if (!slides || slides.length === 0) {
     return null;

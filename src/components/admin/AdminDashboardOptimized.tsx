@@ -56,7 +56,14 @@ export default function AdminDashboardOptimized() {
     { value: 'about', label: 'About Page' },
     { value: 'contact', label: 'Contact Page' },
     { value: 'membership', label: 'Membership Page' },
-    { value: 'services', label: 'Services Pages' }
+    { value: 'services', label: 'Services Pages' },
+    { value: 'articles', label: 'Articles of Interest' },
+    { value: 'judaism', label: 'All About Judaism' },
+    { value: 'media', label: 'Media Archive' },
+    { value: 'parshah', label: 'Parshah' },
+    { value: 'tzedakah', label: 'Tzedakah/Donate' },
+    { value: 'sermons', label: 'High Holy Days Sermons' },
+    { value: 'links', label: 'Media Links' }
   ];
 
   const filterPosts = useCallback(() => {
@@ -165,7 +172,14 @@ export default function AdminDashboardOptimized() {
       'about': 'bg-green-100 text-green-800',
       'contact': 'bg-yellow-100 text-yellow-800',
       'membership': 'bg-red-100 text-red-800',
-      'services': 'bg-indigo-100 text-indigo-800'
+      'services': 'bg-indigo-100 text-indigo-800',
+      'articles': 'bg-orange-100 text-orange-800',
+      'judaism': 'bg-teal-100 text-teal-800',
+      'media': 'bg-pink-100 text-pink-800',
+      'parshah': 'bg-cyan-100 text-cyan-800',
+      'tzedakah': 'bg-emerald-100 text-emerald-800',
+      'sermons': 'bg-violet-100 text-violet-800',
+      'links': 'bg-amber-100 text-amber-800'
     };
     return colors[category] || 'bg-gray-100 text-gray-800';
   };

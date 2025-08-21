@@ -7,6 +7,7 @@ import { Navigation, Pagination, Autoplay, EffectFade } from "swiper/modules";
 import { heroSlides } from "@/data/site-data";
 import { useContent } from "@/hooks/useContent";
 import { SlideItem } from "@/types/content";
+import { getBlurDataURL } from "@/utils/image-utils";
 
 // Import Swiper styles
 import "swiper/css";
@@ -57,7 +58,7 @@ export default function HeroSlider() {
         loop={true}
         className="w-full h-full"
       >
-        {slides.map((slide) => (
+        {slides.map((slide, index) => (
           <SwiperSlide key={slide.id}>
             <div className="relative w-full h-full">
               {/* Background Image */}
@@ -66,8 +67,10 @@ export default function HeroSlider() {
                 alt={slide.title}
                 fill
                 className="object-cover z-0"
-                priority={slide.id === "1"}
+                priority={index === 0}
                 sizes="100vw"
+                placeholder="blur"
+                blurDataURL={getBlurDataURL(slide.imageUrl)}
               />
 
               {/* Content Overlay */}

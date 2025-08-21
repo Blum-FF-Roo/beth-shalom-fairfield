@@ -274,5 +274,218 @@ Special THANKS to Steven Emanuel Blum for helping to make this website happen. H
 
 <h3>Passover Observance</h3>
 <p>During the eight days of Passover, we remember our ancestors' journey from slavery to freedom by avoiding chametz (leavened products) and eating matzah (unleavened bread), among other traditions that connect us to this pivotal moment in Jewish history.</p>`
+  },
+
+  // Articles of Interest page content sections
+  {
+    id: 'articles-page-header',
+    key: 'articlesPageHeader',
+    title: 'Articles Page Header',
+    description: 'Header text for the Articles of Interest page',
+    type: 'text',
+    category: 'articles',
+    defaultContent: 'Explore thought-provoking articles and insights on Jewish life, tradition, and community.'
+  },
+
+  {
+    id: 'articles-page-intro',
+    key: 'articlesPageIntro',
+    title: 'Articles Page Introduction',
+    description: 'Introduction text for the Articles of Interest page',
+    type: 'rich_text',
+    category: 'articles',
+    defaultContent: `<p>Welcome to our collection of articles exploring various aspects of Jewish life, tradition, culture, and contemporary issues. These pieces offer insights, perspectives, and discussions that enrich our understanding of our heritage and community.</p>
+<p>We invite you to read, reflect, and engage with these thoughtful contributions to Jewish discourse.</p>`
+  },
+
+  // All About Judaism page content sections  
+  {
+    id: 'judaism-page-header',
+    key: 'judaismPageHeader',
+    title: 'Judaism Page Header',
+    description: 'Header text for the All About Judaism page',
+    type: 'text',
+    category: 'judaism',
+    defaultContent: 'Discover the rich traditions, beliefs, and practices of Judaism.'
+  },
+
+  {
+    id: 'judaism-page-intro',
+    key: 'judaismPageIntro',
+    title: 'Judaism Page Introduction',
+    description: 'Introduction text for the All About Judaism page',
+    type: 'rich_text',
+    category: 'judaism',
+    defaultContent: `<p>Judaism is one of the world's oldest monotheistic religions, with a rich history spanning thousands of years. Here you'll find resources to help you understand Jewish beliefs, practices, holidays, and traditions.</p>
+<p>Whether you're new to Judaism or seeking to deepen your knowledge, these resources provide insight into the faith that has sustained our people through millennia.</p>`
+  },
+
+  {
+    id: 'judaism-basics',
+    key: 'judaismBasics',
+    title: 'Judaism Basics',
+    description: 'Basic information about Judaism',
+    type: 'rich_text',
+    category: 'judaism',
+    defaultContent: `<h3>Core Beliefs</h3>
+<p>Judaism is founded on the belief in one, eternal God who created and governs the universe. Central to Jewish belief is the covenant between God and the Jewish people, as well as the importance of ethical behavior and social justice.</p>
+
+<h3>Torah and Sacred Texts</h3>
+<p>The Torah, comprising the Five Books of Moses, is the central text of Judaism. Along with the Nevi'im (Prophets) and Ketuvim (Writings), it forms the Tanakh (Hebrew Bible). The Talmud provides commentary and interpretation of Jewish law.</p>
+
+<h3>Jewish Practice</h3>
+<p>Jewish practice includes observance of Shabbat, keeping kosher, prayer, study, and celebrating holidays throughout the year. These practices connect Jews to their heritage and community.</p>`
+  },
+
+  // Media Archive page content sections
+  {
+    id: 'media-archive-header',
+    key: 'mediaArchiveHeader',
+    title: 'Media Archive Page Header',
+    description: 'Header text for the Media Archive page',
+    type: 'text',
+    category: 'media',
+    defaultContent: 'Watch video talks and presentations from rabbis and speakers at Congregation Beth Shalom'
+  },
+
+  {
+    id: 'media-archive-intro',
+    key: 'mediaArchiveIntro',
+    title: 'Media Archive Introduction',
+    description: 'Introduction text for the Media Archive page',
+    type: 'rich_text',
+    category: 'media',
+    defaultContent: `<p>Our media archive contains recordings of meaningful talks, presentations, and discussions that have taken place at Beth Shalom Fairfield. These videos feature rabbis, scholars, and community members sharing insights on Jewish life, tradition, and contemporary issues.</p>
+<p>We invite you to explore these recordings and engage with the wisdom and perspectives they offer.</p>`
+  },
+
+  // Parshah page content sections
+  {
+    id: 'parshah-page-header',
+    key: 'parshahPageHeader',
+    title: 'Parshah Page Header',
+    description: 'Header text for the Parshah page',
+    type: 'text',
+    category: 'parshah',
+    defaultContent: 'Weekly Torah Portion - Parashat HaShavua'
+  },
+
+  {
+    id: 'parshah-page-intro',
+    key: 'parshahPageIntro',
+    title: 'Parshah Page Introduction',
+    description: 'Introduction text for the Parshah page',
+    type: 'rich_text',
+    category: 'parshah',
+    defaultContent: `<p>Each week, Jewish communities around the world read from the same portion of the Torah, called the Parshah or Torah portion. This ancient practice connects Jews across time and geography in shared study and reflection.</p>
+<p>Here you'll find insights, commentary, and discussion about the weekly Torah reading, helping to deepen your understanding of these timeless teachings.</p>`
+  },
+
+  // Tzedakah/Donate page content sections
+  {
+    id: 'tzedakah-page-header',
+    key: 'tzedakahPageHeader',
+    title: 'Tzedakah Page Header',
+    description: 'Header text for the Tzedakah/Donate page',
+    type: 'text',
+    category: 'tzedakah',
+    defaultContent: 'Support Our Community Through Tzedakah'
+  },
+
+  {
+    id: 'tzedakah-page-intro',
+    key: 'tzedakahPageIntro',
+    title: 'Tzedakah Page Introduction',
+    description: 'Introduction text for the Tzedakah page',
+    type: 'rich_text',
+    category: 'tzedakah',
+    defaultContent: `<p>Tzedakah, often translated as charity, is actually closer in meaning to justice or righteousness. It represents our obligation to help others and support our community.</p>
+<p>Your generous contributions help maintain our synagogue, support our programs, and ensure that Beth Shalom Fairfield continues to serve our community for generations to come.</p>`
+  },
+
+  {
+    id: 'donation-info',
+    key: 'donationInfo',
+    title: 'Donation Information',
+    description: 'Information about making donations',
+    type: 'rich_text',
+    category: 'tzedakah',
+    defaultContent: `<h3>Ways to Give</h3>
+<p>You can support Congregation Beth Shalom in several ways:</p>
+<ul>
+<li>Online donations through our secure payment system</li>
+<li>Checks made payable to "Congregation Beth Shalom"</li>
+<li>In-person donations during services or events</li>
+</ul>
+
+<h3>Contact Information</h3>
+<p>For questions about donations or to discuss other ways to support our community, please contact us at bethshalomfairfield@gmail.com or call (641) 472-9509.</p>`
+  },
+
+  // High Holy Days Sermons page content sections
+  {
+    id: 'hh-sermons-header',
+    key: 'hhSermonsHeader',
+    title: 'High Holy Days Sermons Header',
+    description: 'Header text for the High Holy Days Sermons page',
+    type: 'text',
+    category: 'sermons',
+    defaultContent: 'High Holy Days Sermons and Teachings'
+  },
+
+  {
+    id: 'hh-sermons-intro',
+    key: 'hhSermonsIntro',
+    title: 'High Holy Days Sermons Introduction',
+    description: 'Introduction text for the High Holy Days Sermons page',
+    type: 'rich_text',
+    category: 'sermons',
+    defaultContent: `<p>The High Holy Days offer unique opportunities for reflection, repentance, and renewal. Our collection of sermons and teachings from Rosh Hashanah and Yom Kippur services provides insights into these sacred themes.</p>
+<p>These messages explore the meaning of the Days of Awe and offer guidance for personal and spiritual growth in the coming year.</p>`
+  },
+
+  // Media Links page content sections
+  {
+    id: 'media-links-header',
+    key: 'mediaLinksHeader',
+    title: 'Media Links Page Header',
+    description: 'Header text for the Media Links page',
+    type: 'text',
+    category: 'links',
+    defaultContent: 'Jewish Resources and Educational Links'
+  },
+
+  {
+    id: 'media-links-intro',
+    key: 'mediaLinksIntro',
+    title: 'Media Links Introduction',
+    description: 'Introduction text for the Media Links page',
+    type: 'rich_text',
+    category: 'links',
+    defaultContent: `<p>Explore our curated collection of Jewish educational resources, news sources, cultural sites, and learning materials available online.</p>
+<p>These links provide access to a wealth of information about Jewish history, culture, practice, and contemporary issues.</p>`
+  },
+
+  {
+    id: 'educational-links',
+    key: 'educationalLinks',
+    title: 'Educational Links List',
+    description: 'List of educational Jewish resource links',
+    type: 'rich_text',
+    category: 'links',
+    defaultContent: `<h3>Educational Resources</h3>
+<ul>
+<li><a href="https://www.myjewishlearning.com" target="_blank">My Jewish Learning</a> - Comprehensive Jewish education resource</li>
+<li><a href="https://www.chabad.org" target="_blank">Chabad.org</a> - Jewish practice, holidays, and learning</li>
+<li><a href="https://www.jewishvirtuallibrary.org" target="_blank">Jewish Virtual Library</a> - Encyclopedia of Jewish history and culture</li>
+</ul>
+
+<h3>News and Current Events</h3>
+<ul>
+<li><a href="https://www.jta.org" target="_blank">Jewish Telegraphic Agency</a> - Jewish news from around the world</li>
+<li><a href="https://forward.com" target="_blank">The Forward</a> - Jewish news, culture, and opinion</li>
+</ul>
+
+<p><em>Please note: These links are provided for educational purposes. Check with our community for current recommendations and additional resources.</em></p>`
   }
 ];

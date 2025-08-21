@@ -48,8 +48,20 @@ export async function deleteHeroSliderImage(imageUrl: string): Promise<void> {
       return;
     }
 
-    // Create reference from URL
-    const storageRef = ref(storage, imageUrl);
+    // Extract the file path from the Firebase Storage URL
+    const url = new URL(imageUrl);
+    const pathMatch = url.pathname.match(/\/o\/(.+)\?/);
+    
+    if (!pathMatch) {
+      console.warn('Could not extract path from Firebase Storage URL:', imageUrl);
+      return;
+    }
+
+    // Decode the path (Firebase encodes special characters)
+    const filePath = decodeURIComponent(pathMatch[1]);
+    
+    // Create reference from the extracted path
+    const storageRef = ref(storage, filePath);
     await deleteObject(storageRef);
   } catch (error) {
     console.error('Error deleting image:', error);

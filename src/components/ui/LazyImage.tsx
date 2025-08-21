@@ -13,6 +13,8 @@ interface LazyImageProps {
   sizes?: string;
   priority?: boolean;
   onClick?: () => void;
+  placeholder?: 'blur' | 'empty';
+  blurDataURL?: string;
 }
 
 export default function LazyImage({
@@ -24,7 +26,9 @@ export default function LazyImage({
   className = '',
   sizes,
   priority = false,
-  onClick
+  onClick,
+  placeholder,
+  blurDataURL
 }: LazyImageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -75,6 +79,8 @@ export default function LazyImage({
         onLoad={handleLoad}
         onError={handleError}
         loading={priority ? 'eager' : 'lazy'}
+        placeholder={placeholder}
+        blurDataURL={blurDataURL}
       />
     </div>
   );

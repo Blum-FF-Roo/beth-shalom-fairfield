@@ -6,20 +6,8 @@ import { useContent } from '@/hooks/useContent';
 import { programs, toggleablePrograms } from '@/data/site-data';
 
 export default function ProgramsSectionServer() {
-  // Fetch toggle setting with real-time updates
-  const { content: toggleSetting, loading } = useContent('programsToggle', 'highHolyDays');
-  
-  if (loading) {
-    return (
-      <section className="py-12 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto" style={{borderColor: '#F58C28'}}></div>
-          </div>
-        </div>
-      </section>
-    );
-  }
+  // Use static default and load toggle setting in background
+  const { content: toggleSetting } = useContent('programsToggle', 'highHolyDays');
   
   // Select the second program based on toggle setting
   const currentToggle = toggleSetting as string || 'highHolyDays';

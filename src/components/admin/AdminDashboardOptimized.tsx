@@ -51,6 +51,7 @@ export default function AdminDashboardOptimized() {
 
   const contentCategories = [
     { value: 'all', label: 'All Sections' },
+    { value: 'logo', label: 'Site Logo' },
     { value: 'home', label: 'Home Page' },
     { value: 'hero', label: 'Hero Slider' },
     { value: 'about', label: 'About Page' },
@@ -167,6 +168,7 @@ export default function AdminDashboardOptimized() {
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
+      'logo': 'bg-slate-100 text-slate-800',
       'home': 'bg-blue-100 text-blue-800',
       'hero': 'bg-purple-100 text-purple-800',
       'about': 'bg-green-100 text-green-800',
@@ -198,6 +200,8 @@ export default function AdminDashboardOptimized() {
         return '🎞️';
       case 'toggle':
         return '🎛️';
+      case 'image':
+        return '🖼️';
       default:
         return '📄';
     }

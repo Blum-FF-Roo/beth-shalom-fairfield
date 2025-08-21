@@ -1,16 +1,14 @@
-'use client';
-
 import Link from 'next/link';
 import Image from 'next/image';
-import { useContent } from '@/hooks/useContent';
+import { getContentByKey } from '@/lib/content-server';
 import { programs, toggleablePrograms } from '@/data/site-data';
 
-export default function ProgramsSectionServer() {
-  // Use static default and load toggle setting in background
-  const { content: toggleSetting } = useContent('programsToggle', 'highHolyDays');
+export default async function ProgramsSectionServer() {
+  // Load toggle setting server-side
+  const toggleSetting = await getContentByKey('programsToggle');
   
   // Select the second program based on toggle setting
-  const currentToggle = toggleSetting as string || 'highHolyDays';
+  const currentToggle = (toggleSetting as string) || 'highHolyDays';
   const secondProgram = currentToggle === 'passover' ? toggleablePrograms.passover : toggleablePrograms.highHolyDays;
   
   // Create the programs array with the toggle selection

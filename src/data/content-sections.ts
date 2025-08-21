@@ -35,6 +35,17 @@ For further Beth Shalom Information: Call Marc Berkowitz at 472-9509 or email be
 Special THANKS to Steven Emanuel Blum for helping to make this website happen. He is a man of many talents.`
   },
   
+  // Site logo upload
+  {
+    id: 'site-logo-upload',
+    key: 'siteLogoImage',
+    title: 'Site Logo Upload',
+    description: 'Upload logo image displayed in the header (upper left)',
+    type: 'image',
+    category: 'logo',
+    defaultContent: '/images/logo.png'
+  },
+
   // Hero slides
   {
     id: 'home-hero-slides',

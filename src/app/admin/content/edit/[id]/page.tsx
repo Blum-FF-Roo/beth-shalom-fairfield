@@ -35,6 +35,7 @@ export default function EditContentPage({ params }: Props) {
   const [contactContent, setContactContent] = useState<ContactInfo | null>(null);
   const [slideContent, setSlideContent] = useState<SlideItem[]>([]);
   const [toggleContent, setToggleContent] = useState('');
+  const [imageContent, setImageContent] = useState('');
 
   useEffect(() => {
     // Resolve params promise
@@ -90,6 +91,9 @@ export default function EditContentPage({ params }: Props) {
         case 'toggle':
           setToggleContent(section.content as string);
           break;
+        case 'image':
+          setImageContent(section.content as string);
+          break;
       }
     } catch (error) {
       console.error('Error loading content section:', error);
@@ -125,6 +129,9 @@ export default function EditContentPage({ params }: Props) {
           break;
         case 'toggle':
           contentToSave = toggleContent;
+          break;
+        case 'image':
+          contentToSave = imageContent;
           break;
         default:
           throw new Error('Unknown content type');
@@ -582,6 +589,24 @@ export default function EditContentPage({ params }: Props) {
                   </div>
                   <p className="mt-2 text-xs text-gray-500">
                     This controls which program appears in the Programs section of the home page.
+                  </p>
+                </div>
+              )}
+
+              {/* Image Upload Form */}
+              {contentSection.type === 'image' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                    {contentSection.title}
+                  </label>
+                  <ImageUpload
+                    currentImageUrl={imageContent || undefined}
+                    onImageChange={setImageContent}
+                    disabled={saving}
+                    className="max-w-md"
+                  />
+                  <p className="mt-2 text-xs text-gray-500">
+                    {contentSection.description}
                   </p>
                 </div>
               )}

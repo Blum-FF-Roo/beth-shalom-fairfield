@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
 import { uploadHeroSliderImage, deleteHeroSliderImage } from '@/lib/storage';
+import { useToast } from '@/contexts/ToastContext';
 
 interface ImageUploadProps {
   currentImageUrl?: string;
@@ -22,6 +23,7 @@ export default function ImageUpload({
   const [isUploading, setIsUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { showSuccess, showError } = useToast();
 
   const handleFileSelect = async (file: File) => {
     if (!file || disabled) return;
@@ -30,9 +32,10 @@ export default function ImageUpload({
     try {
       const imageUrl = await uploadHeroSliderImage(file);
       onImageChange(imageUrl);
+      showSuccess('Upload Successful', 'Image uploaded successfully!');
     } catch (error) {
       console.error('Upload failed:', error);
-      alert(error instanceof Error ? error.message : 'Upload failed');
+      showError('Upload Failed', error instanceof Error ? error.message : 'Failed to upload image');
     } finally {
       setIsUploading(false);
     }
@@ -77,9 +80,10 @@ export default function ImageUpload({
     try {
       await deleteHeroSliderImage(currentImageUrl);
       onImageDelete?.();
+      showSuccess('Image Deleted', 'Image deleted successfully!');
     } catch (error) {
       console.error('Delete failed:', error);
-      alert('Failed to delete image');
+      showError('Delete Failed', 'Failed to delete image');
     }
   };
 

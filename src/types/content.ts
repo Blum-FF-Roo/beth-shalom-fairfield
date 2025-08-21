@@ -3,8 +3,8 @@ export interface ContentSection {
   key: string; // unique identifier for the content section
   title: string; // display name for admin
   description: string; // description of what this content is for
-  type: 'text' | 'rich_text' | 'list' | 'contact' | 'slide_array' | 'toggle';
-  category: 'home' | 'about' | 'contact' | 'membership' | 'history' | 'hero' | 'services' | 'articles' | 'judaism' | 'media' | 'parshah' | 'tzedakah' | 'sermons' | 'links';
+  type: 'text' | 'rich_text' | 'list' | 'contact' | 'slide_array' | 'toggle' | 'image';
+  category: 'home' | 'about' | 'contact' | 'membership' | 'history' | 'hero' | 'logo' | 'services' | 'articles' | 'judaism' | 'media' | 'parshah' | 'tzedakah' | 'sermons' | 'links';
   content: string | ContactInfo | SlideItem[] | string[]; // the actual content
   isEditable: boolean;
   updatedAt: Date;

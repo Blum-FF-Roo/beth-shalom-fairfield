@@ -1,14 +1,29 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
-import { getContentByKey } from '@/lib/content-server';
+import { useContent } from '@/hooks/useContent';
 import { programs, toggleablePrograms } from '@/data/site-data';
 
-export default async function ProgramsSectionServer() {
-  // Fetch toggle setting server-side with fallback
-  const toggleSetting = await getContentByKey('programsToggle') as string || 'highHolyDays';
+export default function ProgramsSectionServer() {
+  // Fetch toggle setting with real-time updates
+  const { content: toggleSetting, loading } = useContent('programsToggle', 'highHolyDays');
+  
+  if (loading) {
+    return (
+      <section className="py-12 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto" style={{borderColor: '#F58C28'}}></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
   
   // Select the second program based on toggle setting
-  const secondProgram = toggleSetting === 'passover' ? toggleablePrograms.passover : toggleablePrograms.highHolyDays;
+  const currentToggle = toggleSetting as string || 'highHolyDays';
+  const secondProgram = currentToggle === 'passover' ? toggleablePrograms.passover : toggleablePrograms.highHolyDays;
   
   // Create the programs array with the toggle selection
   const displayPrograms = [programs[0], secondProgram];

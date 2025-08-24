@@ -8,18 +8,18 @@ import { Settings, LogOut, Users, ChevronDown, Menu, X } from 'lucide-react';
 import { siteConfig, navigationMenu } from '@/data/site-data';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
+import { useContentRefresh } from '@/hooks/useContentRefresh';
 
-interface HeaderScrollWrapperProps {
-  logoUrl: string;
-}
-
-export default function HeaderScrollWrapper({ logoUrl }: HeaderScrollWrapperProps) {
+export default function HeaderScrollWrapper() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [, setActiveDropdown] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, userData, logout } = useAuth();
   const pathname = usePathname();
   const isMainPage = pathname === '/';
+
+  // Use the universal content refresh hook for logo
+  const [logoUrl] = useContentRefresh<string>('siteLogo');
 
   // Handle scroll behavior
   useEffect(() => {
@@ -130,11 +130,13 @@ export default function HeaderScrollWrapper({ logoUrl }: HeaderScrollWrapperProp
             <div className="w-12 h-12 relative flex-shrink-0">
               {logoUrl && logoUrl.includes('firebase') ? (
                 <Image
+                  key={logoUrl} // Force re-render when URL changes
                   src={logoUrl}
                   alt={siteConfig.name}
                   fill
                   className="rounded-full object-cover"
                   sizes="48px"
+                  priority
                 />
               ) : (
                 <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{backgroundColor: '#F58C28'}}>

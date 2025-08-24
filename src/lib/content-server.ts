@@ -47,7 +47,7 @@ async function getCachedSections(): Promise<ContentSection[]> {
 // Cache invalidation function
 export function clearContentCache(): void {
   cachedQueryResult = null;
-  console.log('Content cache cleared');
+  console.log('Server-side content cache cleared');
 }
 
 // Get multiple content sections server-side with batch loading

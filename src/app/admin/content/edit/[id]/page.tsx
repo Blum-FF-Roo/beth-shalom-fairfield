@@ -138,7 +138,17 @@ export default function EditContentPage({ params }: Props) {
       }
 
       await updateContentSectionContent(contentSection.id, contentToSave, userData.uid);
-      showSuccess('Content Updated', 'Content section has been successfully updated.');
+      
+      // Trigger universal content refresh
+      window.dispatchEvent(new CustomEvent('refreshContent', { 
+        detail: { key: contentSection.key } 
+      }));
+      
+      if (contentSection.key === 'siteLogo' || contentSection.category === 'logo') {
+        showSuccess('Logo Updated Successfully', 'Your logo has been updated and should appear immediately.');
+      } else {
+        showSuccess('Content Updated', `${contentSection.title} has been updated and should appear immediately.`);
+      }
       router.push('/admin?tab=content');
     } catch (error) {
       console.error('Error updating content section:', error);

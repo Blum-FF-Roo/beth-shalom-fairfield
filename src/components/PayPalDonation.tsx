@@ -11,6 +11,7 @@ interface PayPalDonationProps {
 export default function PayPalDonation({ defaultAmount = "25.00" }: PayPalDonationProps) {
   const [donationAmount, setDonationAmount] = useState(defaultAmount);
   const [isCustomAmount, setIsCustomAmount] = useState(false);
+  const [personalMessage, setPersonalMessage] = useState("");
   const [isMounted, setIsMounted] = useState(false);
   const { showSuccess, showError } = useToast();
 
@@ -83,6 +84,30 @@ export default function PayPalDonation({ defaultAmount = "25.00" }: PayPalDonati
         </div>
       </div>
 
+      {/* Personal Message */}
+      <div className="mb-6">
+        <label htmlFor="personalMessage" className="block text-sm font-medium text-gray-700 mb-2">
+          Personal Message (Optional)
+        </label>
+        <textarea
+          id="personalMessage"
+          value={personalMessage}
+          onChange={(e) => setPersonalMessage(e.target.value)}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none"
+          rows={3}
+          placeholder="Add a personal message that will be visible to synagogue staff..."
+          maxLength={200}
+        />
+        <div className="flex justify-between items-center mt-1">
+          <p className="text-xs text-gray-500">
+            This message will be included with your donation details
+          </p>
+          <p className="text-xs text-gray-400">
+            {personalMessage.length}/200
+          </p>
+        </div>
+      </div>
+
       {/* PayPal Buttons */}
       {isMounted && process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID && process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID !== "test-mock-client-id" ? (
         <PayPalButtons
@@ -99,7 +124,9 @@ export default function PayPalDonation({ defaultAmount = "25.00" }: PayPalDonati
                 value: donationAmount,
                 currency_code: "USD"
               },
-              description: "Donation to Congregation Beth Shalom"
+              description: personalMessage 
+                ? `Donation to Congregation Beth Shalom - ${personalMessage}`
+                : "Donation to Congregation Beth Shalom"
             }],
             intent: "CAPTURE"
           });

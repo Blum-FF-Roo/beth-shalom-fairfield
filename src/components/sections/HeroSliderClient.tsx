@@ -18,7 +18,7 @@ interface HeroSliderClientProps {
 
 export default function HeroSliderClient({ slides }: HeroSliderClientProps) {
   return (
-    <section className="relative w-full h-screen overflow-hidden">
+    <section className="relative w-full h-150 overflow-hidden">
       <Swiper
         modules={[Navigation, Pagination, Autoplay, EffectFade]}
         spaceBetween={0}

@@ -44,6 +44,12 @@ async function getCachedSections(): Promise<ContentSection[]> {
   return sections;
 }
 
+// Cache invalidation function
+export function clearContentCache(): void {
+  cachedQueryResult = null;
+  console.log('Content cache cleared');
+}
+
 // Get multiple content sections server-side with batch loading
 export async function getMultipleContentByKeys(keys: string[]): Promise<Record<string, unknown>> {
   try {

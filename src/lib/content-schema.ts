@@ -1,6 +1,7 @@
 import { collection, doc, getDocs, getDoc, setDoc, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { ContentSection, ContactInfo, SlideItem, ContentPermission } from '@/types/content';
+import { clearContentCache } from '@/lib/content-server';
 
 const CONTENT_COLLECTION = 'content_sections';
 const PERMISSIONS_COLLECTION = 'content_permissions';
@@ -22,6 +23,9 @@ export async function createContentSection(
 
     const docRef = doc(db, CONTENT_COLLECTION, contentSection.id);
     await setDoc(docRef, contentSection);
+    
+    // Clear cache to reflect changes immediately
+    clearContentCache();
     
     return contentSection;
   } catch (error) {
@@ -100,6 +104,9 @@ export async function updateContentSection(
     };
     
     await updateDoc(docRef, updateData);
+    
+    // Clear cache to reflect changes immediately
+    clearContentCache();
   } catch (error) {
     console.error('Error updating content section:', error);
     throw error;
@@ -120,6 +127,9 @@ export async function deleteContentSection(id: string): Promise<void> {
   try {
     const docRef = doc(db, CONTENT_COLLECTION, id);
     await deleteDoc(docRef);
+    
+    // Clear cache to reflect changes immediately
+    clearContentCache();
   } catch (error) {
     console.error('Error deleting content section:', error);
     throw error;

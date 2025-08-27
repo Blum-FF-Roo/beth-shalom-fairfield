@@ -1,18 +1,33 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import PostList from '@/components/posts/PostList';
+import Link from 'next/link';
+import { Search } from 'lucide-react';
 import { Post } from '@/types';
 import { getPostsByCategory } from '@/lib/posts';
 
 export default function HighHolyDaysSermonsPage() {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     loadPosts();
   }, []);
+
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      setFilteredPosts(posts);
+    } else {
+      const filtered = posts.filter(post =>
+        post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        post.content.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredPosts(filtered);
+    }
+  }, [posts, searchTerm]);
 
   const loadPosts = async () => {
     try {
@@ -25,6 +40,14 @@ export default function HighHolyDaysSermonsPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const formatDate = (date: Date) => {
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    }).format(date);
   };
 
   if (loading) {
@@ -63,6 +86,22 @@ export default function HighHolyDaysSermonsPage() {
           </p>
         </div>
 
+        {/* Search Bar */}
+        <div className="mb-8">
+          <div className="relative max-w-md mx-auto">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              placeholder="Search sermons..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
+            />
+          </div>
+        </div>
+
         {/* Error Message */}
         {error && (
           <div className="mb-8 rounded-md bg-red-50 p-4">
@@ -70,8 +109,49 @@ export default function HighHolyDaysSermonsPage() {
           </div>
         )}
 
+        {/* Results Info */}
+        {searchTerm && (
+          <div className="mb-4 text-gray-600">
+            Found {filteredPosts.length} sermon{filteredPosts.length !== 1 ? 's' : ''} 
+            {searchTerm && ` for "${searchTerm}"`}
+          </div>
+        )}
+
         {/* Posts */}
-        <PostList posts={posts} category="high-holy-day" />
+        <div className="space-y-6">
+          {filteredPosts.length === 0 && !loading ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500">
+                {searchTerm ? `No sermons found for "${searchTerm}"` : 'No sermons available'}
+              </p>
+            </div>
+          ) : (
+            filteredPosts.map(post => (
+              <div key={post.id} className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-200">
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between">
+                  <div className="flex-1">
+                    <Link 
+                      href={`/high-holy-days/${post.id}`}
+                      className="block group"
+                    >
+                      <h3 className="text-xl font-bold text-gray-900 group-hover:text-orange-600 transition-colors duration-200 mb-2">
+                        {post.title}
+                      </h3>
+                    </Link>
+                    <div className="text-gray-700 mb-4 line-clamp-3">
+                      {post.content.length > 200 ? post.content.substring(0, 200) + '...' : post.content}
+                    </div>
+                    <div className="flex items-center text-sm text-gray-500">
+                      <time dateTime={post.createdAt.toISOString()}>
+                        {formatDate(post.createdAt)}
+                      </time>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

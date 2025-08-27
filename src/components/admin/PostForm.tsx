@@ -12,16 +12,17 @@ import { useAuth } from '@/contexts/AuthContext';
 interface PostFormProps {
   post?: Post;
   isEditing?: boolean;
+  initialCategory?: PostCategory;
 }
 
-export default function PostForm({ post, isEditing = false }: PostFormProps) {
+export default function PostForm({ post, isEditing = false, initialCategory }: PostFormProps) {
   const router = useRouter();
   const { userData } = useAuth();
   
   const [formData, setFormData] = useState<PostFormData>({
     title: post?.title || '',
     content: post?.content || '',
-    category: post?.category || 'parshah',
+    category: post?.category || initialCategory || 'parshah',
     isPublished: post?.isPublished || false,
   });
   
@@ -58,7 +59,7 @@ export default function PostForm({ post, isEditing = false }: PostFormProps) {
       if (isEditing && post) {
         await updatePost(post.id, dataToSubmit);
       } else {
-        await createPost(dataToSubmit, userData.uid);
+        await createPost(dataToSubmit, userData.uid, userData.email);
       }
       
       router.push('/admin');
@@ -137,6 +138,7 @@ export default function PostForm({ post, isEditing = false }: PostFormProps) {
                 >
                   <option value="parshah">Parshah</option>
                   <option value="high-holy-day">High Holy Day</option>
+                  <option value="articles">Articles of Interest</option>
                 </select>
               </div>
 

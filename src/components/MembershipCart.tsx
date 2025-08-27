@@ -59,11 +59,25 @@ export default function MembershipCart() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showCart, setShowCart] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [customText, setCustomText] = useState('');
   const { showSuccess, showError } = useToast();
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  const scrollToCart = (elementId: string) => {
+    const cartElement = document.getElementById(elementId);
+    if (cartElement) {
+      const headerHeight = 120; // Approximate header height including padding
+      const elementTop = cartElement.offsetTop - headerHeight;
+      
+      window.scrollTo({
+        top: elementTop,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   const addToCart = (membership: MembershipOption) => {
     setCart(prevCart => {
@@ -77,6 +91,11 @@ export default function MembershipCart() {
       }
       return [...prevCart, { ...membership, quantity: 1 }];
     });
+    
+    // Scroll to cart section after adding item
+    setTimeout(() => {
+      scrollToCart('membership-cart-section');
+    }, 100); // Small delay to ensure cart state has updated
   };
 
   const removeFromCart = (membershipId: string) => {
@@ -101,7 +120,25 @@ export default function MembershipCart() {
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-8">
+    <>
+      {/* Z-Index fix for PayPal buttons */}
+      <style jsx global>{`
+        .paypal-buttons {
+          position: relative !important;
+          z-index: 10 !important;
+        }
+        
+        .paypal-buttons iframe {
+          z-index: 10 !important;
+        }
+        
+        /* Ensure header stays on top - preserve existing positioning */
+        header, nav {
+          z-index: 50 !important;
+        }
+      `}</style>
+      
+      <div className="bg-white rounded-lg shadow-lg p-8">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-4">Select Your Membership</h2>
         <p className="text-gray-600">Choose your membership level and proceed to secure PayPal checkout</p>
@@ -135,7 +172,7 @@ export default function MembershipCart() {
 
       {/* Cart Summary */}
       {cart.length > 0 && (
-        <div className="border-t pt-6">
+        <div id="membership-cart-section" className="border-t pt-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900">Your Cart ({cartItemCount} items)</h3>
             <button
@@ -194,8 +231,23 @@ export default function MembershipCart() {
             <h3 className="text-lg font-semibold text-gray-900 text-center mb-4">
               Ready to Complete Your Membership?
             </h3>
+            
+            {/* Custom Text Field */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Please list the names of all the members included in this purchase:
+              </label>
+              <textarea
+                value={customText}
+                onChange={(e) => setCustomText(e.target.value)}
+                rows={3}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm"
+                placeholder="Enter the names of all members..."
+              />
+            </div>
+            
             <p className="text-gray-600 text-center mb-6">
-              Click the PayPal button below to securely complete your membership purchase
+              Complete the form above and click the PayPal button below to securely complete your membership purchase
             </p>
             
             {/* PayPal Checkout */}
@@ -209,6 +261,10 @@ export default function MembershipCart() {
                 label: "pay"
               }}
               createOrder={(_data, actions) => {
+                const customTextForPaypal = customText.trim() 
+                  ? ` | Members: ${customText.trim()}`
+                  : '';
+                
                 return actions.order.create({
                   purchase_units: [{
                     amount: {
@@ -230,7 +286,8 @@ export default function MembershipCart() {
                       quantity: item.quantity.toString(),
                       description: item.description || ''
                     })),
-                    description: "Congregation Beth Shalom Membership"
+                    description: `Congregation Beth Shalom Membership${customTextForPaypal}`,
+                    custom_id: customText.trim() || undefined
                   }],
                   intent: "CAPTURE"
                 });
@@ -248,9 +305,10 @@ export default function MembershipCart() {
                       8000
                     );
                     
-                    // Clear cart after successful purchase
+                    // Clear cart and custom text after successful purchase
                     setCart([]);
                     setShowCart(false);
+                    setCustomText('');
                     
                   } catch (error) {
                     console.error("Error capturing order:", error);
@@ -308,5 +366,6 @@ export default function MembershipCart() {
         </div>
       )}
     </div>
+    </>
   );
 }

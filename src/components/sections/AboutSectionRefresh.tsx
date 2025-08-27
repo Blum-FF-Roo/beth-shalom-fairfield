@@ -2,14 +2,13 @@
 
 import Link from 'next/link';
 import { useContentRefresh } from '@/hooks/useContentRefresh';
-import { aboutText } from '@/data/site-data';
 
 export default function AboutSectionRefresh() {
   // Use the universal content refresh hook for about text
   const [dynamicAboutText, loading] = useContentRefresh<string>('aboutText');
   
-  // Use default text if no dynamic text or still loading
-  const content = dynamicAboutText || aboutText;
+  // Use database content only
+  const content = dynamicAboutText;
 
   return (
     <section className="py-12 bg-white">
@@ -28,13 +27,17 @@ export default function AboutSectionRefresh() {
               <div className="flex items-center justify-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
               </div>
-            ) : (
+            ) : content ? (
               <div className="text-gray-700 leading-relaxed space-y-4">
                 {content.split('\n\n').map((paragraph: string, index: number) => (
                   <p key={index} className="mb-4">
                     {paragraph.trim()}
                   </p>
                 ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-gray-500">No content available</p>
               </div>
             )}
             

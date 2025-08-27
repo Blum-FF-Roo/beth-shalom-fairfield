@@ -1,5 +1,5 @@
-import UserManagementOptimized from '@/components/admin/UserManagementOptimized';
+import UserManagement from '@/components/admin/UserManagement';
 
 export default function UserManagementPage() {
-  return <UserManagementOptimized />;
+  return <UserManagement />;
 }

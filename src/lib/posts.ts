@@ -32,7 +32,9 @@ function convertFirestorePost(doc: DocumentSnapshot<DocumentData>): Post {
     isPublished: data.isPublished,
     createdAt: data.createdAt?.toDate() || new Date(),
     updatedAt: data.updatedAt?.toDate() || new Date(),
-    authorId: data.authorId
+    authorId: data.authorId,
+    authorName: data.authorName,
+    slug: data.slug
   };
 }
 
@@ -91,11 +93,21 @@ export async function getPostById(id: string): Promise<Post | null> {
 }
 
 // Create new post
-export async function createPost(postData: PostFormData, authorId: string): Promise<string> {
+export async function createPost(postData: PostFormData, authorId: string, authorName?: string): Promise<string> {
   try {
+    // Generate slug from title
+    const slug = postData.title
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim();
+
     const docRef = await addDoc(collection(db, POSTS_COLLECTION), {
       ...postData,
       authorId,
+      authorName,
+      slug,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     });

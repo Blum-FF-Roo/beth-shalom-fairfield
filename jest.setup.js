@@ -59,3 +59,10 @@ process.env.NEXT_PUBLIC_FIREBASE_APP_ID = 'test-app-id';
 // Mock window.alert and console.error
 global.alert = jest.fn();
 global.console.error = jest.fn();
+
+// Mock Firebase
+jest.mock('@/lib/firebase', () => ({
+  db: {},
+  auth: {},
+  storage: {}
+}));

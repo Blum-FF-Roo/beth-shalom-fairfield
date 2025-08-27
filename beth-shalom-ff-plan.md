@@ -805,3 +805,19 @@ the submenu links (##) should be a popover menu when hovering on a main link (#)
 all content areas need to be editable by admin (when given permission) and super admin
 
 the header needs to be sticky when the page scrolls. when it is at the top on the main page it should be transparent background. when scroll starts it should be opaque.
+
+### SEB Revisions
+
+A) Add a menu item “Join” (between Parashah and Donate) with submenu “Become a
+Member” So move become a member from the Donate menu.
+D) The High Holy Day Sermons (under Media Archive) page should be
+https://bethshalomfairfield.com/high-holy-day-sermons/
+should have the same format and functionality as the Parashah page i.e. listing the
+sermons and have a search capability
+E) The Articles of Interest https://bethshalomfairfield.com/words-of-wisdom/ page
+should have the same format and functionality as the Parashah page i.e. listing the
+articles and have search capability
+F) Change the “Media Links” entry under “Media Archive” to be “History”
+And the page should look like this https://bethshalomfairfield.com/history/
+G) The logo at the upper left text should read “Congregation Beth Shalom” and under that
+“Fairfield, Iowa” the text should be proportionately larger

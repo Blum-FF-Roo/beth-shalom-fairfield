@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Settings, LogOut, Users, ChevronDown, Menu, X } from 'lucide-react';
-import { siteConfig, navigationMenu } from '@/data/site-data';
+import { Settings, LogOut, Users, Menu as MenuIcon, X } from 'lucide-react';
+import { siteConfig } from '@/data/site-data';
 import { cn } from '@/lib/utils';
+import Menu from '@/components/shared/Menu';
+import { getNavigationMenuItems } from '@/components/shared/MenuItemsConfig';
 import { useAuth } from '@/contexts/AuthContext';
 import { useContentRefresh } from '@/hooks/useContentRefresh';
 
@@ -20,6 +22,9 @@ export default function HeaderScrollWrapper() {
 
   // Use the universal content refresh hook for logo
   const [logoUrl] = useContentRefresh<string>('siteLogo');
+  
+  // Get navigation items for mobile menu
+  const navigationMenuItems = getNavigationMenuItems();
 
   // Handle scroll behavior
   useEffect(() => {
@@ -64,7 +69,7 @@ export default function HeaderScrollWrapper() {
     : 'text-gray-900';
 
   const logoColorStyle = isMainPage && !isScrolled 
-    ? { color: '#F58C28' } 
+    ? { color: '#fff' } 
     : { color: '#F58C28' };
 
   return (
@@ -72,169 +77,137 @@ export default function HeaderScrollWrapper() {
       "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
       headerBgClass
     )}>
-      <div className="max-w-7xl mx-auto px-4">
-        {/* Top bar with login/admin links */}
-        <div className="flex justify-end pt-4 text-xs">
-          {!user ? (
-            <Link
-              href="/admin/login"
-              className={cn(
-                "hover:underline transition-colors duration-200",
-                textColorClass
-              )}
-            >
-              Login
-            </Link>
-          ) : (
-            <div className="flex items-center space-x-3">
-              <Link
-                href="/admin"
-                className={cn(
-                  "inline-flex items-center hover:underline transition-colors duration-200",
-                  textColorClass
-                )}
-              >
-                <Settings className="h-3 w-3 mr-1" />
-                Admin
-              </Link>
-              {userData?.role === 'super-admin' && (
-                <Link
-                  href="/admin/users"
-                  className={cn(
-                    "inline-flex items-center hover:underline transition-colors duration-200",
-                    textColorClass
-                  )}
-                >
-                  <Users className="h-3 w-3 mr-1" />
-                  Users
-                </Link>
-              )}
-              <button
-                onClick={handleLogout}
-                className={cn(
-                  "inline-flex items-center hover:underline transition-colors duration-200",
-                  textColorClass
-                )}
-              >
-                <LogOut className="h-3 w-3 mr-1" />
-                Logout
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Main navigation */}
-        <div className="flex items-center justify-between pb-3">
-          {/* Logo and Site Title */}
-          <Link href="/" className="flex items-center space-x-3">
-            <div className="w-12 h-12 relative flex-shrink-0">
+      <div className="mx-auto px-4">
+        {/* Header Layout: Logo Left, Menus Right */}
+        <div className="flex items-center justify-between">
+          {/* Logo and Site Title - Upper Left */}
+          <Link href="/" className="flex items-center space-x-2 lg:space-x-2 p-2">
+            {/* Logo Container */}
+            <div className="site-logo-wrapper relative w-12 h-12 lg:w-12 lg:h-12 xl:w-18 xl:h-18 flex-shrink-0 bg-white/80 rounded-full p-2 lg:p-3">
               {logoUrl && logoUrl.includes('firebase') ? (
                 <Image
                   key={logoUrl} // Force re-render when URL changes
                   src={logoUrl}
                   alt={siteConfig.name}
                   fill
-                  className="rounded-full object-cover"
-                  sizes="48px"
+                  className="rounded-full object-cover p-1 shadow-md"
+                  sizes="(max-width: 1024px) 48px, (max-width: 1280px) 96px, 112px"
                   priority
                 />
               ) : (
-                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{backgroundColor: '#F58C28'}}>
-                  <span className="text-white font-bold text-lg">BS</span>
+                <div className="w-full h-full rounded-full flex items-center justify-center" style={{backgroundColor: '#F58C28'}}>
+                  <span className="text-white font-bold text-sm lg:text-2xl xl:text-3xl">BS</span>
                 </div>
               )}
             </div>
-            <div>
-              <h1 className="text-lg md:text-xl font-bold" style={logoColorStyle}>
+            
+            {/* Site Title */}
+            <div className="site-title-container flex flex-col justify-center">
+              <h1 
+                className="site-title text-lg md:text-xl lg:text-2xl xl:text-3xl font-[500] text-shadow-xs" 
+                style={{
+                  ...logoColorStyle,
+                  fontFamily: 'system-ui, -apple-system, sans-serif',
+                  textTransform: 'uppercase',
+                  fontWeight: '700'
+                }}
+              >
                 {siteConfig.name}
               </h1>
-              <p className="text-xs md:text-sm opacity-75" style={logoColorStyle}>{siteConfig.subtitle}</p>
+              <span 
+                className="site-subtitle text-xs md:text-sm lg:text-base xl:text-lg opacity-75 font-medium tracking-wide" 
+                style={{
+                  ...logoColorStyle,
+                  fontFamily: 'system-ui, -apple-system, sans-serif'
+                }}
+              >
+                {siteConfig.subtitle}
+              </span>
             </div>
           </Link>
 
-          {/* Navigation Menu */}
-          <nav className="hidden lg:flex items-center space-x-6">
-            {navigationMenu.map((item) => (
-              <div
-                key={item.id}
-                className="relative group"
-              >
+          {/* Two-Row Menu Structure - Upper Right */}
+          <div className="flex flex-col items-end space-y-1">
+            {/* Top Row: Admin Menu Items */}
+            <div className="flex items-center space-x-3 text-xs text-shadow-md">
+              {!user ? (
                 <Link
-                  href={item.href}
+                  href="/admin/login"
                   className={cn(
-                    "text-sm font-medium transition-colors duration-200 flex items-center py-2",
-                    textColorClass,
-                    isMainPage && !isScrolled 
-                      ? 'hover:text-orange-200' 
-                      : 'hover:text-orange-600',
-                    // Special styling for Donate button
-                    item.id === 'donate' && 'px-4 py-2 border-2 rounded-lg',
-                    item.id === 'donate' && (isMainPage && !isScrolled ? 'border-orange-400' : 'border-orange-500')
+                    "hover:underline transition-colors duration-200",
+                    textColorClass
                   )}
-                  style={item.id === 'donate' ? {
-                    borderColor: '#F58C28',
-                    ...(isMainPage && !isScrolled ? {} : {})
-                  } : {}}
-                  onMouseEnter={(e) => {
-                    if (item.subMenu) handleDropdownEnter(item.id);
-                    if (item.id === 'donate') {
-                      e.currentTarget.style.backgroundColor = '#F58C28';
-                      e.currentTarget.style.color = 'white';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (item.id === 'donate') {
-                      e.currentTarget.style.backgroundColor = 'transparent';
-                      e.currentTarget.style.color = ''; // Clear inline style to let CSS classes take over
-                    }
-                  }}
                 >
-                  {item.title}
-                  {item.subMenu && (
-                    <ChevronDown className="ml-1 w-3 h-3" />
-                  )}
+                  Login
                 </Link>
-
-                {/* Dropdown Menu */}
-                {item.subMenu && (
-                  <div 
-                    className="absolute top-full left-0 mt-0 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
-                    onMouseEnter={() => setActiveDropdown(item.id)}
-                    onMouseLeave={handleDropdownLeave}
+              ) : (
+                <>
+                  <Link
+                    href="/admin"
+                    className={cn(
+                      "inline-flex items-center hover:underline transition-colors duration-200",
+                      textColorClass
+                    )}
                   >
-                    {item.subMenu.map((subItem) => (
-                      <Link
-                        key={subItem.id}
-                        href={subItem.href}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-orange-600 transition-colors duration-200"
-                      >
-                        {subItem.title}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </nav>
+                    <Settings className="h-3 w-3 mr-1" />
+                    Admin
+                  </Link>
+                  {userData?.role === 'super-admin' && (
+                    <Link
+                      href="/admin/users"
+                      className={cn(
+                        "inline-flex items-center hover:underline transition-colors duration-200",
+                        textColorClass
+                      )}
+                    >
+                      <Users className="h-3 w-3 mr-1" />
+                      Users
+                    </Link>
+                  )}
+                  <button
+                    onClick={handleLogout}
+                    className={cn(
+                      "inline-flex items-center hover:underline transition-colors duration-200",
+                      textColorClass
+                    )}
+                  >
+                    <LogOut className="h-3 w-3 mr-1" />
+                    Logout
+                  </button>
+                </>
+              )}
+            </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={toggleMobileMenu}
-            className={cn(
-              "lg:hidden p-2 rounded-md transition-colors duration-200",
-              textColorClass,
-              isMainPage && !isScrolled 
-                ? 'hover:bg-white hover:bg-opacity-20' 
-                : 'hover:bg-gray-100'
-            )}
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
-          </button>
+            {/* Bottom Row: Main Navigation Menu */}
+            <Menu
+              mode="header"
+              className="space-x-4"
+              textColorClass={textColorClass}
+              isMainPage={isMainPage}
+              isScrolled={isScrolled}
+              onDropdownEnter={handleDropdownEnter}
+              onDropdownLeave={handleDropdownLeave}
+            />
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={toggleMobileMenu}
+              className={cn(
+                "lg:hidden p-2 rounded-md transition-colors duration-200 self-end",
+                textColorClass,
+                isMainPage && !isScrolled 
+                  ? 'hover:bg-white hover:bg-opacity-20' 
+                  : 'hover:bg-gray-100'
+              )}
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <MenuIcon className="h-6 w-6" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -269,7 +242,7 @@ export default function HeaderScrollWrapper() {
             {/* Navigation */}
             <nav className="flex-1 px-4 py-6 overflow-y-auto">
               <div className="space-y-1">
-                {navigationMenu.map((item) => (
+                {navigationMenuItems.map((item) => (
                   <div key={item.id}>
                     <Link
                       href={item.href}

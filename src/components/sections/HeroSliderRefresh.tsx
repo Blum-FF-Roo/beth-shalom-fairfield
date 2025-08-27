@@ -1,6 +1,5 @@
 'use client';
 
-import { heroSlides } from '@/data/site-data';
 import { SlideItem } from '@/types/content';
 import { useContentRefresh } from '@/hooks/useContentRefresh';
 import HeroSliderClient from './HeroSliderClient';
@@ -9,8 +8,8 @@ export default function HeroSliderRefresh() {
   // Use the universal content refresh hook for hero slides
   const [dynamicSlides, loading] = useContentRefresh<SlideItem[]>('heroSlides');
   
-  // Use default slides if no dynamic slides or still loading
-  const slides = (dynamicSlides && dynamicSlides.length > 0) ? dynamicSlides : heroSlides;
+  // Use database content only
+  const slides = dynamicSlides;
 
   if (loading) {
     return (

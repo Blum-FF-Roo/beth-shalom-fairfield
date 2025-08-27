@@ -18,7 +18,7 @@ interface HeroSliderClientProps {
 
 export default function HeroSliderClient({ slides }: HeroSliderClientProps) {
   return (
-    <section className="relative w-full h-150 overflow-hidden">
+    <section className="relative w-full h-156 overflow-hidden">
       <Swiper
         modules={[Navigation, Pagination, Autoplay, EffectFade]}
         spaceBetween={0}
@@ -65,28 +65,33 @@ export default function HeroSliderClient({ slides }: HeroSliderClientProps) {
                     >
                       {slide.title}
                     </h2>
-                    {slide.subtitle && (
-                      <h3
-                        className="text-xl md:text-2xl lg:text-3xl font-medium"
-                        style={{ color: "#F58C28" }}
-                      >
-                        {slide.subtitle}
-                      </h3>
-                    )}
-                    <p className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+                    {/* {slide.subtitle && ( */}
+                    {/*   <h3 */}
+                    {/*     className="text-xl md:text-2xl lg:text-3xl font-medium" */}
+                    {/*     style={{ color: "#F58C28" }} */}
+                    {/*   > */}
+                    {/*     {slide.subtitle} */}
+                    {/*   </h3> */}
+                    {/* )} */}
+                    <p className="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed">
                       {slide.description}
                     </p>
                     <div className="pt-6">
                       <Link
                         href={slide.linkUrl}
                         target={slide.linkTarget || "_self"}
-                        className="inline-block text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
-                        style={{ backgroundColor: "#F58C28" }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.backgroundColor = "#E67C1F")
+                        className="px-4 py-2 border-2 rounded-sm border-orange-400 text-2xl  transition-colors duration-200 shadow-lg hover:shadow-xl"
+                        // className="inline-block text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
+                        style={{ backgroundColor: "transparent" }}
+                        onMouseEnter={(e) =>{
+                          e.currentTarget.style.backgroundColor = "#E67C1F"
+                            e.currentTarget.style.color = 'white';
                         }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.backgroundColor = "#F58C28")
+                        }
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = "transparent"
+                          e.currentTarget.style.color = '';
+                        }
                         }
                       >
                         {slide.linkText}

@@ -22,7 +22,25 @@ export default function PayPalDonation({ defaultAmount = "25.00" }: PayPalDonati
   const predefinedAmounts = ["18", "36", "50", "100", "180"];
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <>
+      {/* Z-Index fix for PayPal buttons */}
+      <style jsx global>{`
+        .paypal-buttons {
+          position: relative !important;
+          z-index: 10 !important;
+        }
+        
+        .paypal-buttons iframe {
+          z-index: 10 !important;
+        }
+        
+        /* Ensure header stays on top - preserve existing positioning */
+        header, nav {
+          z-index: 50 !important;
+        }
+      `}</style>
+      
+      <div className="w-full max-w-md mx-auto">
       {/* Amount Selection */}
       <div className="mb-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-3">Select Donation Amount</h3>
@@ -195,5 +213,6 @@ export default function PayPalDonation({ defaultAmount = "25.00" }: PayPalDonati
         <p className="mt-1">Congregation Beth Shalom is a registered 501(c)(3) organization</p>
       </div>
     </div>
+    </>
   );
 }

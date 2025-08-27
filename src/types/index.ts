@@ -53,7 +53,7 @@ export interface ContactInfo {
   facebook?: string;
 }
 
-export type PostCategory = 'parshah' | 'high-holy-day';
+export type PostCategory = 'parshah' | 'high-holy-day' | 'articles';
 
 export interface Post {
   id: string;
@@ -64,6 +64,8 @@ export interface Post {
   createdAt: Date;
   updatedAt: Date;
   authorId: string;
+  authorName?: string;
+  slug?: string;
 }
 
 export interface PostFormData {

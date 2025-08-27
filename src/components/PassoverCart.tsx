@@ -25,9 +25,29 @@ interface CartItem extends PassoverTicket {
   quantity: number;
 }
 
+type PaymentStatus = 'cart' | 'success' | 'error';
+
+interface PayPalOrderDetails {
+  id?: string;
+  status?: string;
+  payer?: {
+    name?: {
+      given_name?: string;
+    };
+  };
+  purchase_units?: Array<{
+    amount?: {
+      value?: string;
+    };
+  }>;
+  [key: string]: unknown; // Allow other PayPal properties
+}
+
 export default function PassoverCart() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showCart, setShowCart] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>('cart');
+  const [paymentDetails, setPaymentDetails] = useState<PayPalOrderDetails | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [customText, setCustomText] = useState('');
   const { showSuccess, showError } = useToast();
@@ -108,7 +128,94 @@ export default function PassoverCart() {
         }
       `}</style>
       
-      <div className="bg-white rounded-lg shadow-lg p-8">
+      {/* Payment Success State */}
+      {paymentStatus === 'success' && paymentDetails && (
+        <div className="bg-white rounded-lg shadow-lg p-8">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Reservation Confirmed!</h3>
+            <p className="text-lg text-gray-600 mb-4">
+              Thank you {paymentDetails.payer?.name?.given_name || 'for your reservation'}!
+            </p>
+            <div className="bg-green-50 rounded-lg p-4 mb-6">
+              <p className="text-sm text-green-800 mb-2">
+                <strong>Transaction ID:</strong> {paymentDetails.id || 'N/A'}
+              </p>
+              <p className="text-sm text-green-800 mb-2">
+                <strong>Amount:</strong> ${paymentDetails.purchase_units?.[0]?.amount?.value || 'N/A'}
+              </p>
+              <p className="text-sm text-green-800">
+                <strong>Status:</strong> {paymentDetails.status || 'N/A'}
+              </p>
+            </div>
+            <p className="text-gray-600 mb-6">
+              Your Passover Seder reservation has been confirmed! We look forward to celebrating with you. You will receive a confirmation email with event details and location information.
+            </p>
+            <button
+              onClick={() => {
+                setPaymentStatus('cart');
+                setPaymentDetails(null);
+                setCart([]);
+                setShowCart(false);
+                setCustomText('');
+              }}
+              className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
+            >
+              Continue Browsing
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Payment Error State */}
+      {paymentStatus === 'error' && (
+        <div className="bg-white rounded-lg shadow-lg p-8">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Reservation Failed</h3>
+            <p className="text-lg text-gray-600 mb-4">
+              We encountered an issue processing your Seder reservation.
+            </p>
+            <div className="bg-red-50 rounded-lg p-4 mb-6">
+              <p className="text-sm text-red-800 mb-2">
+                Don't worry - no charges have been made to your account.
+              </p>
+              <p className="text-sm text-red-800">
+                You can try again or contact us directly for assistance.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <button
+                onClick={() => {
+                  setPaymentStatus('cart');
+                  setPaymentDetails(null);
+                }}
+                className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
+              >
+                Try Again
+              </button>
+              <a
+                href="/contact"
+                className="bg-gray-500 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 text-center"
+              >
+                Contact Us
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Regular Cart State */}
+      {paymentStatus === 'cart' && (
+        <div className="bg-white rounded-lg shadow-lg p-8">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-4">Reserve Your Seder Seats</h2>
         <p className="text-gray-600">Join us for our Community Passover Seder - $20 per person</p>
@@ -266,19 +373,19 @@ export default function PassoverCart() {
                       try {
                         const details = await actions.order.capture();
                         
+                        // Set success state and store payment details
+                        setPaymentStatus('success');
+                        setPaymentDetails(details);
+                        
                         showSuccess(
                           'Seder Reservation Confirmed!',
                           `Thank you ${details.payer?.name?.given_name || 'Anonymous'}! Your Passover Seder reservation for ${cartItemCount} ${cartItemCount === 1 ? 'person' : 'people'} has been confirmed. Transaction ID: ${details.id}. We look forward to celebrating with you!`,
                           8000
                         );
                         
-                        // Clear cart and custom text after successful purchase
-                        setCart([]);
-                        setShowCart(false);
-                        setCustomText('');
-                        
                       } catch (error) {
                         console.error("Error capturing order:", error);
+                        setPaymentStatus('error');
                         showError(
                           'Payment Processing Error',
                           'There was an error processing your seder reservation. Please try again or contact us for assistance.'
@@ -288,6 +395,7 @@ export default function PassoverCart() {
                   }}
                   onError={(err) => {
                     console.error("PayPal error:", err);
+                    setPaymentStatus('error');
                     showError(
                       'PayPal Error',
                       'There was an error with PayPal. Please try again or contact us directly for assistance.'
@@ -333,6 +441,7 @@ export default function PassoverCart() {
         </div>
       )}
     </div>
+    )}
     </>
   );
 }

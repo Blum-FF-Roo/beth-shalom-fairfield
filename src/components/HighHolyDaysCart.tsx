@@ -107,12 +107,32 @@ interface CartItem extends ProductOption {
   quantity: number;
 }
 
+type PaymentStatus = 'cart' | 'success' | 'error';
+
+interface PayPalOrderDetails {
+  id?: string;
+  status?: string;
+  payer?: {
+    name?: {
+      given_name?: string;
+    };
+  };
+  purchase_units?: Array<{
+    amount?: {
+      value?: string;
+    };
+  }>;
+  [key: string]: unknown; // Allow other PayPal properties
+}
+
 export default function HighHolyDaysCart() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showCart, setShowCart] = useState(false);
   const [activeSection, setActiveSection] = useState<'membership' | 'tickets'>('membership');
   const [isMounted, setIsMounted] = useState(false);
   const [customText, setCustomText] = useState('');
+  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>('cart');
+  const [paymentDetails, setPaymentDetails] = useState<PayPalOrderDetails | null>(null);
   const { showSuccess, showError } = useToast();
 
   useEffect(() => {
@@ -202,7 +222,95 @@ export default function HighHolyDaysCart() {
   );
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-8">
+    <>
+      {/* Payment Success State */}
+      {paymentStatus === 'success' && paymentDetails && (
+        <div className="bg-white rounded-lg shadow-lg p-8">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Purchase Successful!</h3>
+            <p className="text-lg text-gray-600 mb-4">
+              Thank you {paymentDetails.payer?.name?.given_name || 'for your purchase'}!
+            </p>
+            <div className="bg-green-50 rounded-lg p-4 mb-6">
+              <p className="text-sm text-green-800 mb-2">
+                <strong>Transaction ID:</strong> {paymentDetails.id}
+              </p>
+              <p className="text-sm text-green-800 mb-2">
+                <strong>Amount:</strong> ${paymentDetails.purchase_units?.[0]?.amount?.value || 'N/A'}
+              </p>
+              <p className="text-sm text-green-800">
+                <strong>Status:</strong> {paymentDetails.status}
+              </p>
+            </div>
+            <p className="text-gray-600 mb-6">
+              Your High Holy Days purchase has been processed successfully! You will receive confirmation emails with event details, membership information, and ticket information as applicable.
+            </p>
+            <button
+              onClick={() => {
+                setPaymentStatus('cart');
+                setPaymentDetails(null);
+                setCart([]);
+                setShowCart(false);
+                setCustomText('');
+              }}
+              className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
+            >
+              Continue Browsing
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Payment Error State */}
+      {paymentStatus === 'error' && (
+        <div className="bg-white rounded-lg shadow-lg p-8">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Purchase Failed</h3>
+            <p className="text-lg text-gray-600 mb-4">
+              We encountered an issue processing your High Holy Days purchase.
+            </p>
+            <div className="bg-red-50 rounded-lg p-4 mb-6">
+              <p className="text-sm text-red-800 mb-2">
+                Don't worry - no charges have been made to your account.
+              </p>
+              <p className="text-sm text-red-800">
+                You can try again or contact us directly for assistance.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <button
+                onClick={() => {
+                  setPaymentStatus('cart');
+                  setPaymentDetails(null);
+                }}
+                className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
+              >
+                Try Again
+              </button>
+              <a
+                href="/contact"
+                className="bg-gray-500 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 text-center"
+              >
+                Contact Us
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Regular Cart State */}
+      {paymentStatus === 'cart' && (
+        <div className="bg-white rounded-lg shadow-lg p-8">
       {/* Section Toggle */}
       <div className="flex justify-center mb-8">
         <div className="inline-flex rounded-lg border border-gray-200 p-1">
@@ -384,6 +492,10 @@ export default function HighHolyDaysCart() {
                       try {
                         const details = await actions.order.capture();
                         
+                        // Set success state and store payment details
+                        setPaymentStatus('success');
+                        setPaymentDetails(details);
+                        
                         const hasMemebership = cart.some(item => item.category === 'membership');
                         const successMessage = hasMemebership 
                           ? `Thank you ${details.payer?.name?.given_name || 'Anonymous'}! Your membership has been processed. Transaction ID: ${details.id}. Welcome to Congregation Beth Shalom!`
@@ -395,13 +507,9 @@ export default function HighHolyDaysCart() {
                           8000
                         );
                         
-                        // Clear cart and custom text after successful purchase
-                        setCart([]);
-                        setShowCart(false);
-                        setCustomText('');
-                        
                       } catch (error) {
                         console.error("Error capturing order:", error);
+                        setPaymentStatus('error');
                         showError(
                           'Payment Processing Error',
                           'There was an error processing your purchase. Please try again or contact us for assistance.'
@@ -411,6 +519,7 @@ export default function HighHolyDaysCart() {
                   }}
                   onError={(err) => {
                     console.error("PayPal error:", err);
+                    setPaymentStatus('error');
                     showError(
                       'PayPal Error',
                       'There was an error with PayPal. Please try again or contact us directly for assistance.'
@@ -456,5 +565,7 @@ export default function HighHolyDaysCart() {
         </div>
       )}
     </div>
+    )}
+    </>
   );
 }

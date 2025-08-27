@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import PostForm from '@/components/admin/PostForm';
-import { Post } from '@/types';
+import { Post, PostCategory } from '@/types';
 import { getPostById } from '@/lib/posts';
 import { PermissionService } from '@/lib/permissions';
 import { useAuth } from '@/contexts/AuthContext';
@@ -17,13 +17,20 @@ export default function EditPostPage() {
   const [error, setError] = useState('');
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
 
-  useEffect(() => {
-    if (params.id) {
-      loadPost(params.id as string);
+  const checkPermission = useCallback(async (category: string) => {
+    if (!user || !userData) return;
+    
+    if (userData.role === 'super-admin') {
+      setHasPermission(true);
+    } else {
+      const permitted = await PermissionService.hasPostPermission(user.uid, category as PostCategory);
+      setHasPermission(permitted);
     }
-  }, [params.id]);
+    
+    setLoading(false);
+  }, [user, userData]);
 
-  const loadPost = async (id: string) => {
+  const loadPost = useCallback(async (id: string) => {
     try {
       const fetchedPost = await getPostById(id);
       if (fetchedPost) {
@@ -34,24 +41,17 @@ export default function EditPostPage() {
         setError('Post not found');
         setLoading(false);
       }
-    } catch (err) {
+    } catch {
       setError('Failed to load post');
       setLoading(false);
     }
-  };
+  }, [checkPermission]);
 
-  const checkPermission = async (category: string) => {
-    if (!user || !userData) return;
-    
-    if (userData.role === 'super-admin') {
-      setHasPermission(true);
-    } else {
-      const permitted = await PermissionService.hasPostPermission(user.uid, category as any);
-      setHasPermission(permitted);
+  useEffect(() => {
+    if (params.id) {
+      loadPost(params.id as string);
     }
-    
-    setLoading(false);
-  };
+  }, [params.id, loadPost]);
 
   if (loading) {
     return (

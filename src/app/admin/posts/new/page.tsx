@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import PostForm from '@/components/admin/PostForm';
@@ -8,7 +8,7 @@ import { PermissionService } from '@/lib/permissions';
 import { useAuth } from '@/contexts/AuthContext';
 import { PostCategory } from '@/types';
 
-export default function NewPostPage() {
+function NewPostContent() {
   const { user, userData } = useAuth();
   const searchParams = useSearchParams();
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -71,5 +71,15 @@ export default function NewPostPage() {
     <ProtectedRoute>
       <PostForm initialCategory={requestedCategory || undefined} />
     </ProtectedRoute>
+  );
+}
+
+export default function NewPostPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="animate-spin rounded-full h-32 w-32 border-b-2" style={{borderColor: '#F58C28'}}></div>
+    </div>}>
+      <NewPostContent />
+    </Suspense>
   );
 }

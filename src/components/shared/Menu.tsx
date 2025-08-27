@@ -19,7 +19,6 @@ interface MenuProps {
   // Filter mode props
   selectedCategory?: string;
   onFilterClick?: (category: string) => void;
-  itemCounts?: Record<string, number>;
   showAdminButtons?: boolean; // For "All Sections" and "Site Branding" buttons
 }
 
@@ -33,7 +32,6 @@ export default function Menu({
   onDropdownLeave,
   selectedCategory = 'all',
   onFilterClick,
-  itemCounts,
   showAdminButtons = false
 }: MenuProps) {
   

@@ -394,7 +394,9 @@ export async function importAllContent(userId: string = 'system'): Promise<void>
       try {
         const contentSection: Omit<ContentSection, 'createdAt' | 'updatedAt'> = {
           id: `${sectionData.category}-${sectionData.key}`,
-          ...sectionData
+          ...sectionData,
+          createdBy: userId,
+          updatedBy: userId
         };
         
         await createContentSection(contentSection, userId);

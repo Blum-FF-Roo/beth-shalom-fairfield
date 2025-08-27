@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getAllContentSections, updateContentSection } from '@/lib/content-schema';
 
-export async function POST(_request: NextRequest) {
+export async function POST() {
   try {
     // Get all content sections
     const allSections = await getAllContentSections();

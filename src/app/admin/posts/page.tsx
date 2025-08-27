@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Plus, Edit, Eye, Trash2, ArrowLeft, Calendar, User } from 'lucide-react';
@@ -12,7 +12,7 @@ import { PermissionService } from '@/lib/permissions';
 import { useToast } from '@/contexts/ToastContext';
 import { POST_CATEGORIES } from '@/lib/admin-permissions';
 
-export default function PostsListPage() {
+function PostsListContent() {
   const { user, userData } = useAuth();
   const { showSuccess, showError } = useToast();
   const searchParams = useSearchParams();
@@ -331,5 +331,15 @@ export default function PostsListPage() {
         </div>
       </div>
     </ProtectedRoute>
+  );
+}
+
+export default function PostsListPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="animate-spin rounded-full h-32 w-32 border-b-2" style={{borderColor: '#F58C28'}}></div>
+    </div>}>
+      <PostsListContent />
+    </Suspense>
   );
 }

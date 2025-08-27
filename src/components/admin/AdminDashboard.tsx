@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Plus, Users, Edit, FileText } from 'lucide-react';
+import { Plus, Users, Edit } from 'lucide-react';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import { useToast } from '@/contexts/ToastContext';
 import { ContentSection } from '@/types/content';

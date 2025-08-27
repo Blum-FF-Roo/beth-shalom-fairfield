@@ -107,7 +107,9 @@ export async function initHistoryContent(userId: string = 'system'): Promise<voi
     for (const sectionData of historyContentSections) {
       const contentSection: Omit<ContentSection, 'createdAt' | 'updatedAt'> = {
         id: `history-${sectionData.key}`,
-        ...sectionData
+        ...sectionData,
+        createdBy: userId,
+        updatedBy: userId
       };
       
       await createContentSection(contentSection, userId);

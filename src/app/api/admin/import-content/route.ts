@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { importAllContent } from '@/scripts/import-all-content';
 import { getContentSectionByKey } from '@/lib/content-schema';
 
-export async function POST(_request: NextRequest) {
+export async function POST() {
   try {
     // Check if content already exists
     const existingHistory = await getContentSectionByKey('historyIntro');

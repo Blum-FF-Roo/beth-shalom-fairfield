@@ -240,22 +240,22 @@ export default function UserManagement() {
       <div className="min-h-screen bg-gray-50 pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
+            <div className="mb-4">
+              <Link
+                href="/admin"
+                className="inline-flex items-center text-gray-600 hover:text-gray-900"
+              >
+                <ArrowLeft className="h-4 w-4 mr-1" />
+                Back to Dashboard
+              </Link>
+            </div>
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <Link
-                  href="/admin"
-                  className="inline-flex items-center text-gray-600 hover:text-gray-900"
-                >
-                  <ArrowLeft className="h-4 w-4 mr-1" />
-                  Back to Dashboard
-                </Link>
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-                    <UsersIcon className="h-8 w-8 mr-3" />
-                    User Management
-                  </h1>
-                  <p className="mt-2 text-gray-600">Manage user accounts and permissions</p>
-                </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 flex items-center">
+                  <UsersIcon className="h-8 w-8 mr-3" />
+                  User Management
+                </h1>
+                <p className="mt-2 text-gray-600">Manage user accounts and permissions</p>
               </div>
 
               <button

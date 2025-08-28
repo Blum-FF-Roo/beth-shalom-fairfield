@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Plus, Users as UsersIcon, CheckCircle, XCircle } from 'lucide-react';
+import { ArrowLeft, Plus, Users as UsersIcon, CheckCircle, XCircle, ChevronDown, ChevronRight } from 'lucide-react';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
 import { UserData, getAllUsers, updateUser, deleteUser, createUser } from '@/lib/users';
@@ -30,6 +30,7 @@ export default function UserManagement() {
   const [newUserRole, setNewUserRole] = useState<UserRole>('admin');
   const [addingUser, setAddingUser] = useState(false);
   const [loadingPermissions, setLoadingPermissions] = useState<string | null>(null);
+  const [expandedPermissions, setExpandedPermissions] = useState<Set<string>>(new Set());
 
   const loadData = useCallback(async (): Promise<void> => {
     try {
@@ -209,6 +210,16 @@ export default function UserManagement() {
     }
   };
 
+  const togglePermissionsExpanded = (userId: string) => {
+    const newExpanded = new Set(expandedPermissions);
+    if (newExpanded.has(userId)) {
+      newExpanded.delete(userId);
+    } else {
+      newExpanded.add(userId);
+    }
+    setExpandedPermissions(newExpanded);
+  };
+
   if (loading) {
     return (
       <ProtectedRoute requiredRole="super-admin">
@@ -331,6 +342,13 @@ export default function UserManagement() {
                         {user.isActive ? 'Active' : 'Inactive'}
                       </span>
                     </div>
+                    {user.lastLogin && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        Last login: {typeof user.lastLogin === 'object' && user.lastLogin && 'toDate' in user.lastLogin && typeof user.lastLogin.toDate === 'function'
+                          ? new Date(user.lastLogin.toDate()).toLocaleString()
+                          : new Date(user.lastLogin as Date).toLocaleString()}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex space-x-2">
@@ -344,7 +362,7 @@ export default function UserManagement() {
                     >
                       {user.isActive ? 'Deactivate' : 'Activate'}
                     </button>
-                    {user.role !== 'super-admin' && (
+                    {user.uid !== userData?.uid && (
                       <button
                         onClick={() => handleDeleteUser(user.uid)}
                         className="px-3 py-1.5 text-xs font-medium rounded text-white bg-red-600 hover:bg-red-700"
@@ -358,26 +376,42 @@ export default function UserManagement() {
                 {user.role !== 'super-admin' && (
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <h4 className="text-sm font-medium text-gray-900">Content Permissions</h4>
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => handleSelectAllPermissions(user.uid)}
-                          disabled={loadingPermissions === user.uid}
-                          className="px-3 py-1 text-xs font-medium rounded text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          {loadingPermissions === user.uid ? 'Processing...' : 'Select All'}
-                        </button>
-                        <button
-                          onClick={() => handleClearAllPermissions(user.uid)}
-                          disabled={loadingPermissions === user.uid}
-                          className="px-3 py-1 text-xs font-medium rounded text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          {loadingPermissions === user.uid ? 'Processing...' : 'Clear All'}
-                        </button>
-                      </div>
+                      <button
+                        onClick={() => togglePermissionsExpanded(user.uid)}
+                        className="flex items-center text-sm font-medium text-gray-900 hover:text-gray-700 focus:outline-none"
+                      >
+                        {expandedPermissions.has(user.uid) ? (
+                          <ChevronDown className="h-4 w-4 mr-1" />
+                        ) : (
+                          <ChevronRight className="h-4 w-4 mr-1" />
+                        )}
+                        Content Permissions
+                        <span className="ml-2 text-xs text-gray-500">
+                          ({user.permissions.length}/{permissionSections.length})
+                        </span>
+                      </button>
+                      {expandedPermissions.has(user.uid) && (
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={() => handleSelectAllPermissions(user.uid)}
+                            disabled={loadingPermissions === user.uid}
+                            className="px-3 py-1 text-xs font-medium rounded text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {loadingPermissions === user.uid ? 'Processing...' : 'Select All'}
+                          </button>
+                          <button
+                            onClick={() => handleClearAllPermissions(user.uid)}
+                            disabled={loadingPermissions === user.uid}
+                            className="px-3 py-1 text-xs font-medium rounded text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {loadingPermissions === user.uid ? 'Processing...' : 'Clear All'}
+                          </button>
+                        </div>
+                      )}
                     </div>
-                    <div className="space-y-4">
-                      {Object.entries(groupedPermissions).map(([category, sections]) => (
+                    {expandedPermissions.has(user.uid) && (
+                      <div className="space-y-4">
+                        {Object.entries(groupedPermissions).map(([category, sections]) => (
                         <div key={category}>
                           <h5 className="text-xs font-semibold text-gray-700 mb-2 flex items-center">
                             {getCategoryDisplayName(category)}
@@ -411,9 +445,10 @@ export default function UserManagement() {
                               );
                             })}
                           </div>
-                        </div>
-                      ))}
-                    </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

@@ -140,7 +140,7 @@ export default function EditContentPage({ params }: Props) {
       await updateContentSectionContent(contentSection.id, contentToSave, userData.uid);
       
       // Trigger universal content refresh
-      window.dispatchEvent(new CustomEvent('refreshContent', { 
+      window.dispatchEvent(new CustomEvent('contentUpdated', { 
         detail: { key: contentSection.key } 
       }));
       

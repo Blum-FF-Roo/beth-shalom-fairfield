@@ -16,7 +16,7 @@ jest.mock('../PayPalProvider', () => ({
 const mockShowSuccess = jest.fn();
 const mockShowError = jest.fn();
 
-jest.mock('../../contexts/ToastContext', () => ({
+jest.mock('../../utils/ToastContext', () => ({
   useToast: () => ({
     showSuccess: mockShowSuccess,
     showError: mockShowError,
@@ -169,8 +169,9 @@ describe('MembershipCart', () => {
       );
     });
     
-    // Cart should be empty after successful payment
-    expect(screen.getByText('Your cart is empty. Select a membership level above to get started.')).toBeInTheDocument();
+    // Should show success screen instead of empty cart
+    expect(screen.getByText('Payment Successful!')).toBeInTheDocument();
+    expect(screen.getByText(/Thank you.*Test User/)).toBeInTheDocument();
   });
 
   test('handles PayPal payment error', async () => {

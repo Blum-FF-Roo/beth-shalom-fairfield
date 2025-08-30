@@ -1,15 +1,16 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AdminDashboard from '../AdminDashboard';
 import { useAuth } from '@/app/utils/AuthContext';
 import { useToast } from '@/app/utils/ToastContext';
 import { getAllContentSections } from '@/app/utils/firebase-operations';
 import { PermissionService } from '@/app/utils/permissions';
 
-jest.mock('@/contexts/AuthContext');
-jest.mock('@/contexts/ToastContext');
-jest.mock('@/app/utils/firebase-content');
-jest.mock('@/lib/permissions');
+jest.mock('@/app/utils/AuthContext');
+jest.mock('@/app/utils/ToastContext');
+jest.mock('@/app/utils/firebase-operations');
+jest.mock('@/app/utils/permissions');
 jest.mock('@/app/components/auth/ProtectedRoute', () => {
   return function ProtectedRoute({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
@@ -20,6 +21,23 @@ const mockUseAuth = useAuth as jest.Mock;
 const mockUseToast = useToast as jest.Mock;
 const mockGetAllContentSections = getAllContentSections as jest.Mock;
 const mockPermissionService = PermissionService as jest.Mocked<typeof PermissionService>;
+
+// Helper function to render with QueryClient
+const renderWithQueryClient = (component: React.ReactElement) => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+  
+  return render(
+    <QueryClientProvider client={queryClient}>
+      {component}
+    </QueryClientProvider>
+  );
+};
 
 const mockUser = {
   uid: 'user123',
@@ -89,7 +107,7 @@ describe('AdminDashboard', () => {
       
       mockGetAllContentSections.mockImplementation(() => new Promise(() => {}));
       
-      render(<AdminDashboard />);
+      renderWithQueryClient(<AdminDashboard />);
       
       expect(screen.getByText('Loading admin dashboard...')).toBeInTheDocument();
       expect(screen.getByRole('status', { hidden: true })).toBeInTheDocument();
@@ -105,7 +123,7 @@ describe('AdminDashboard', () => {
       
       mockGetAllContentSections.mockResolvedValue(mockContentSections);
       
-      render(<AdminDashboard />);
+      renderWithQueryClient(<AdminDashboard />);
       
       await waitFor(() => {
         expect(screen.getByText('Site Logo')).toBeInTheDocument();
@@ -122,7 +140,7 @@ describe('AdminDashboard', () => {
       
       mockGetAllContentSections.mockResolvedValue(mockContentSections);
       
-      render(<AdminDashboard />);
+      renderWithQueryClient(<AdminDashboard />);
       
       await waitFor(() => {
         expect(screen.getByText('Manage Users')).toBeInTheDocument();
@@ -140,7 +158,7 @@ describe('AdminDashboard', () => {
       mockGetAllContentSections.mockResolvedValue(mockContentSections);
       mockPermissionService.getUserPermissions.mockResolvedValue(['section1', 'section3']);
       
-      render(<AdminDashboard />);
+      renderWithQueryClient(<AdminDashboard />);
       
       await waitFor(() => {
         expect(screen.getByText('Site Logo')).toBeInTheDocument();
@@ -158,7 +176,7 @@ describe('AdminDashboard', () => {
       mockGetAllContentSections.mockResolvedValue(mockContentSections);
       mockPermissionService.getUserPermissions.mockResolvedValue(['section1']);
       
-      render(<AdminDashboard />);
+      renderWithQueryClient(<AdminDashboard />);
       
       await waitFor(() => {
         expect(screen.queryByText('Manage Users')).not.toBeInTheDocument();
@@ -176,7 +194,7 @@ describe('AdminDashboard', () => {
       mockGetAllContentSections.mockResolvedValue(mockContentSections);
       mockPermissionService.getUserPermissions.mockResolvedValue(['section1']);
       
-      render(<AdminDashboard />);
+      renderWithQueryClient(<AdminDashboard />);
       
       await waitFor(() => {
         expect(screen.getByText('All')).toBeInTheDocument();
@@ -196,7 +214,7 @@ describe('AdminDashboard', () => {
       
       mockGetAllContentSections.mockResolvedValue(mockContentSections);
       
-      render(<AdminDashboard />);
+      renderWithQueryClient(<AdminDashboard />);
       
       await waitFor(() => {
         expect(screen.getByText('Site Logo')).toBeInTheDocument();
@@ -223,7 +241,7 @@ describe('AdminDashboard', () => {
       mockGetAllContentSections.mockResolvedValue(mockContentSections);
       mockPermissionService.getUserPermissions.mockResolvedValue([]);
       
-      render(<AdminDashboard />);
+      renderWithQueryClient(<AdminDashboard />);
       
       await waitFor(() => {
         expect(screen.getByText('No content sections found')).toBeInTheDocument();
@@ -241,7 +259,7 @@ describe('AdminDashboard', () => {
       
       mockGetAllContentSections.mockRejectedValue(new Error('Failed to load'));
       
-      render(<AdminDashboard />);
+      renderWithQueryClient(<AdminDashboard />);
       
       await waitFor(() => {
         expect(mockShowError).toHaveBeenCalledWith('Error', 'Failed to load content sections');
@@ -259,7 +277,7 @@ describe('AdminDashboard', () => {
       mockGetAllContentSections.mockResolvedValue([mockContentSections[0]]);
       mockPermissionService.getUserPermissions.mockResolvedValue(['section1']);
       
-      render(<AdminDashboard />);
+      renderWithQueryClient(<AdminDashboard />);
       
       await waitFor(() => {
         const editLink = screen.getByRole('link', { name: /edit/i });

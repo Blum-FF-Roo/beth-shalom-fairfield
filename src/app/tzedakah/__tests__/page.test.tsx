@@ -3,14 +3,14 @@ import { render, screen } from '@testing-library/react';
 import TzedakahPage from '../page';
 
 // Mock PayPalProvider to avoid PayPal SDK issues in tests
-jest.mock('../../../components/PayPalProvider', () => {
+jest.mock('../../components/PayPalProvider', () => {
   return function MockPayPalProvider({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
   };
 });
 
 // Mock the ToastContext to avoid provider issues in tests
-jest.mock('../../../contexts/ToastContext', () => ({
+jest.mock('../../utils/ToastContext', () => ({
   useToast: () => ({
     showSuccess: jest.fn(),
     showError: jest.fn(),

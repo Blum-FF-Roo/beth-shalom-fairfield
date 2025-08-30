@@ -1,21 +1,57 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { useRouter } from 'next/navigation';
+import { QueryClient, QueryClientProvider, useMutation, useQueryClient } from '@tanstack/react-query';
 import EditContentPage from '../[id]/page';
-import { getContentSectionById, updateContentSectionContent } from '@/app/utils/firebase-operations';
+import { getContentSectionById, updateContentSection } from '@/app/utils/firebase-operations';
 import { useAuth } from '@/app/utils/AuthContext';
 import { useToast } from '@/app/utils/ToastContext';
 
 // Mock all dependencies
 jest.mock('next/navigation');
-jest.mock('@/app/utils/firebase-content');
-jest.mock('@/contexts/AuthContext');
-jest.mock('@/contexts/ToastContext');
+jest.mock('@/app/utils/firebase-operations');
+jest.mock('@/app/utils/AuthContext');
+jest.mock('@/app/utils/ToastContext');
+jest.mock('@tanstack/react-query');
+jest.mock('@/app/components/auth/ProtectedRoute', () => {
+  return function ProtectedRoute({ children }: { children: React.ReactNode }) {
+    return <>{children}</>;
+  };
+});
+jest.mock('@/app/components/admin/RichTextEditor', () => {
+  return function RichTextEditor(props: any) {
+    return <textarea {...props} data-testid="rich-text-editor" />;
+  };
+});
+jest.mock('@/app/components/admin/ImageUpload', () => {
+  return function ImageUpload(props: any) {
+    return <input {...props} data-testid="image-upload" type="file" />;
+  };
+});
 
 const mockUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 const mockGetContentSectionById = getContentSectionById as jest.MockedFunction<typeof getContentSectionById>;
-const mockUpdateContentSectionContent = updateContentSectionContent as jest.MockedFunction<typeof updateContentSectionContent>;
+const mockUpdateContentSection = updateContentSection as jest.MockedFunction<typeof updateContentSection>;
 const mockUseAuth = useAuth as jest.MockedFunction<typeof useAuth>;
 const mockUseToast = useToast as jest.MockedFunction<typeof useToast>;
+const mockUseMutation = useMutation as jest.MockedFunction<typeof useMutation>;
+const mockUseQueryClient = useQueryClient as jest.MockedFunction<typeof useQueryClient>;
+
+// Helper function to render with QueryClient
+const renderWithQueryClient = (component: React.ReactElement) => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+  
+  return render(
+    <QueryClientProvider client={queryClient}>
+      {component}
+    </QueryClientProvider>
+  );
+};
 
 describe('Admin Toggle Functionality', () => {
   const mockRouter = {
@@ -48,6 +84,11 @@ describe('Admin Toggle Functionality', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     
+    const mockMutate = jest.fn();
+    const mockQueryClient = {
+      invalidateQueries: jest.fn(),
+    };
+    
     mockUseRouter.mockReturnValue(mockRouter);
     mockUseAuth.mockReturnValue({
       user: { uid: 'test-user' },
@@ -57,6 +98,26 @@ describe('Admin Toggle Functionality', () => {
       showSuccess: mockShowSuccess,
       showError: mockShowError,
     } as ReturnType<typeof useToast>);
+    
+    mockUseQueryClient.mockReturnValue(mockQueryClient);
+    mockUseMutation.mockReturnValue({
+      mutate: mockMutate,
+      isPending: false,
+      isError: false,
+      isSuccess: false,
+    } as any);
+    
+    // Make the mutate function call the onSuccess callback when invoked
+    mockMutate.mockImplementation((variables) => {
+      // Wait for the next tick to simulate async behavior
+      setTimeout(() => {
+        // Find the most recent useMutation call
+        const recentCall = mockUseMutation.mock.calls[mockUseMutation.mock.calls.length - 1];
+        if (recentCall && recentCall[0].onSuccess) {
+          recentCall[0].onSuccess({ success: true }, variables);
+        }
+      }, 0);
+    });
   });
 
   test('loads programs toggle setting correctly', async () => {
@@ -64,6 +125,11 @@ describe('Admin Toggle Functionality', () => {
 
     const params = Promise.resolve({ id: 'home-programs-toggle' });
     render(<EditContentPage params={params} />);
+
+    // Wait for the component to load and render
+    await waitFor(() => {
+      expect(screen.getByText('Edit: Programs Toggle Setting')).toBeInTheDocument();
+    });
 
     await waitFor(() => {
       expect(screen.getByLabelText('High Holy Days')).toBeInTheDocument();
@@ -77,7 +143,7 @@ describe('Admin Toggle Functionality', () => {
 
   test('allows switching from High Holy Days to Passover', async () => {
     mockGetContentSectionById.mockResolvedValue(mockProgramsToggleSection);
-    mockUpdateContentSectionContent.mockResolvedValue();
+    mockUpdateContentSection.mockResolvedValue();
 
     const params = Promise.resolve({ id: 'home-programs-toggle' });
     render(<EditContentPage params={params} />);
@@ -94,10 +160,9 @@ describe('Admin Toggle Functionality', () => {
     fireEvent.click(screen.getByText('Save Changes'));
 
     await waitFor(() => {
-      expect(mockUpdateContentSectionContent).toHaveBeenCalledWith(
+      expect(mockUpdateContentSection).toHaveBeenCalledWith(
         'home-programs-toggle',
-        'passover',
-        'test-user'
+        { content: 'passover' }
       );
     });
   });
@@ -109,7 +174,7 @@ describe('Admin Toggle Functionality', () => {
     };
     
     mockGetContentSectionById.mockResolvedValue(passoverToggleSection);
-    mockUpdateContentSectionContent.mockResolvedValue();
+    mockUpdateContentSection.mockResolvedValue();
 
     const params = Promise.resolve({ id: 'home-programs-toggle' });
     render(<EditContentPage params={params} />);
@@ -126,17 +191,16 @@ describe('Admin Toggle Functionality', () => {
     fireEvent.click(screen.getByText('Save Changes'));
 
     await waitFor(() => {
-      expect(mockUpdateContentSectionContent).toHaveBeenCalledWith(
+      expect(mockUpdateContentSection).toHaveBeenCalledWith(
         'home-programs-toggle',
-        'highHolyDays',
-        'test-user'
+        { content: 'highHolyDays' }
       );
     });
   });
 
   test('dispatches contentUpdated event after successful save', async () => {
     mockGetContentSectionById.mockResolvedValue(mockProgramsToggleSection);
-    mockUpdateContentSectionContent.mockResolvedValue();
+    mockUpdateContentSection.mockResolvedValue();
 
     // Mock window.dispatchEvent
     const dispatchEventSpy = jest.spyOn(window, 'dispatchEvent');
@@ -166,7 +230,7 @@ describe('Admin Toggle Functionality', () => {
 
   test('shows success message after saving toggle', async () => {
     mockGetContentSectionById.mockResolvedValue(mockProgramsToggleSection);
-    mockUpdateContentSectionContent.mockResolvedValue();
+    mockUpdateContentSection.mockResolvedValue();
 
     const params = Promise.resolve({ id: 'home-programs-toggle' });
     render(<EditContentPage params={params} />);
@@ -182,7 +246,7 @@ describe('Admin Toggle Functionality', () => {
     await waitFor(() => {
       expect(mockShowSuccess).toHaveBeenCalledWith(
         'Content Updated',
-        'Programs Toggle Setting has been updated and should appear immediately.'
+        'Content has been successfully updated.'
       );
     });
   });

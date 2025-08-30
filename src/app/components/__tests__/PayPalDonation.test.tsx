@@ -6,7 +6,7 @@ import PayPalDonation from '../PayPalDonation';
 const mockShowSuccess = jest.fn();
 const mockShowError = jest.fn();
 
-jest.mock('../../contexts/ToastContext', () => ({
+jest.mock('../../utils/ToastContext', () => ({
   useToast: () => ({
     showSuccess: mockShowSuccess,
     showError: mockShowError,

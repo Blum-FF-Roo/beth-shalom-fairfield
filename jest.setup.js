@@ -60,8 +60,24 @@ process.env.NEXT_PUBLIC_FIREBASE_APP_ID = 'test-app-id';
 global.alert = jest.fn();
 global.console.error = jest.fn();
 
+// Mock fetch and Response for Firebase
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    json: () => Promise.resolve({}),
+    ok: true,
+    status: 200
+  })
+);
+
+global.Response = function(body, init) {
+  this.body = body;
+  this.status = init?.status || 200;
+  this.ok = this.status >= 200 && this.status < 300;
+  this.json = () => Promise.resolve(body ? JSON.parse(body) : {});
+};
+
 // Mock Firebase
-jest.mock('@/lib/firebase', () => ({
+jest.mock('@/app/utils/firebase', () => ({
   db: {},
   auth: {},
   storage: {}

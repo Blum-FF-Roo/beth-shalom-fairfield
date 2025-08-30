@@ -362,7 +362,7 @@ export default function UserManagement() {
                     >
                       {user.isActive ? 'Deactivate' : 'Activate'}
                     </button>
-                    {user.uid !== userData?.uid && (
+                    {user.uid !== userData?.uid && user.role !== 'super-admin' && (
                       <button
                         onClick={() => handleDeleteUser(user.uid)}
                         className="px-3 py-1.5 text-xs font-medium rounded text-white bg-red-600 hover:bg-red-700"

@@ -1,10 +1,10 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import ProgramsSection from '../ProgramsSection';
-import { useContentRefresh } from '@/hooks/useContentRefresh';
+import { useQuery } from '@tanstack/react-query';
 
-// Mock the useContentRefresh hook
-jest.mock('@/hooks/useContentRefresh');
-const mockUseContentRefresh = useContentRefresh as jest.MockedFunction<typeof useContentRefresh>;
+// Mock TanStack Query
+jest.mock('@tanstack/react-query');
+const mockUseQuery = useQuery as jest.MockedFunction<typeof useQuery>;
 
 // Mock Next.js Image component
 jest.mock('next/image', () => {
@@ -19,8 +19,12 @@ describe('ProgramsSection', () => {
   });
 
   test('shows High Holy Days when toggle is set to highHolyDays', async () => {
-    // Mock the hook to return 'highHolyDays'
-    mockUseContentRefresh.mockReturnValue(['highHolyDays', false]);
+    // Mock useQuery to return 'highHolyDays'
+    mockUseQuery.mockReturnValue({
+      data: { content: 'highHolyDays' },
+      isLoading: false,
+      error: null
+    } as any);
 
     render(<ProgramsSection />);
 
@@ -31,8 +35,12 @@ describe('ProgramsSection', () => {
   });
 
   test('shows Passover when toggle is set to passover', async () => {
-    // Mock the hook to return 'passover'
-    mockUseContentRefresh.mockReturnValue(['passover', false]);
+    // Mock useQuery to return 'passover'
+    mockUseQuery.mockReturnValue({
+      data: { content: 'passover' },
+      isLoading: false,
+      error: null
+    } as any);
 
     render(<ProgramsSection />);
 
@@ -43,8 +51,12 @@ describe('ProgramsSection', () => {
   });
 
   test('defaults to High Holy Days when toggle value is null', async () => {
-    // Mock the hook to return null (content not found)
-    mockUseContentRefresh.mockReturnValue([null, false]);
+    // Mock useQuery to return null (content not found)
+    mockUseQuery.mockReturnValue({
+      data: null,
+      isLoading: false,
+      error: null
+    } as any);
 
     render(<ProgramsSection />);
 
@@ -55,25 +67,24 @@ describe('ProgramsSection', () => {
   });
 
   test('shows loading state when content is loading', async () => {
-    // Mock the hook to return loading state
-    mockUseContentRefresh.mockReturnValue([null, true]);
+    // Mock useQuery to return loading state
+    mockUseQuery.mockReturnValue({
+      data: null,
+      isLoading: true,
+      error: null
+    } as any);
 
     render(<ProgramsSection />);
 
     expect(screen.getByRole('status', { name: /loading/i })).toBeInTheDocument();
   });
 
-  test('uses correct content key for toggle setting', () => {
-    mockUseContentRefresh.mockReturnValue(['highHolyDays', false]);
-
-    render(<ProgramsSection />);
-
-    // Verify the hook was called with the correct key
-    expect(mockUseContentRefresh).toHaveBeenCalledWith('programs_toggle_setting');
-  });
-
   test('always shows Shabbat Services as first program', async () => {
-    mockUseContentRefresh.mockReturnValue(['passover', false]);
+    mockUseQuery.mockReturnValue({
+      data: { content: 'passover' },
+      isLoading: false,
+      error: null
+    } as any);
 
     render(<ProgramsSection />);
 

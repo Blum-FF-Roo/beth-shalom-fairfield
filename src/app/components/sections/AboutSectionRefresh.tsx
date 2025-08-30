@@ -6,7 +6,7 @@ import { getContentSectionByKey } from '@/app/utils/firebase-operations';
 
 export default function AboutSectionRefresh() {
   // Use TanStack Query to get about text directly
-  const { data: section, isLoading: loading, error } = useQuery({
+  const { data: section, isLoading: loading } = useQuery({
     queryKey: ['content', 'aboutText'],
     queryFn: () => getContentSectionByKey('aboutText'),
   });

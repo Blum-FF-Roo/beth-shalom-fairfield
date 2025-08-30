@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { useRouter } from 'next/navigation';
-import { QueryClient, QueryClientProvider, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import EditContentPage from '../[id]/page';
 import { getContentSectionById, updateContentSection } from '@/app/utils/firebase-operations';
 import { useAuth } from '@/app/utils/AuthContext';
@@ -18,12 +18,12 @@ jest.mock('@/app/components/auth/ProtectedRoute', () => {
   };
 });
 jest.mock('@/app/components/admin/RichTextEditor', () => {
-  return function RichTextEditor(props: any) {
+  return function RichTextEditor(props: React.ComponentProps<'textarea'>) {
     return <textarea {...props} data-testid="rich-text-editor" />;
   };
 });
 jest.mock('@/app/components/admin/ImageUpload', () => {
-  return function ImageUpload(props: any) {
+  return function ImageUpload(props: React.ComponentProps<'input'>) {
     return <input {...props} data-testid="image-upload" type="file" />;
   };
 });
@@ -36,22 +36,6 @@ const mockUseToast = useToast as jest.MockedFunction<typeof useToast>;
 const mockUseMutation = useMutation as jest.MockedFunction<typeof useMutation>;
 const mockUseQueryClient = useQueryClient as jest.MockedFunction<typeof useQueryClient>;
 
-// Helper function to render with QueryClient
-const renderWithQueryClient = (component: React.ReactElement) => {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
-  
-  return render(
-    <QueryClientProvider client={queryClient}>
-      {component}
-    </QueryClientProvider>
-  );
-};
 
 describe('Admin Toggle Functionality', () => {
   const mockRouter = {
@@ -105,7 +89,12 @@ describe('Admin Toggle Functionality', () => {
       isPending: false,
       isError: false,
       isSuccess: false,
-    } as any);
+      data: undefined,
+      error: null,
+      reset: jest.fn(),
+      isIdle: false,
+      mutateAsync: jest.fn(),
+    });
     
     // Make the mutate function call the onSuccess callback when invoked
     mockMutate.mockImplementation((variables) => {

@@ -23,8 +23,11 @@ describe('ProgramsSection', () => {
     mockUseQuery.mockReturnValue({
       data: { content: 'highHolyDays' },
       isLoading: false,
-      error: null
-    } as any);
+      error: null,
+      isError: false,
+      refetch: jest.fn(),
+      isSuccess: true,
+    });
 
     render(<ProgramsSection />);
 
@@ -39,8 +42,11 @@ describe('ProgramsSection', () => {
     mockUseQuery.mockReturnValue({
       data: { content: 'passover' },
       isLoading: false,
-      error: null
-    } as any);
+      error: null,
+      isError: false,
+      refetch: jest.fn(),
+      isSuccess: true,
+    });
 
     render(<ProgramsSection />);
 
@@ -55,8 +61,11 @@ describe('ProgramsSection', () => {
     mockUseQuery.mockReturnValue({
       data: null,
       isLoading: false,
-      error: null
-    } as any);
+      error: null,
+      isError: false,
+      refetch: jest.fn(),
+      isSuccess: true,
+    });
 
     render(<ProgramsSection />);
 
@@ -71,8 +80,11 @@ describe('ProgramsSection', () => {
     mockUseQuery.mockReturnValue({
       data: null,
       isLoading: true,
-      error: null
-    } as any);
+      error: null,
+      isError: false,
+      refetch: jest.fn(),
+      isSuccess: false,
+    });
 
     render(<ProgramsSection />);
 
@@ -83,8 +95,11 @@ describe('ProgramsSection', () => {
     mockUseQuery.mockReturnValue({
       data: { content: 'passover' },
       isLoading: false,
-      error: null
-    } as any);
+      error: null,
+      isError: false,
+      refetch: jest.fn(),
+      isSuccess: true,
+    });
 
     render(<ProgramsSection />);
 

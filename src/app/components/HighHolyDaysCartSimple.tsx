@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import { Plus, Minus, ShoppingCart, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { useToast } from '@/app/utils/ToastContext';
@@ -138,13 +138,13 @@ export default function HighHolyDaysCartSimple({ onAddToCart }: HighHolyDaysCart
   const [paymentDetails, setPaymentDetails] = useState<PayPalOrderDetails | null>(null);
   const { showSuccess, showError } = useToast();
 
-  const allProducts = [...membershipOptions, ...ticketOptions];
+  const allProducts = useMemo(() => [...membershipOptions, ...ticketOptions], []);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  const scrollToCart = (elementId: string) => {
+  const scrollToCart = useCallback((elementId: string) => {
     const cartElement = document.getElementById(elementId);
     if (cartElement) {
       const headerHeight = 120; // Approximate header height including padding
@@ -155,9 +155,9 @@ export default function HighHolyDaysCartSimple({ onAddToCart }: HighHolyDaysCart
         behavior: 'smooth'
       });
     }
-  };
+  }, []);
 
-  const addToCart = (productId: string) => {
+  const addToCart = useCallback((productId: string) => {
     const product = allProducts.find(p => p.id === productId);
     if (!product) return;
 
@@ -179,7 +179,7 @@ export default function HighHolyDaysCartSimple({ onAddToCart }: HighHolyDaysCart
     setTimeout(() => {
       scrollToCart('high-holy-days-simple-cart-section');
     }, 100); // Small delay to ensure cart state has updated
-  };
+  }, [allProducts, onAddToCart, scrollToCart]);
 
   const removeFromCart = (productId: string) => {
     setCart(prevCart => prevCart.filter(item => item.id !== productId));
@@ -203,7 +203,7 @@ export default function HighHolyDaysCartSimple({ onAddToCart }: HighHolyDaysCart
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   // Function to create "Add to Cart" button for embedding in tables
-  const CreateAddToCartButton = ({ productId }: { productId: string }) => {
+  const CreateAddToCartButton = useCallback(({ productId }: { productId: string }) => {
     return (
       <button
         onClick={() => addToCart(productId)}
@@ -215,7 +215,7 @@ export default function HighHolyDaysCartSimple({ onAddToCart }: HighHolyDaysCart
         Add to Cart
       </button>
     );
-  };
+  }, [addToCart]);
 
   // Expose the button creator function globally for use in page
   useEffect(() => {

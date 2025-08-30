@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Save, Trash2, Plus } from 'lucide-react';
@@ -65,13 +65,7 @@ export default function EditContentPage({ params }: Props) {
     });
   }, [params]);
 
-  useEffect(() => {
-    if (paramsId) {
-      loadContentSection();
-    }
-  }, [paramsId]);
-
-  const loadContentSection = async () => {
+  const loadContentSection = useCallback(async () => {
     try {
       setLoading(true);
       const section = await getContentSectionById(paramsId);
@@ -114,7 +108,13 @@ export default function EditContentPage({ params }: Props) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [paramsId, showError, router]);
+
+  useEffect(() => {
+    if (paramsId) {
+      loadContentSection();
+    }
+  }, [paramsId, loadContentSection]);
 
   const handleSave = async () => {
     if (!contentSection || !userData?.uid) return;

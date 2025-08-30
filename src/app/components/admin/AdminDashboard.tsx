@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { Plus, Users, Edit } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import ProtectedRoute from '@/app/components/auth/ProtectedRoute';
-import { useToast } from '@/app/utils/ToastContext';
 import { useAuth } from '@/app/utils/AuthContext';
 import { ContentSection, getAllContentSections } from '@/app/utils/firebase-operations';
 import { PermissionService } from '@/app/utils/permissions';
@@ -15,7 +14,6 @@ import { POST_CATEGORIES } from '@/app/utils/admin-permissions';
 import { PostCategory } from '@/app/utils';
 
 export default function AdminDashboard() {
-  const { showError } = useToast();
   const { user, userData } = useAuth();
 
   const [selectedCategory, setSelectedCategory] = useState<string>('all');

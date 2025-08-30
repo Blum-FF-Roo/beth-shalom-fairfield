@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import PostDisplay from '@/components/posts/PostDisplay';
-import { Post } from '@/types';
-import { getPostById } from '@/lib/posts';
+import PostDisplay from '@/app/components/posts/PostDisplay';
+import { Post } from '@/app/utils';
+import { getPostById } from '@/app/utils';
 
 export default function HighHolyDaysPostPage() {
   const params = useParams();

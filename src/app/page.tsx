@@ -1,6 +1,6 @@
-import HeroSliderRefresh from "@/components/sections/HeroSliderRefresh";
-import AboutSectionRefresh from "@/components/sections/AboutSectionRefresh";
-import ProgramsSection from "@/components/sections/ProgramsSection";
+import HeroSliderRefresh from "@/app/components/sections/HeroSliderRefresh";
+import AboutSectionRefresh from "@/app/components/sections/AboutSectionRefresh";
+import ProgramsSection from "@/app/components/sections/ProgramsSection";
 
 export default function Home() {
   return (

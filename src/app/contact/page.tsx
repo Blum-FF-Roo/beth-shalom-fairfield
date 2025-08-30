@@ -1,11 +1,24 @@
 'use client';
 
 import { useState } from 'react';
-import { contactInfo } from '@/data/site-data';
 import { Phone, Mail, MapPin, Facebook } from 'lucide-react';
-import { useToast } from '@/contexts/ToastContext';
+import { useToast } from '@/app/utils/ToastContext';
 
 export default function ContactPage() {
+  // Contact information
+  const contactInfo = {
+    name: "Beth Shalom Fairfield",
+    address: {
+      street: "1023 3rd Avenue",
+      city: "Fairfield",
+      state: "IA",
+      zip: "52556"
+    },
+    phone: "(641) 472-0417",
+    email: "info@bethshalomfairfield.org",
+    facebook: "https://www.facebook.com/BethShalomFairfield"
+  };
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',

@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/app/utils/AuthContext';
 import { Lock, AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react';
 
 function ResetPasswordForm() {

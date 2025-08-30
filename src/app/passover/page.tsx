@@ -1,6 +1,6 @@
-import { getMultipleContentByKeys } from '@/lib/content-server';
-import HoverButton from '@/components/ui/HoverButton';
-import PassoverCart from '@/components/PassoverCart';
+import { getMultipleContentByKeys } from '@/app/utils/firebase-operations';
+import HoverButton from '@/app/components/ui/HoverButton';
+import PassoverCart from '@/app/components/PassoverCart';
 
 export default async function PassoverPage() {
   // Fetch content server-side with fallbacks

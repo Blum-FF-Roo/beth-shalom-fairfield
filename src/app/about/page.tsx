@@ -1,5 +1,5 @@
 
-import { getMultipleContentByKeys } from '@/lib/content-server';
+import { getMultipleContentByKeys } from '@/app/utils/firebase-operations';
 
 export default async function AboutPage() {
   // Fetch content server-side with fallbacks

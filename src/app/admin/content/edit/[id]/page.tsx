@@ -1,16 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Save, Trash2, Plus } from 'lucide-react';
-import ProtectedRoute from '@/components/auth/ProtectedRoute';
-import RichTextEditor from '@/components/admin/RichTextEditor';
-import ImageUpload from '@/components/admin/ImageUpload';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/contexts/ToastContext';
-import { ContentSection, ContactInfo, SlideItem } from '@/types/content';
-import { getContentSectionById, updateContentSectionContent, userHasContentPermission } from '@/lib/content-schema';
+import ProtectedRoute from '@/app/components/auth/ProtectedRoute';
+import RichTextEditor from '@/app/components/admin/RichTextEditor';
+import ImageUpload from '@/app/components/admin/ImageUpload';
+import { useAuth } from '@/app/utils/AuthContext';
+import { useToast } from '@/app/utils/ToastContext';
+import { ContactInfo, SlideItem } from '@/app/utils';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { ContentSection, getContentSectionById, updateContentSection, setContent } from '@/app/utils/firebase-operations';
 
 interface Props {
   params: Promise<{
@@ -22,11 +23,31 @@ export default function EditContentPage({ params }: Props) {
   const router = useRouter();
   const { userData } = useAuth();
   const { showSuccess, showError } = useToast();
+  const queryClient = useQueryClient();
   const [contentSection, setContentSection] = useState<ContentSection | null>(null);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [hasPermission, setHasPermission] = useState(false);
   const [paramsId, setParamsId] = useState<string>('');
+  
+  // TanStack Query mutations for direct content updates
+  const updateContentMutation = useMutation({
+    mutationFn: async ({ id, content, key }: { id: string; content: string | ContactInfo | SlideItem[] | string[]; key: string }) => {
+      // Update both the content section and the simple content using the section's key
+      await updateContentSection(id, { content });
+      await setContent(key, content);
+      return { success: true };
+    },
+    onSuccess: (data, variables) => {
+      // Invalidate specific content key that was just updated
+      queryClient.invalidateQueries({ queryKey: ['content', variables.key] });
+      queryClient.invalidateQueries({ queryKey: ['content-sections'] });
+      showSuccess('Content Updated', 'Content has been successfully updated.');
+      router.push('/admin');
+    },
+    onError: (error) => {
+      console.error('Error updating content:', error);
+      showError('Update Failed', 'Failed to update content. Please try again.');
+    },
+  });
 
   // Form state for different content types
   const [textContent, setTextContent] = useState('');
@@ -44,13 +65,7 @@ export default function EditContentPage({ params }: Props) {
     });
   }, [params]);
 
-  useEffect(() => {
-    if (paramsId) {
-      loadContentSection();
-    }
-  }, [paramsId]);
-
-  const loadContentSection = async () => {
+  const loadContentSection = useCallback(async () => {
     try {
       setLoading(true);
       const section = await getContentSectionById(paramsId);
@@ -62,14 +77,6 @@ export default function EditContentPage({ params }: Props) {
       }
 
       setContentSection(section);
-
-      // Check permissions (super-admin always has access)
-      if (userData?.role === 'super-admin') {
-        setHasPermission(true);
-      } else if (userData?.uid) {
-        const permission = await userHasContentPermission(userData.uid, section.id);
-        setHasPermission(permission);
-      }
 
       // Initialize form state based on content type
       switch (section.type) {
@@ -101,61 +108,51 @@ export default function EditContentPage({ params }: Props) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [paramsId, showError, router]);
+
+  useEffect(() => {
+    if (paramsId) {
+      loadContentSection();
+    }
+  }, [paramsId, loadContentSection]);
 
   const handleSave = async () => {
-    if (!contentSection || !userData?.uid || !hasPermission) return;
+    if (!contentSection || !userData?.uid) return;
 
-    try {
-      setSaving(true);
-      
-      let contentToSave: string | ContactInfo | SlideItem[] | string[];
-      
-      switch (contentSection.type) {
-        case 'text':
-          contentToSave = textContent;
-          break;
-        case 'rich_text':
-          contentToSave = richTextContent;
-          break;
-        case 'list':
-          contentToSave = listContent;
-          break;
-        case 'contact':
-          contentToSave = contactContent!;
-          break;
-        case 'slide_array':
-          contentToSave = slideContent;
-          break;
-        case 'toggle':
-          contentToSave = toggleContent;
-          break;
-        case 'image':
-          contentToSave = imageContent;
-          break;
-        default:
-          throw new Error('Unknown content type');
-      }
-
-      await updateContentSectionContent(contentSection.id, contentToSave, userData.uid);
-      
-      // Trigger universal content refresh
-      window.dispatchEvent(new CustomEvent('contentUpdated', { 
-        detail: { key: contentSection.key } 
-      }));
-      
-      if (contentSection.key === 'siteLogo' || contentSection.category === 'logo') {
-        showSuccess('Logo Updated Successfully', 'Your logo has been updated and should appear immediately.');
-      } else {
-        showSuccess('Content Updated', `${contentSection.title} has been updated and should appear immediately.`);
-      }
-      router.push('/admin?tab=content');
-    } catch (error) {
-      console.error('Error updating content section:', error);
-      showError('Update Failed', 'Failed to update content section. Please try again.');
-    } finally {
-      setSaving(false);
+    let contentToSave: string | ContactInfo | SlideItem[] | string[];
+    
+    switch (contentSection.type) {
+      case 'text':
+        contentToSave = textContent;
+        break;
+      case 'rich_text':
+        contentToSave = richTextContent;
+        break;
+      case 'list':
+        contentToSave = listContent;
+        break;
+      case 'contact':
+        contentToSave = contactContent!;
+        break;
+      case 'slide_array':
+        contentToSave = slideContent;
+        break;
+      case 'toggle':
+        contentToSave = toggleContent;
+        break;
+      case 'image':
+        contentToSave = imageContent;
+        break;
+      default:
+        showError('Error', 'Unknown content type');
+        return;
     }
+
+    updateContentMutation.mutate({
+      id: contentSection.id,
+      content: contentToSave,
+      key: contentSection.key
+    });
   };
 
   const addListItem = () => {
@@ -220,22 +217,6 @@ export default function EditContentPage({ params }: Props) {
     );
   }
 
-  if (!hasPermission) {
-    return (
-      <ProtectedRoute requiredRole="admin">
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-900">Access Denied</h2>
-            <p className="mt-2 text-gray-600">You don't have permission to edit this content section.</p>
-            <Link href="/admin" className="mt-4 text-blue-600 hover:text-blue-800">
-              Return to Admin Dashboard
-            </Link>
-          </div>
-        </div>
-      </ProtectedRoute>
-    );
-  }
-
   return (
     <ProtectedRoute requiredRole="admin">
       <div className="min-h-screen bg-gray-50 pt-32 pb-12">
@@ -258,12 +239,12 @@ export default function EditContentPage({ params }: Props) {
               </div>
               <button
                 onClick={handleSave}
-                disabled={saving}
+                disabled={updateContentMutation.isPending}
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                 style={{backgroundColor: '#F58C28'}}
               >
                 <Save className="h-4 w-4 mr-2" />
-                {saving ? 'Saving...' : 'Save Changes'}
+                {updateContentMutation.isPending ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
           </div>
@@ -517,7 +498,7 @@ export default function EditContentPage({ params }: Props) {
                               currentImageUrl={slide.imageUrl}
                               onImageChange={(imageUrl) => updateSlide(index, 'imageUrl', imageUrl)}
                               onImageDelete={() => updateSlide(index, 'imageUrl', '')}
-                              disabled={saving}
+                              disabled={updateContentMutation.isPending}
                             />
                           </div>
 
@@ -612,7 +593,7 @@ export default function EditContentPage({ params }: Props) {
                   <ImageUpload
                     currentImageUrl={imageContent || undefined}
                     onImageChange={setImageContent}
-                    disabled={saving}
+                    disabled={updateContentMutation.isPending}
                     className="max-w-md"
                   />
                   <p className="mt-2 text-xs text-gray-500">

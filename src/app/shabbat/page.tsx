@@ -1,5 +1,5 @@
-import { getMultipleContentByKeys } from '@/lib/content-server';
-import HoverButton from '@/components/ui/HoverButton';
+import { getMultipleContentByKeys } from '@/app/utils/firebase-operations';
+import HoverButton from '@/app/components/ui/HoverButton';
 
 export default async function ShabbatPage() {
   // Fetch content server-side with fallbacks

@@ -1,6 +1,6 @@
 'use client';
 
-import PayPalDonation from '@/components/PayPalDonation';
+import PayPalDonation from '@/app/components/PayPalDonation';
 
 export default function TzedakahPage() {
   return (

@@ -1,6 +1,6 @@
 'use client';
 
-import MembershipCart from '@/components/MembershipCart';
+import MembershipCart from '@/app/components/MembershipCart';
 
 export default function MembershipPage() {
   return (

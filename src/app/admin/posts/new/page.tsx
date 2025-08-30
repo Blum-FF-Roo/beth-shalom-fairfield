@@ -2,11 +2,11 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import ProtectedRoute from '@/components/auth/ProtectedRoute';
-import PostForm from '@/components/admin/PostForm';
-import { PermissionService } from '@/lib/permissions';
-import { useAuth } from '@/contexts/AuthContext';
-import { PostCategory } from '@/types';
+import ProtectedRoute from '@/app/components/auth/ProtectedRoute';
+import PostForm from '@/app/components/admin/PostForm';
+import { PermissionService } from '@/app/utils/permissions';
+import { useAuth } from '@/app/utils/AuthContext';
+import { PostCategory } from '@/app/utils';
 
 function NewPostContent() {
   const { user, userData } = useAuth();

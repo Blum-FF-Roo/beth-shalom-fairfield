@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/app/utils/AuthContext';
 import { Mail, AlertCircle, CheckCircle, ArrowLeft } from 'lucide-react';
 
 export default function ForgotPasswordPage() {

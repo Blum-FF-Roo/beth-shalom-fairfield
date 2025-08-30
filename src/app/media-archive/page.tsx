@@ -1,4 +1,4 @@
-import LazyYouTubeEmbed from '@/components/LazyYouTubeEmbed';
+import LazyYouTubeEmbed from '@/app/components/LazyYouTubeEmbed';
 
 export const metadata = {
   title: 'Media Archive - Congregation Beth Shalom',

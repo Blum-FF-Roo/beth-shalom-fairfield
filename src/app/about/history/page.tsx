@@ -1,4 +1,4 @@
-import { getMultipleContentByKeys } from '@/lib/content-server';
+import { getMultipleContentByKeys } from '@/app/utils/firebase-operations';
 
 export const metadata = {
   title: 'History - Congregation Beth Shalom',

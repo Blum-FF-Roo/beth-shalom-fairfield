@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Search } from 'lucide-react';
-import { Post } from '@/types';
-import { getPostsByCategory } from '@/lib/posts';
+import { Post } from '@/app/utils';
+import { getPostsByCategory } from '@/app/utils';
 
 export default function ParashahPage() {
   const [posts, setPosts] = useState<Post[]>([]);

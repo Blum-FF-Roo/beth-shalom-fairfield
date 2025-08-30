@@ -1,4 +1,4 @@
-import HoverButton from '@/components/ui/HoverButton';
+import HoverButton from '@/app/components/ui/HoverButton';
 
 export default function ServicesPage() {
   const services = [

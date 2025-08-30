@@ -1,99 +1,77 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Edit, Eye, Trash2, ArrowLeft, Calendar, User } from 'lucide-react';
-import ProtectedRoute from '@/components/auth/ProtectedRoute';
-import { Post, PostCategory } from '@/types';
-import { getAllPosts, deletePost } from '@/lib/posts';
-import { useAuth } from '@/contexts/AuthContext';
-import { PermissionService } from '@/lib/permissions';
-import { useToast } from '@/contexts/ToastContext';
-import { POST_CATEGORIES } from '@/lib/admin-permissions';
+import ProtectedRoute from '@/app/components/auth/ProtectedRoute';
+import { Post, PostCategory } from '@/app/utils';
+import { getAllPosts } from '@/app/utils';
+import { PermissionService } from '@/app/utils/permissions';
+import { deletePost as deletePostAction } from '@/app/utils';
+import { useAuth } from '@/app/utils/AuthContext';
+import { useToast } from '@/app/utils/ToastContext';
+import { POST_CATEGORIES } from '@/app/utils/admin-permissions';
 
 function PostsListContent() {
   const { user, userData } = useAuth();
   const { showSuccess, showError } = useToast();
+  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get('category') as PostCategory;
 
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [authorizedCategories, setAuthorizedCategories] = useState<PostCategory[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<PostCategory | 'all'>(categoryParam || 'all');
-  const [loading, setLoading] = useState(true);
-  const [deleting, setDeleting] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!user || !userData) return;
-    loadUserPermissions();
-  }, [user, userData]);
+  // Get user post permissions (only if not super-admin)
+  const { data: userPostPermissions } = useQuery({
+    queryKey: ['permissions', 'posts', user?.uid],
+    queryFn: () => PermissionService.getUserPostPermissions(user!.uid),
+    enabled: !!user && !!userData && userData.role !== 'super-admin',
+  });
 
-  useEffect(() => {
-    if (authorizedCategories.length > 0) {
-      loadPosts();
-    }
-  }, [authorizedCategories]);
+  // Calculate authorized categories
+  const authorizedCategories: PostCategory[] = 
+    userData?.role === 'super-admin' 
+      ? POST_CATEGORIES.map(cat => cat.category)
+      : userPostPermissions || [];
 
-  const loadUserPermissions = async () => {
-    if (!user || !userData) return;
+  // Get all posts
+  const { data: allPosts, isLoading: postsLoading } = useQuery({
+    queryKey: ['posts'],
+    queryFn: () => getAllPosts(),
+    enabled: !!user && !!userData && authorizedCategories.length > 0,
+  });
 
-    try {
-      let categories: PostCategory[];
-      
-      if (userData.role === 'super-admin') {
-        categories = POST_CATEGORIES.map(cat => cat.category);
-      } else {
-        categories = await PermissionService.getUserPostPermissions(user.uid);
-      }
-      
-      setAuthorizedCategories(categories);
-      
-      // If user navigated directly with a category param, validate they have permission
-      if (categoryParam && !categories.includes(categoryParam) && userData.role !== 'super-admin') {
-        setSelectedCategory('all');
-      }
-      
-    } catch (error) {
-      showError('Error', 'Failed to load user permissions');
-      console.error('Error loading permissions:', error);
-    }
-  };
+  // Filter posts to only show ones the user has permission for
+  const posts = allPosts ? allPosts.filter(post => 
+    authorizedCategories.includes(post.category as PostCategory)
+  ) : [];
 
-  const loadPosts = async () => {
-    try {
-      const allPosts = await getAllPosts();
-      
-      // Filter posts to only show ones the user has permission for
-      const filteredPosts = allPosts.filter(post => 
-        authorizedCategories.includes(post.category as PostCategory)
-      );
-      
-      setPosts(filteredPosts);
-    } catch (error) {
-      showError('Error', 'Failed to load posts');
-      console.error('Error loading posts:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const loading = postsLoading || (userData?.role !== 'super-admin' && !userPostPermissions);
+
+  // Delete post mutation
+  const deletePostMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await deletePostAction(id);
+      return { success: true };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      showSuccess('Success', 'Post deleted successfully');
+    },
+    onError: (error) => {
+      showError('Error', 'Failed to delete post');
+      console.error('Error deleting post:', error);
+    },
+  });
 
   const handleDeletePost = async (postId: string, postTitle: string) => {
     if (!confirm(`Are you sure you want to delete "${postTitle}"? This action cannot be undone.`)) {
       return;
     }
 
-    setDeleting(postId);
-    try {
-      await deletePost(postId);
-      showSuccess('Success', 'Post deleted successfully');
-      loadPosts(); // Reload posts
-    } catch (error) {
-      showError('Error', 'Failed to delete post');
-      console.error('Error deleting post:', error);
-    } finally {
-      setDeleting(null);
-    }
+    deletePostMutation.mutate(postId);
   };
 
   const getFilteredPosts = (): Post[] => {
@@ -315,11 +293,11 @@ function PostsListContent() {
                         </Link>
                         <button
                           onClick={() => handleDeletePost(post.id, post.title)}
-                          disabled={deleting === post.id}
+                          disabled={deletePostMutation.isPending}
                           className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                         >
                           <Trash2 className="h-3 w-3 mr-1" />
-                          {deleting === post.id ? 'Deleting...' : 'Delete'}
+                          {deletePostMutation.isPending ? 'Deleting...' : 'Delete'}
                         </button>
                       </div>
                     </div>

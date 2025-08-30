@@ -1,13 +1,13 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { useRouter } from 'next/navigation';
 import EditContentPage from '../[id]/page';
-import { getContentSectionById, updateContentSectionContent } from '@/lib/content-schema';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/contexts/ToastContext';
+import { getContentSectionById, updateContentSectionContent } from '@/app/utils/firebase-operations';
+import { useAuth } from '@/app/utils/AuthContext';
+import { useToast } from '@/app/utils/ToastContext';
 
 // Mock all dependencies
 jest.mock('next/navigation');
-jest.mock('@/lib/content-schema');
+jest.mock('@/app/utils/firebase-content');
 jest.mock('@/contexts/AuthContext');
 jest.mock('@/contexts/ToastContext');
 

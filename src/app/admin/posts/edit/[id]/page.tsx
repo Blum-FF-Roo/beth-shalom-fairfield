@@ -2,12 +2,12 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
-import ProtectedRoute from '@/components/auth/ProtectedRoute';
-import PostForm from '@/components/admin/PostForm';
-import { Post, PostCategory } from '@/types';
-import { getPostById } from '@/lib/posts';
-import { PermissionService } from '@/lib/permissions';
-import { useAuth } from '@/contexts/AuthContext';
+import ProtectedRoute from '@/app/components/auth/ProtectedRoute';
+import PostForm from '@/app/components/admin/PostForm';
+import { Post, PostCategory } from '@/app/utils';
+import { getPostById } from '@/app/utils';
+import { PermissionService } from '@/app/utils/permissions';
+import { useAuth } from '@/app/utils/AuthContext';
 
 export default function EditPostPage() {
   const { user, userData } = useAuth();

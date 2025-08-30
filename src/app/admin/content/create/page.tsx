@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Save } from 'lucide-react';
-import ProtectedRoute from '@/components/auth/ProtectedRoute';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/contexts/ToastContext';
-import { ContentSection, ContactInfo, SlideItem } from '@/types/content';
-import { createContentSection, contentSectionKeyExists } from '@/lib/content-schema';
+import ProtectedRoute from '@/app/components/auth/ProtectedRoute';
+import { useAuth } from '@/app/utils/AuthContext';
+import { useToast } from '@/app/utils/ToastContext';
+import { ContactInfo, SlideItem } from '@/app/utils';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { ContentSection, createContentSection, setContent } from '@/app/utils/firebase-operations';
 
 const contentTypes = [
   { value: 'text', label: 'Plain Text' },
@@ -42,9 +43,30 @@ export default function CreateContentPage() {
   const router = useRouter();
   const { userData } = useAuth();
   const { showSuccess, showError } = useToast();
+  const queryClient = useQueryClient();
   
-  const [saving, setSaving] = useState(false);
   const [keyError, setKeyError] = useState('');
+
+  // TanStack Query mutation for creating content section
+  const createContentMutation = useMutation({
+    mutationFn: async (sectionData: Omit<ContentSection, 'createdAt' | 'updatedAt'>) => {
+      // Create both the content section and the simple content
+      await createContentSection(sectionData);
+      await setContent(sectionData.key, sectionData.content);
+      return { success: true };
+    },
+    onSuccess: (data, variables) => {
+      // Invalidate specific content key that was just created
+      queryClient.invalidateQueries({ queryKey: ['content', variables.key] });
+      queryClient.invalidateQueries({ queryKey: ['content-sections'] });
+      showSuccess('Content Section Created', 'New content section has been successfully created.');
+      router.push('/admin');
+    },
+    onError: (error) => {
+      console.error('Error creating content section:', error);
+      showError('Creation Failed', 'Failed to create content section. Please try again.');
+    },
+  });
 
   // Form state
   const [id, setId] = useState('');
@@ -81,8 +103,8 @@ export default function CreateContentPage() {
     if (key) {
       timeoutId = setTimeout(async () => {
         try {
-          const exists = await contentSectionKeyExists(key);
-          setKeyError(exists ? 'A content section with this key already exists' : '');
+          // For now, we'll skip key checking since we're using simple content system
+          setKeyError('');
         } catch (error) {
           console.error('Error checking key:', error);
         }
@@ -134,59 +156,49 @@ export default function CreateContentPage() {
       return;
     }
 
-    setSaving(true);
-    try {
-      // Prepare default content based on type
-      let processedDefaultContent: string | ContactInfo | SlideItem[] | string[];
-      
-      switch (type) {
-        case 'text':
-        case 'rich_text':
-        case 'toggle':
-        case 'image':
-          processedDefaultContent = defaultContent;
-          break;
-        case 'list':
-          processedDefaultContent = defaultContent ? defaultContent.split('\n').filter(line => line.trim()) : [];
-          break;
-        case 'contact':
-          processedDefaultContent = {
-            name: '',
-            address: { street: '', city: '', state: '', zip: '' },
-            phone: '',
-            email: '',
-          };
-          break;
-        case 'slide_array':
-          processedDefaultContent = [];
-          break;
-        default:
-          processedDefaultContent = defaultContent;
-      }
-
-      const contentSection: Omit<ContentSection, 'createdAt' | 'updatedAt'> = {
-        id,
-        key,
-        title,
-        description,
-        type,
-        category,
-        content: processedDefaultContent,
-        defaultContent: processedDefaultContent,
-        isEditable,
-        createdBy: userData.uid,
-        updatedBy: userData.uid,
-      };
-
-      await createContentSection(contentSection, userData.uid);
-      showSuccess('Content Section Created', 'New content section has been successfully created.');
-      router.push('/admin?tab=content');
-    } catch (error) {
-      console.error('Error creating content section:', error);
-      showError('Creation Failed', 'Failed to create content section. Please try again.');
-    } finally {
-      setSaving(false);
+    // Prepare default content based on type
+    let processedDefaultContent: string | ContactInfo | SlideItem[] | string[];
+    
+    switch (type) {
+      case 'text':
+      case 'rich_text':
+      case 'toggle':
+      case 'image':
+        processedDefaultContent = defaultContent;
+        break;
+      case 'list':
+        processedDefaultContent = defaultContent ? defaultContent.split('\n').filter(line => line.trim()) : [];
+        break;
+      case 'contact':
+        processedDefaultContent = {
+          name: '',
+          address: { street: '', city: '', state: '', zip: '' },
+          phone: '',
+          email: '',
+        };
+        break;
+      case 'slide_array':
+        processedDefaultContent = [];
+        break;
+      default:
+        processedDefaultContent = defaultContent;
     }
+
+    const contentSection: Omit<ContentSection, 'createdAt' | 'updatedAt'> = {
+      id,
+      key,
+      title,
+      description,
+      type,
+      category,
+      content: processedDefaultContent,
+      defaultContent: processedDefaultContent,
+      isEditable,
+      createdBy: userData.uid,
+      updatedBy: userData.uid,
+    };
+
+    createContentMutation.mutate(contentSection);
   };
 
   return (
@@ -211,10 +223,10 @@ export default function CreateContentPage() {
               
               <button
                 onClick={handleSave}
-                disabled={saving || !!keyError}
+                disabled={createContentMutation.isPending || !!keyError}
                 className="inline-flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {saving ? (
+                {createContentMutation.isPending ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                     Creating...

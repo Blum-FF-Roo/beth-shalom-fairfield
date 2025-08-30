@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import { AuthProvider } from "@/contexts/AuthContext";
-import PayPalProvider from "@/components/PayPalProvider";
-import { ToastProvider } from "@/contexts/ToastContext";
-import ToastContainer from "@/components/ui/ToastContainer";
+import Header from "@/app/components/layout/Header";
+import Footer from "@/app/components/layout/Footer";
+import { AuthProvider } from "@/app/utils/AuthContext";
+import PayPalProvider from "@/app/components/PayPalProvider";
+import { ToastProvider } from "@/app/utils/ToastContext";
+import ToastContainer from "@/app/components/ui/ToastContainer";
+import QueryProvider from "@/app/components/providers/QueryProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -34,16 +35,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
-        <ToastProvider>
-          <PayPalProvider>
-            <AuthProvider>
-              <Header />
-              <main>{children}</main>
-              <Footer />
-              <ToastContainer />
-            </AuthProvider>
-          </PayPalProvider>
-        </ToastProvider>
+        <QueryProvider>
+          <ToastProvider>
+            <PayPalProvider>
+              <AuthProvider>
+                <Header />
+                <main>{children}</main>
+                <Footer />
+                <ToastContainer />
+              </AuthProvider>
+            </PayPalProvider>
+          </ToastProvider>
+        </QueryProvider>
       </body>
     </html>
   );

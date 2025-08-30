@@ -1,7 +1,7 @@
-import { getMultipleContentByKeys } from '@/lib/content-server';
-import HoverButton from '@/components/ui/HoverButton';
-import HighHolyDaysCartSimple from '@/components/HighHolyDaysCartSimple';
-import AddToCartButton from '@/components/AddToCartButton';
+import { getMultipleContentByKeys } from '@/app/utils/firebase-operations';
+import HoverButton from '@/app/components/ui/HoverButton';
+import HighHolyDaysCartSimple from '@/app/components/HighHolyDaysCartSimple';
+import AddToCartButton from '@/app/components/AddToCartButton';
 
 export default async function HighHolyDaysPage() {
   // Fetch content server-side with fallbacks - only dynamic sections

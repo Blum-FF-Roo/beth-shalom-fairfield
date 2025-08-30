@@ -1,18 +1,40 @@
+'use client';
+
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getContentByKey } from '@/lib/content-server';
+import { useContentRefresh } from '@/hooks/useContentRefresh';
 import { programs, toggleablePrograms } from '@/data/site-data';
 
-export default async function ProgramsSectionServer() {
-  // Load toggle setting server-side
-  const toggleSetting = await getContentByKey('programsToggle');
+export default function ProgramsSection() {
+  
+  // Use the universal content refresh hook for programs toggle
+  const [toggleSetting, loading] = useContentRefresh<string>('programsToggle');
+  
   
   // Select the second program based on toggle setting
-  const currentToggle = (toggleSetting as string) || 'highHolyDays';
+  const currentToggle = toggleSetting || 'highHolyDays';
   const secondProgram = currentToggle === 'passover' ? toggleablePrograms.passover : toggleablePrograms.highHolyDays;
   
   // Create the programs array with the toggle selection
   const displayPrograms = [programs[0], secondProgram];
+
+  if (loading) {
+    return (
+      <section className="py-12 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Programs
+            </h2>
+          </div>
+          <div className="flex items-center justify-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500" role="status" aria-label="loading"></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-12 bg-gray-50">

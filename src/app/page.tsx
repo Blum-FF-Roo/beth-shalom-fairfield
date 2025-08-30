@@ -1,6 +1,6 @@
 import HeroSliderRefresh from "@/components/sections/HeroSliderRefresh";
 import AboutSectionRefresh from "@/components/sections/AboutSectionRefresh";
-import ProgramsSectionServer from "@/components/sections/ProgramsSectionServer";
+import ProgramsSection from "@/components/sections/ProgramsSection";
 
 export default function Home() {
   return (
@@ -12,7 +12,7 @@ export default function Home() {
       <AboutSectionRefresh />
       
       {/* Programs Section */}
-      <ProgramsSectionServer />
+      <ProgramsSection />
     </div>
   );
 }

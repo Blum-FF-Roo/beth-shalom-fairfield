@@ -65,7 +65,7 @@ export function UserManagementWithSuspense() {
   );
 }
 
-export function PayPalDonationWithSuspense(props: any) {
+export function PayPalDonationWithSuspense(props: Record<string, unknown>) {
   return (
     <SuspenseWrapper>
       <LazyPayPalDonation {...props} />
@@ -81,7 +81,13 @@ export function MembershipCartWithSuspense() {
   );
 }
 
-export function YouTubeEmbedWithSuspense(props: any) {
+interface YouTubeEmbedProps {
+  videoId: string;
+  title: string;
+  className?: string;
+}
+
+export function YouTubeEmbedWithSuspense(props: YouTubeEmbedProps) {
   return (
     <SuspenseWrapper>
       <LazyYouTubeEmbed {...props} />

@@ -7,7 +7,7 @@ interface UseMobileMenuOptions {
   closeOnRouteChange?: boolean;
   closeOnEscape?: boolean;
   trapFocus?: boolean;
-  containerRef?: RefObject<HTMLElement>;
+  containerRef: RefObject<HTMLElement | null>;
 }
 
 export function useMobileMenu({
@@ -15,7 +15,7 @@ export function useMobileMenu({
   closeOnEscape = true,
   trapFocus = true,
   containerRef
-}: UseMobileMenuOptions = {}) {
+}: UseMobileMenuOptions) {
   const [isOpen, setIsOpen] = useState(false);
 
   const openMenu = useCallback(() => {
@@ -70,8 +70,8 @@ export function useMobileMenu({
     };
   }, [isOpen, closeOnRouteChange, closeMenu]);
 
-  // Focus trap for accessibility
-  useFocusTrap(containerRef!, isOpen && trapFocus);
+  // Focus trap for accessibility  
+  useFocusTrap(containerRef, isOpen && trapFocus);
 
   // Clean up body scroll on unmount
   useEffect(() => {

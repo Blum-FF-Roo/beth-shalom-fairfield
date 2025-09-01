@@ -1,6 +1,7 @@
 'use client';
 
 import React, { Component, ReactNode, ErrorInfo } from 'react';
+import Link from 'next/link';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 
 interface ErrorBoundaryState {
@@ -55,14 +56,14 @@ const DefaultErrorFallback = ({
           Try Again
         </button>
         
-        <a
+        <Link
           href="/"
           className="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
           aria-label="Go to homepage"
         >
           <Home className="h-4 w-4 mr-2" aria-hidden="true" />
           Go Home
-        </a>
+        </Link>
       </div>
 
       {showDetails && process.env.NODE_ENV === 'development' && (

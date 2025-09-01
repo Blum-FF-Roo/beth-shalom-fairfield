@@ -3,7 +3,7 @@
 import { useEffect, useCallback, RefObject } from 'react';
 
 interface UseKeyboardNavigationOptions {
-  containerRef?: RefObject<HTMLElement>;
+  containerRef?: RefObject<HTMLElement | null>;
   onEscape?: () => void;
   onEnter?: () => void;
   onArrowUp?: () => void;
@@ -26,13 +26,14 @@ export function useKeyboardNavigation({
   disabled = false
 }: UseKeyboardNavigationOptions = {}) {
   
-  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+  const handleKeyDown = useCallback((event: Event) => {
+    const keyboardEvent = event as KeyboardEvent;
     if (disabled) return;
 
-    switch (event.key) {
+    switch (keyboardEvent.key) {
       case 'Escape':
         if (onEscape) {
-          event.preventDefault();
+          keyboardEvent.preventDefault();
           onEscape();
         }
         break;
@@ -40,42 +41,42 @@ export function useKeyboardNavigation({
       case 'Enter':
       case ' ': // Space key
         if (onEnter) {
-          event.preventDefault();
+          keyboardEvent.preventDefault();
           onEnter();
         }
         break;
       
       case 'ArrowUp':
         if (onArrowUp) {
-          event.preventDefault();
+          keyboardEvent.preventDefault();
           onArrowUp();
         }
         break;
       
       case 'ArrowDown':
         if (onArrowDown) {
-          event.preventDefault();
+          keyboardEvent.preventDefault();
           onArrowDown();
         }
         break;
       
       case 'ArrowLeft':
         if (onArrowLeft) {
-          event.preventDefault();
+          keyboardEvent.preventDefault();
           onArrowLeft();
         }
         break;
       
       case 'ArrowRight':
         if (onArrowRight) {
-          event.preventDefault();
+          keyboardEvent.preventDefault();
           onArrowRight();
         }
         break;
       
       case 'Tab':
         if (onTab) {
-          onTab(event);
+          onTab(keyboardEvent);
         }
         break;
       
@@ -99,7 +100,7 @@ export function useKeyboardNavigation({
 
 // Hook for managing focus trap in modals/dropdowns
 export function useFocusTrap(
-  containerRef: RefObject<HTMLElement>,
+  containerRef: RefObject<HTMLElement | null>,
   isActive: boolean = true
 ) {
   const getFocusableElements = useCallback((container: HTMLElement) => {

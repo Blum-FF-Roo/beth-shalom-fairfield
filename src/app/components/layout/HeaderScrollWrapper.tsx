@@ -16,8 +16,16 @@ import { useMobileMenu } from '@/app/hooks/useMobileMenu';
 import { HeaderLogoSkeleton } from '@/app/components/ui/SkeletonLoaders';
 import ErrorBoundary from '@/app/components/ui/ErrorBoundary';
 
+interface UserData {
+  role?: string;
+}
+
+interface AuthUser {
+  uid: string;
+}
+
 // Logo component with error handling and accessibility
-const HeaderLogo = memo(({ logoUrl, logoColorStyle }: { logoUrl?: string; logoColorStyle: React.CSSProperties }) => {
+const HeaderLogo = memo(({ logoUrl }: { logoUrl?: string }) => {
   if (!logoUrl) {
     return <HeaderLogoSkeleton />;
   }
@@ -57,8 +65,8 @@ const AuthMenu = memo(({
   textColorClass, 
   onLogout 
 }: { 
-  user: any; 
-  userData: any; 
+  user: AuthUser | null; 
+  userData: UserData | null; 
   textColorClass: string; 
   onLogout: () => void;
 }) => {
@@ -138,12 +146,12 @@ export default function HeaderScrollWrapper() {
   const isMainPage = pathname === '/';
 
   // Use TanStack Query to get logo URL directly
-  const { data: logoSection, isLoading } = useQuery({
+  const { data: logoSection } = useQuery({
     queryKey: ['content', 'siteLogo'],
     queryFn: () => getContentSectionByKey('siteLogo'),
   });
   
-  const logoUrl = logoSection?.content;
+  const logoUrl = logoSection?.content as string | undefined;
   
   // Get navigation items for mobile menu
   const navigationMenuItems = getNavigationMenuItems();
@@ -193,7 +201,7 @@ export default function HeaderScrollWrapper() {
             {/* Logo Container */}
             <div className="site-logo-wrapper relative w-12 h-12 lg:w-12 lg:h-12 xl:w-18 xl:h-18 flex-shrink-0 bg-white/80 rounded-full p-2 lg:p-3">
               <ErrorBoundary>
-                <HeaderLogo logoUrl={logoUrl} logoColorStyle={logoColorStyle} />
+                <HeaderLogo logoUrl={logoUrl} />
               </ErrorBoundary>
             </div>
             
@@ -224,8 +232,8 @@ export default function HeaderScrollWrapper() {
 
           {/* Two-Row Menu Structure - Upper Right */}
           <div className="flex flex-col items-end space-y-1">
-            {/* Top Row: Admin Menu Items */}
-            <div className="flex items-center space-x-3 text-xs text-shadow-md" role="navigation" aria-label="Admin navigation">
+            {/* Top Row: Admin Menu Items - Hidden on mobile, shown on desktop */}
+            <div className="hidden lg:flex items-center space-x-3 text-xs text-shadow-md" role="navigation" aria-label="Admin navigation">
               <AuthMenu 
                 user={user} 
                 userData={userData} 

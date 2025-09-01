@@ -1,4 +1,4 @@
-import ErrorBoundary, { SectionErrorBoundary } from "@/app/components/ui/ErrorBoundary";
+import { SectionErrorBoundary } from "@/app/components/ui/ErrorBoundary";
 import { 
   HeroSliderWithSuspense, 
   AboutSectionWithSuspense, 

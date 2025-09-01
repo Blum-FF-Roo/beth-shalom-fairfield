@@ -1,11 +1,12 @@
 'use client';
 
+import { memo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import { getContentSectionByKey } from '@/app/utils/firebase-operations';
 
-export default function ProgramsSection() {
+function ProgramsSection() {
   // Static programs data (like main branch)
   const programs = [
     {
@@ -47,15 +48,21 @@ export default function ProgramsSection() {
 
   if (loading) {
     return (
-      <section className="py-12 bg-gray-50">
+      <section className="py-12 bg-gray-50" role="region" aria-labelledby="programs-heading">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 id="programs-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Programs
             </h2>
           </div>
-          <div className="flex items-center justify-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500" role="status" aria-label="loading"></div>
+          <div 
+            className="flex items-center justify-center py-8"
+            role="status"
+            aria-label="Loading programs"
+          >
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500">
+              <span className="sr-only">Loading...</span>
+            </div>
           </div>
         </div>
       </section>
@@ -63,11 +70,11 @@ export default function ProgramsSection() {
   }
 
   return (
-    <section className="py-12 bg-gray-50">
+    <section className="py-12 bg-gray-50" role="region" aria-labelledby="programs-heading">
       <div className="max-w-6xl mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 id="programs-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Programs
           </h2>
         </div>
@@ -78,13 +85,14 @@ export default function ProgramsSection() {
             <div key={program.id} className="group">
               <Link
                 href={program.linkUrl}
-                className="block bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden"
+                className="block bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                aria-label={`Learn more about ${program.title}`}
               >
                 {/* Image Container */}
                 <div className="relative h-48 overflow-hidden">
                   <Image 
                     src={program.imageUrl}
-                    alt={program.title}
+                    alt={`${program.title} program image`}
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, 50vw"
@@ -105,3 +113,5 @@ export default function ProgramsSection() {
     </section>
   );
 }
+
+export default memo(ProgramsSection);

@@ -8,6 +8,7 @@ import PayPalProvider from "@/app/components/PayPalProvider";
 import { ToastProvider } from "@/app/utils/ToastContext";
 import ToastContainer from "@/app/components/ui/ToastContainer";
 import QueryProvider from "@/app/components/providers/QueryProvider";
+import ErrorBoundary from "@/app/components/ui/ErrorBoundary";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -35,18 +36,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
-        <QueryProvider>
-          <ToastProvider>
-            <PayPalProvider>
-              <AuthProvider>
-                <Header />
-                <main>{children}</main>
-                <Footer />
-                <ToastContainer />
-              </AuthProvider>
-            </PayPalProvider>
-          </ToastProvider>
-        </QueryProvider>
+        <ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
+          <QueryProvider>
+            <ToastProvider>
+              <PayPalProvider>
+                <AuthProvider>
+                  <Header />
+                  <main role="main">{children}</main>
+                  <Footer />
+                  <ToastContainer />
+                </AuthProvider>
+              </PayPalProvider>
+            </ToastProvider>
+          </QueryProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

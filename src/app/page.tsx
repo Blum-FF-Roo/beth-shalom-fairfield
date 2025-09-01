@@ -1,18 +1,27 @@
-import HeroSliderRefresh from "@/app/components/sections/HeroSliderRefresh";
-import AboutSectionRefresh from "@/app/components/sections/AboutSectionRefresh";
-import ProgramsSection from "@/app/components/sections/ProgramsSection";
+import { SectionErrorBoundary } from "@/app/components/ui/ErrorBoundary";
+import { 
+  HeroSliderWithSuspense, 
+  AboutSectionWithSuspense, 
+  ProgramsSectionWithSuspense 
+} from "@/app/components/lazy/LazyComponents";
 
 export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <HeroSliderRefresh />
+      <SectionErrorBoundary>
+        <HeroSliderWithSuspense />
+      </SectionErrorBoundary>
       
       {/* About Section */}
-      <AboutSectionRefresh />
+      <SectionErrorBoundary title="About">
+        <AboutSectionWithSuspense />
+      </SectionErrorBoundary>
       
       {/* Programs Section */}
-      <ProgramsSection />
+      <SectionErrorBoundary title="Programs">
+        <ProgramsSectionWithSuspense />
+      </SectionErrorBoundary>
     </div>
   );
 }

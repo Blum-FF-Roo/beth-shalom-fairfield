@@ -1,10 +1,11 @@
 'use client';
 
+import { memo } from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { getContentSectionByKey } from '@/app/utils/firebase-operations';
 
-export default function AboutSectionRefresh() {
+function AboutSectionRefresh() {
   // Use TanStack Query to get about text directly
   const { data: section, isLoading: loading } = useQuery({
     queryKey: ['content', 'aboutText'],
@@ -13,14 +14,13 @@ export default function AboutSectionRefresh() {
 
   const aboutText = (section?.content as string) || '';
 
-
   return (
-    <section className="py-12 bg-white">
+    <section className="py-12 bg-white" role="region" aria-labelledby="about-heading">
       <div className="max-w-4xl mx-auto px-4">
         <div className="bg-gray-50 rounded-lg p-8 md:p-12">
           {/* Section Header */}
           <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 id="about-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               About
             </h2>
           </div>
@@ -28,8 +28,14 @@ export default function AboutSectionRefresh() {
           {/* Content */}
           <div className="prose prose-lg max-w-none">
             {loading ? (
-              <div className="flex items-center justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+              <div 
+                className="flex items-center justify-center py-8"
+                role="status"
+                aria-label="Loading about section"
+              >
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500">
+                  <span className="sr-only">Loading...</span>
+                </div>
               </div>
             ) : aboutText ? (
               <div className="text-gray-700 leading-relaxed space-y-4">
@@ -57,7 +63,8 @@ export default function AboutSectionRefresh() {
             <div className="mt-8 pt-6 border-t border-gray-200">
               <Link
                 href="/about"
-                className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200"
+                className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                aria-label="Learn more about Beth Shalom Fairfield"
               >
                 Learn More
                 <svg 
@@ -65,6 +72,7 @@ export default function AboutSectionRefresh() {
                   fill="none" 
                   stroke="currentColor" 
                   viewBox="0 0 24 24"
+                  aria-hidden="true"
                 >
                   <path 
                     strokeLinecap="round" 
@@ -81,3 +89,5 @@ export default function AboutSectionRefresh() {
     </section>
   );
 }
+
+export default memo(AboutSectionRefresh);

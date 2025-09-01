@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Plus, Users, Edit } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import ProtectedRoute from '@/app/components/auth/ProtectedRoute';
 import { useAuth } from '@/app/utils/AuthContext';
+import { useToast } from '@/app/utils/ToastContext';
 import { ContentSection, getAllContentSections } from '@/app/utils/firebase-operations';
 import { PermissionService } from '@/app/utils/permissions';
 import { mapContentCategoryToNav } from '@/app/components/shared/MenuItemsConfig';
@@ -15,11 +16,12 @@ import { PostCategory } from '@/app/utils';
 
 export default function AdminDashboard() {
   const { user, userData } = useAuth();
+  const { showError } = useToast();
 
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   // Get all content sections
-  const { data: allSections, isLoading: sectionsLoading } = useQuery({
+  const { data: allSections, isLoading: sectionsLoading, error: sectionsError } = useQuery({
     queryKey: ['content-sections'],
     queryFn: getAllContentSections,
     enabled: !!user && !!userData,
@@ -38,6 +40,13 @@ export default function AdminDashboard() {
     queryFn: () => PermissionService.getUserPostPermissions(user!.uid),
     enabled: !!user && !!userData && userData.role !== 'super-admin',
   });
+
+  // Handle errors
+  useEffect(() => {
+    if (sectionsError) {
+      showError('Error', 'Failed to load content sections');
+    }
+  }, [sectionsError, showError]);
 
   // Calculate authorized sections
   const authorizedSections: ContentSection[] = !allSections ? [] : 
@@ -106,7 +115,7 @@ export default function AdminDashboard() {
       <ProtectedRoute>
         <div className="min-h-screen bg-gray-50 pt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="text-center">
+            <div className="text-center" role="status" aria-label="Loading admin dashboard">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{borderColor: '#F58C28'}}></div>
               <p className="text-gray-600">Loading admin dashboard...</p>
             </div>

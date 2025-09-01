@@ -126,9 +126,9 @@ describe('AdminDashboard', () => {
       renderWithQueryClient(<AdminDashboard />);
       
       await waitFor(() => {
-        expect(screen.getByText('Site Logo')).toBeInTheDocument();
-        expect(screen.getByText('About Us')).toBeInTheDocument();
-        expect(screen.getByText('Contact Info')).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'Site Logo' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'About Us' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'Contact Info' })).toBeInTheDocument();
       });
     });
 
@@ -161,9 +161,9 @@ describe('AdminDashboard', () => {
       renderWithQueryClient(<AdminDashboard />);
       
       await waitFor(() => {
-        expect(screen.getByText('Site Logo')).toBeInTheDocument();
-        expect(screen.getByText('Contact Info')).toBeInTheDocument();
-        expect(screen.queryByText('About Us')).not.toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'Site Logo' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'Contact Info' })).toBeInTheDocument();
+        expect(screen.queryByRole('heading', { name: 'About Us' })).not.toBeInTheDocument();
       });
     });
 
@@ -197,8 +197,8 @@ describe('AdminDashboard', () => {
       renderWithQueryClient(<AdminDashboard />);
       
       await waitFor(() => {
-        expect(screen.getByText('All')).toBeInTheDocument();
-        expect(screen.getByText('Branding')).toBeInTheDocument();
+        expect(screen.getByText('All Sections')).toBeInTheDocument();
+        expect(screen.getByText('Site Branding')).toBeInTheDocument();
         expect(screen.queryByText('About')).not.toBeInTheDocument();
         expect(screen.queryByText('Contact')).not.toBeInTheDocument();
       });
@@ -217,17 +217,17 @@ describe('AdminDashboard', () => {
       renderWithQueryClient(<AdminDashboard />);
       
       await waitFor(() => {
-        expect(screen.getByText('Site Logo')).toBeInTheDocument();
-        expect(screen.getByText('About Us')).toBeInTheDocument();
-        expect(screen.getByText('Contact Info')).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'Site Logo' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'About Us' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'Contact Info' })).toBeInTheDocument();
       });
       
-      const aboutButton = screen.getByText('About');
+      const aboutButton = screen.getByRole('button', { name: 'About Us' });
       await user.click(aboutButton);
       
-      expect(screen.queryByText('Site Logo')).not.toBeInTheDocument();
-      expect(screen.getByText('About Us')).toBeInTheDocument();
-      expect(screen.queryByText('Contact Info')).not.toBeInTheDocument();
+      expect(screen.queryByRole('heading', { name: 'Site Logo' })).not.toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'About Us' })).toBeInTheDocument();
+      expect(screen.queryByRole('heading', { name: 'Contact Info' })).not.toBeInTheDocument();
     });
   });
 

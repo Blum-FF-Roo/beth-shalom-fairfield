@@ -28,8 +28,8 @@ export default function HeroSliderClient({ slides }: HeroSliderClientProps) {
           prevEl: ".hero-button-prev",
         }}
         pagination={{
-          el: ".hero-pagination",
           clickable: true,
+          dynamicBullets: false,
         }}
         autoplay={{
           delay: 5000,
@@ -104,8 +104,8 @@ export default function HeroSliderClient({ slides }: HeroSliderClientProps) {
           </SwiperSlide>
         ))}
 
-        {/* Custom Navigation Buttons */}
-        <div className="hero-button-prev absolute left-4 top-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-3 rounded-full transition-all duration-200 z-30 cursor-pointer">
+        {/* Custom Navigation Buttons - Hidden on mobile */}
+        <div className="hero-button-prev absolute left-4 top-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-3 rounded-full transition-all duration-200 z-30 cursor-pointer hidden md:block">
           <svg
             width="24"
             height="24"
@@ -123,7 +123,7 @@ export default function HeroSliderClient({ slides }: HeroSliderClientProps) {
           </svg>
         </div>
 
-        <div className="hero-button-next absolute right-4 top-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-3 rounded-full transition-all duration-200 z-30 cursor-pointer">
+        <div className="hero-button-next absolute right-4 top-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-3 rounded-full transition-all duration-200 z-30 cursor-pointer hidden md:block">
           <svg
             width="24"
             height="24"
@@ -141,23 +141,28 @@ export default function HeroSliderClient({ slides }: HeroSliderClientProps) {
           </svg>
         </div>
 
-        {/* Custom Pagination */}
-        <div className="hero-pagination absolute bottom-6 left-1/2 -translate-x-1/2 flex space-x-2 z-30"></div>
       </Swiper>
 
       {/* Custom Swiper Styles */}
       <style jsx global>{`
-        .hero-pagination .swiper-pagination-bullet {
+        .swiper-pagination-bullet {
           width: 12px;
           height: 12px;
           background: rgba(255, 255, 255, 0.5);
           border-radius: 50%;
           transition: all 0.2s;
+          margin: 0 4px !important;
         }
 
-        .hero-pagination .swiper-pagination-bullet-active {
+        .swiper-pagination-bullet-active {
           background: white;
           transform: scale(1.2);
+        }
+
+        .swiper-pagination {
+          bottom: 120px !important;
+          position: absolute !important;
+          z-index: 30;
         }
 
         .hero-button-prev,

@@ -36,20 +36,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
-        <ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
-          <QueryProvider>
-            <ToastProvider>
-              <PayPalProvider>
-                <AuthProvider>
-                  <Header />
+        <QueryProvider>
+          <ToastProvider>
+            <PayPalProvider>
+              <AuthProvider>
+                <Header />
+                <ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
                   <main role="main">{children}</main>
-                  <Footer />
-                  <ToastContainer />
-                </AuthProvider>
-              </PayPalProvider>
-            </ToastProvider>
-          </QueryProvider>
-        </ErrorBoundary>
+                </ErrorBoundary>
+                <Footer />
+                <ToastContainer />
+              </AuthProvider>
+            </PayPalProvider>
+          </ToastProvider>
+        </QueryProvider>
       </body>
     </html>
   );

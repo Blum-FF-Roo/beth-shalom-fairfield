@@ -59,9 +59,24 @@ export async function getMultipleContentByKeys(keys: string[]): Promise<Record<s
   try {
     const results: Record<string, unknown> = {};
     
+    // First try to get content from site_content collection
     for (const key of keys) {
       const content = await getContent(key);
       results[key] = content;
+    }
+    
+    // For any keys that returned null, fallback to content_sections (like the old implementation)
+    const missingKeys = keys.filter(key => results[key] === null);
+    
+    if (missingKeys.length > 0) {
+      const contentSections = await getAllContentSections();
+      
+      for (const key of missingKeys) {
+        const section = contentSections.find(s => s.key === key);
+        if (section && section.content !== null && section.content !== undefined) {
+          results[key] = section.content;
+        }
+      }
     }
     
     return results;

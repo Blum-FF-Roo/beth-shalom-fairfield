@@ -1,4 +1,5 @@
 import { getMultipleContentByKeys } from '@/app/utils/firebase-operations';
+import { formatContentAsHtml } from '@/app/utils';
 import HoverButton from '@/app/components/ui/HoverButton';
 
 export default async function ShabbatPage() {
@@ -38,7 +39,7 @@ export default async function ShabbatPage() {
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
           <div 
             className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: contentWithFallbacks.shabbatIntro as string }}
+            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.shabbatIntro as string) }}
           />
         </div>
 
@@ -46,14 +47,14 @@ export default async function ShabbatPage() {
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
           <div 
             className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: contentWithFallbacks.shabbatServices as string }}
+            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.shabbatServices as string) }}
           />
         </div>
 
         {/* Times */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
           <div className="prose prose-lg max-w-none">
-            <div dangerouslySetInnerHTML={{ __html: contentWithFallbacks.shabbatTimes as string }} />
+            <div dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.shabbatTimes as string) }} />
 
             {/* Links */}
             <div className="mt-8 pt-6 border-t border-gray-200">

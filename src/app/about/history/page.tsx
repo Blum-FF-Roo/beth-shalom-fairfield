@@ -1,4 +1,5 @@
 import { getMultipleContentByKeys } from '@/app/utils/firebase-operations';
+import { formatContentAsHtml } from '@/app/utils';
 
 export const metadata = {
   title: 'History - Congregation Beth Shalom',
@@ -91,7 +92,7 @@ export default async function HistoryPage() {
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
           <div 
             className="prose prose-lg max-w-none text-gray-700 leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: contentWithFallbacks.historyIntro as string }}
+            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.historyIntro as string) }}
           />
         </div>
 
@@ -100,7 +101,7 @@ export default async function HistoryPage() {
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Early Days</h2>
           <div 
             className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-6"
-            dangerouslySetInnerHTML={{ __html: contentWithFallbacks.historyEarlyDays as string }}
+            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.historyEarlyDays as string) }}
           />
         </div>
 
@@ -109,7 +110,7 @@ export default async function HistoryPage() {
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Foundation and Leadership</h2>
           <div 
             className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-6"
-            dangerouslySetInnerHTML={{ __html: contentWithFallbacks.historyFoundation as string }}
+            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.historyFoundation as string) }}
           />
         </div>
 
@@ -118,7 +119,7 @@ export default async function HistoryPage() {
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Finding Our Home</h2>
           <div 
             className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-6"
-            dangerouslySetInnerHTML={{ __html: contentWithFallbacks.historyBuilding as string }}
+            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.historyBuilding as string) }}
           />
         </div>
 
@@ -127,7 +128,7 @@ export default async function HistoryPage() {
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Growth and Community</h2>
           <div 
             className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-6"
-            dangerouslySetInnerHTML={{ __html: contentWithFallbacks.historyGrowth as string }}
+            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.historyGrowth as string) }}
           />
         </div>
       </div>

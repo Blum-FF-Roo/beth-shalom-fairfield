@@ -69,7 +69,36 @@ describe('Admin Toggle Functionality', () => {
     
     const mockQueryClient = {
       invalidateQueries: jest.fn(),
-    };
+      getQueryData: jest.fn(),
+      setQueryData: jest.fn(),
+      prefetchQuery: jest.fn(),
+      fetchQuery: jest.fn(),
+      getQueriesData: jest.fn(),
+      setQueriesData: jest.fn(),
+      refetchQueries: jest.fn(),
+      cancelQueries: jest.fn(),
+      removeQueries: jest.fn(),
+      resetQueries: jest.fn(),
+      isFetching: jest.fn(),
+      isMutating: jest.fn(),
+      clear: jest.fn(),
+      mount: jest.fn(),
+      unmount: jest.fn(),
+      getMutationCache: jest.fn(),
+      getQueryCache: jest.fn(),
+      getLogger: jest.fn(),
+      getDefaultOptions: jest.fn(),
+      setDefaultOptions: jest.fn(),
+      setMutationDefaults: jest.fn(),
+      getMutationDefaults: jest.fn(),
+      setQueryDefaults: jest.fn(),
+      getQueryDefaults: jest.fn(),
+      resumePausedMutations: jest.fn(),
+      ensureQueryData: jest.fn(),
+      getQueryState: jest.fn(),
+      fetchInfiniteQuery: jest.fn(),
+      prefetchInfiniteQuery: jest.fn(),
+    } as unknown as ReturnType<typeof useQueryClient>;
     
     mockUseRouter.mockReturnValue(mockRouter);
     mockUseAuth.mockReturnValue({
@@ -77,18 +106,23 @@ describe('Admin Toggle Functionality', () => {
       userData: { role: 'super-admin' },
     } as ReturnType<typeof useAuth>);
     mockUseToast.mockReturnValue({
+      toasts: [],
+      addToast: jest.fn(),
+      removeToast: jest.fn(),
       showSuccess: mockShowSuccess,
       showError: mockShowError,
+      showWarning: jest.fn(),
+      showInfo: jest.fn(),
     } as ReturnType<typeof useToast>);
     
     mockUseQueryClient.mockReturnValue(mockQueryClient);
     
     // Mock useMutation to return a function that captures and executes the callbacks
-    let savedOnSuccess: ((data: { success: boolean }, variables: unknown) => void) | null = null;
+    let savedOnSuccess: ((data: { success: boolean }, variables: unknown, context: unknown) => void) | null = null;
     
     const mockMutate = jest.fn().mockImplementation((variables) => {
       if (savedOnSuccess) {
-        savedOnSuccess({ success: true }, variables);
+        savedOnSuccess({ success: true }, variables, {});
       }
     });
     
@@ -102,9 +136,17 @@ describe('Admin Toggle Functionality', () => {
         data: undefined,
         error: null,
         reset: jest.fn(),
-        isIdle: false,
+        isIdle: true,
         mutateAsync: jest.fn(),
-      };
+        status: 'idle' as const,
+        variables: undefined,
+        context: undefined,
+        failureCount: 0,
+        failureReason: null,
+        isLoadingError: false,
+        isPaused: false,
+        submittedAt: 0,
+      } as unknown as ReturnType<typeof useMutation>;
     });
   });
 

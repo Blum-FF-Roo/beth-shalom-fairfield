@@ -1,5 +1,6 @@
 
 import { getMultipleContentByKeys } from '@/app/utils/firebase-operations';
+import { formatContentAsHtml } from '@/app/utils';
 
 export default async function AboutPage() {
   // Fetch content server-side with fallbacks
@@ -79,7 +80,7 @@ export default async function AboutPage() {
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
           <div 
             className="text-gray-700"
-            dangerouslySetInnerHTML={{ __html: contentWithFallbacks.aboutAdministration as string }}
+            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.aboutAdministration as string) }}
           />
         </div>
 
@@ -98,7 +99,7 @@ export default async function AboutPage() {
           <h2 className="text-2xl font-bold text-gray-900 mb-6">COMMITTEES</h2>
           <div 
             className="space-y-3 text-gray-700"
-            dangerouslySetInnerHTML={{ __html: contentWithFallbacks.aboutCommittees as string }}
+            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.aboutCommittees as string) }}
           />
         </div>
 
@@ -107,7 +108,7 @@ export default async function AboutPage() {
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Beth Shalom Resources</h2>
           <div 
             className="space-y-4 text-gray-700"
-            dangerouslySetInnerHTML={{ __html: contentWithFallbacks.aboutResources as string }}
+            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.aboutResources as string) }}
           />
         </div>
 
@@ -117,7 +118,7 @@ export default async function AboutPage() {
           <p className="text-sm text-gray-600 mb-4">By Fred Swartz</p>
           <div 
             className="text-gray-700 leading-relaxed space-y-4"
-            dangerouslySetInnerHTML={{ __html: contentWithFallbacks.aboutCommunityMessage as string }}
+            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.aboutCommunityMessage as string) }}
           />
         </div>
       </div>

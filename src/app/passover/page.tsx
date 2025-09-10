@@ -1,4 +1,5 @@
 import { getMultipleContentByKeys } from '@/app/utils/firebase-operations';
+import { formatContentAsHtml } from '@/app/utils';
 import HoverButton from '@/app/components/ui/HoverButton';
 import PassoverCart from '@/app/components/PassoverCart';
 
@@ -37,7 +38,7 @@ export default async function PassoverPage() {
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
           <div 
             className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: contentWithFallbacks.passoverIntro as string }}
+            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.passoverIntro as string) }}
           />
         </div>
 
@@ -45,7 +46,7 @@ export default async function PassoverPage() {
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
           <div 
             className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: contentWithFallbacks.passoverDetails as string }}
+            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.passoverDetails as string) }}
           />
         </div>
 
@@ -56,7 +57,7 @@ export default async function PassoverPage() {
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
           <div 
             className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: contentWithFallbacks.passoverReservation as string }}
+            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.passoverReservation as string) }}
           />
         </div>
 

@@ -4,6 +4,7 @@ import { memo } from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { getContentSectionByKey } from '@/app/utils/firebase-operations';
+import { formatContentAsHtml } from '@/app/utils/content-formatter';
 
 function AboutSectionRefresh() {
   // Use TanStack Query to get about text directly
@@ -38,13 +39,10 @@ function AboutSectionRefresh() {
                 </div>
               </div>
             ) : aboutText ? (
-              <div className="text-gray-700 leading-relaxed space-y-4">
-                {aboutText.split('\n\n').map((paragraph: string, index: number) => (
-                  <p key={index} className="mb-4">
-                    {paragraph.trim()}
-                  </p>
-                ))}
-              </div>
+              <div
+                className="text-gray-700 leading-relaxed prose prose-lg max-w-none"
+                dangerouslySetInnerHTML={{ __html: formatContentAsHtml(aboutText) }}
+              />
             ) : (
               <div className="text-gray-700 leading-relaxed space-y-4">
                 <p className="mb-4">

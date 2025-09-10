@@ -1,6 +1,6 @@
 "use client";
 
-import { Post } from "@/app/utils";
+import { Post, formatContentAsHtml } from "@/app/utils";
 import ShareButton from "@/app/components/ui/ShareButton";
 
 interface PostDisplayProps {
@@ -16,27 +16,6 @@ export default function PostDisplay({ post }: PostDisplayProps) {
     }).format(date);
   };
 
-  const formatContent = (content: string) => {
-    return content
-      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-      .replace(/\*(.*?)\*/g, "<em>$1</em>")
-      .replace(
-        /^> (.*$)/gm,
-        '<blockquote class="border-l-4 border-orange-400 pl-4 italic text-gray-600 my-4">$1</blockquote>',
-      )
-      .replace(/^- (.*$)/gm, '<li class="ml-4">$1</li>')
-      .replace(
-        /(<li[\s\S]*?<\/li>)/g,
-        '<ul class="list-disc pl-6 space-y-1 my-4">$1</ul>',
-      )
-      .split("\n\n")
-      .map((paragraph) =>
-        paragraph.trim() ? `<p class="mb-4">${paragraph}</p>` : "",
-      )
-      .join("")
-      .replace(/<p class="mb-4">(<ul|<blockquote)/g, "$1")
-      .replace(/(<\/ul>|<\/blockquote>)<\/p>/g, "$1");
-  };
 
   return (
     <article className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -55,7 +34,7 @@ export default function PostDisplay({ post }: PostDisplayProps) {
       <div className="p-6 sm:p-8">
         <div
           className="prose prose-lg max-w-none text-gray-700 leading-relaxed"
-          dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
+          dangerouslySetInnerHTML={{ __html: formatContentAsHtml(post.content) }}
         />
       </div>
 

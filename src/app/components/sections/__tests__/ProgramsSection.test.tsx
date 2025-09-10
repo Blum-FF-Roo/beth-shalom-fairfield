@@ -27,7 +27,28 @@ describe('ProgramsSection', () => {
       isError: false,
       refetch: jest.fn(),
       isSuccess: true,
-    });
+      status: 'success' as const,
+      dataUpdatedAt: Date.now(),
+      errorUpdatedAt: 0,
+      failureCount: 0,
+      errorUpdateCount: 0,
+      isFetched: true,
+      isFetchedAfterMount: true,
+      isFetching: false,
+      isRefetching: false,
+      isLoadingError: false,
+      isPending: false,
+      isPlaceholderData: false,
+      isPreviousData: false,
+      isRefetchError: false,
+      isStale: false,
+      fetchStatus: 'idle' as const,
+      failureReason: null,
+      isInitialLoading: false,
+      isPaused: false,
+      isEnabled: true,
+      promise: Promise.resolve(),
+    } as unknown as ReturnType<typeof useQuery>);
 
     render(<ProgramsSection />);
 
@@ -46,7 +67,28 @@ describe('ProgramsSection', () => {
       isError: false,
       refetch: jest.fn(),
       isSuccess: true,
-    });
+      status: 'success' as const,
+      dataUpdatedAt: Date.now(),
+      errorUpdatedAt: 0,
+      failureCount: 0,
+      errorUpdateCount: 0,
+      isFetched: true,
+      isFetchedAfterMount: true,
+      isFetching: false,
+      isRefetching: false,
+      isLoadingError: false,
+      isPending: false,
+      isPlaceholderData: false,
+      isPreviousData: false,
+      isRefetchError: false,
+      isStale: false,
+      fetchStatus: 'idle' as const,
+      failureReason: null,
+      isInitialLoading: false,
+      isPaused: false,
+      isEnabled: true,
+      promise: Promise.resolve(),
+    } as unknown as ReturnType<typeof useQuery>);
 
     render(<ProgramsSection />);
 
@@ -65,7 +107,28 @@ describe('ProgramsSection', () => {
       isError: false,
       refetch: jest.fn(),
       isSuccess: true,
-    });
+      status: 'success' as const,
+      dataUpdatedAt: Date.now(),
+      errorUpdatedAt: 0,
+      failureCount: 0,
+      errorUpdateCount: 0,
+      isFetched: true,
+      isFetchedAfterMount: true,
+      isFetching: false,
+      isRefetching: false,
+      isLoadingError: false,
+      isPending: false,
+      isPlaceholderData: false,
+      isPreviousData: false,
+      isRefetchError: false,
+      isStale: false,
+      fetchStatus: 'idle' as const,
+      failureReason: null,
+      isInitialLoading: false,
+      isPaused: false,
+      isEnabled: true,
+      promise: Promise.resolve(),
+    } as unknown as ReturnType<typeof useQuery>);
 
     render(<ProgramsSection />);
 
@@ -84,7 +147,28 @@ describe('ProgramsSection', () => {
       isError: false,
       refetch: jest.fn(),
       isSuccess: false,
-    });
+      status: 'pending' as const,
+      dataUpdatedAt: 0,
+      errorUpdatedAt: 0,
+      failureCount: 0,
+      errorUpdateCount: 0,
+      isFetched: false,
+      isFetchedAfterMount: false,
+      isFetching: true,
+      isRefetching: false,
+      isLoadingError: false,
+      isPending: true,
+      isPlaceholderData: false,
+      isPreviousData: false,
+      isRefetchError: false,
+      isStale: false,
+      fetchStatus: 'fetching' as const,
+      failureReason: null,
+      isInitialLoading: true,
+      isPaused: false,
+      isEnabled: true,
+      promise: Promise.resolve(),
+    } as unknown as ReturnType<typeof useQuery>);
 
     render(<ProgramsSection />);
 
@@ -99,7 +183,28 @@ describe('ProgramsSection', () => {
       isError: false,
       refetch: jest.fn(),
       isSuccess: true,
-    });
+      status: 'success' as const,
+      dataUpdatedAt: Date.now(),
+      errorUpdatedAt: 0,
+      failureCount: 0,
+      errorUpdateCount: 0,
+      isFetched: true,
+      isFetchedAfterMount: true,
+      isFetching: false,
+      isRefetching: false,
+      isLoadingError: false,
+      isPending: false,
+      isPlaceholderData: false,
+      isPreviousData: false,
+      isRefetchError: false,
+      isStale: false,
+      fetchStatus: 'idle' as const,
+      failureReason: null,
+      isInitialLoading: false,
+      isPaused: false,
+      isEnabled: true,
+      promise: Promise.resolve(),
+    } as unknown as ReturnType<typeof useQuery>);
 
     render(<ProgramsSection />);
 

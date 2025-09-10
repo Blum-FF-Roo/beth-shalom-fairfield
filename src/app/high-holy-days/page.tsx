@@ -1,4 +1,5 @@
 import { getMultipleContentByKeys } from '@/app/utils/firebase-operations';
+import { formatContentAsHtml } from '@/app/utils';
 import HoverButton from '@/app/components/ui/HoverButton';
 import HighHolyDaysCartSimple from '@/app/components/HighHolyDaysCartSimple';
 import AddToCartButton from '@/app/components/AddToCartButton';
@@ -35,7 +36,7 @@ export default async function HighHolyDaysPage() {
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
           <div 
             className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: contentWithFallbacks.highHolyDaysCalendar as string }}
+            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.highHolyDaysCalendar as string) }}
           />
         </div>
 
@@ -43,7 +44,7 @@ export default async function HighHolyDaysPage() {
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
           <div 
             className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: contentWithFallbacks.highHolyDaysInfo as string }}
+            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.highHolyDaysInfo as string) }}
           />
         </div>
 

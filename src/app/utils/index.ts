@@ -84,3 +84,11 @@ export {
   updatePost, 
   deletePost 
 } from './posts';
+
+// Re-export content formatting utilities
+export {
+  formatContentAsHtml,
+  formatContentAsPlainText,
+  containsHtml,
+  getContentExcerpt
+} from './content-formatter';

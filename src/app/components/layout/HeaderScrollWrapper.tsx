@@ -206,6 +206,7 @@ export default function HeaderScrollWrapper() {
             </div>
             
             {/* Site Title */}
+              {/* className="site-subtitle text-sm md:text-sm lg:text-base xl:text-lg opacity-75 font-medium tracking-wide" */}
             <div className="site-title-container flex flex-col justify-center">
               <h1 
                 className="site-title text-lg md:text-xl lg:text-2xl xl:text-3xl font-[500] text-shadow-xs" 
@@ -216,16 +217,18 @@ export default function HeaderScrollWrapper() {
                   fontWeight: '700'
                 }}
               >
-                Beth Shalom Fairfield
+                Congregation Beth Shalom
               </h1>
+
               <span 
-                className="site-subtitle text-xs md:text-sm lg:text-base xl:text-lg opacity-75 font-medium tracking-wide" 
+            
+                className="site-subtitle text-base md:text-lg lg:text-xl xl:text-3xl opacity-75 font-medium tracking-wide"
                 style={{
                   ...logoColorStyle,
                   fontFamily: 'system-ui, -apple-system, sans-serif'
                 }}
               >
-                A Conservative Jewish Community
+                Fairfield Iowa
               </span>
             </div>
           </Link>

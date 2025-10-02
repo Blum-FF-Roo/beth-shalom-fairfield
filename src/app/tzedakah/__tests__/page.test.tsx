@@ -21,7 +21,7 @@ describe('TzedakahPage', () => {
   test('renders tzedakah page with main heading', () => {
     render(<TzedakahPage />);
     
-    expect(screen.getByText('TZEDAKAH/DONATIONS')).toBeInTheDocument();
+    expect(screen.getByText('TZEDAKAH')).toBeInTheDocument();
     expect(screen.getByText('Temple Beth Shalom values your contribution to any of its funds')).toBeInTheDocument();
   });
 

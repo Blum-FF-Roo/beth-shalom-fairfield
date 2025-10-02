@@ -8,8 +8,8 @@ export default function TzedakahPage() {
       <div className="max-w-4xl mx-auto px-4">
         {/* Page Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold" style={{color: '#F58C28'}}>
-            TZEDAKAH/DONATIONS
+          <h1 className="text-4xl md:text-4xl font-bold" style={{color: '#F58C28'}}>
+            TZEDAKAH
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mt-4">
             Temple Beth Shalom values your contribution to any of its funds

@@ -111,21 +111,7 @@ export const menuConfig: MenuSection = {
     id: 'donate',
     title: 'Donate',
     href: '/tzedakah',
-    category: 'tzedakah',
-    subItems: [
-      {
-        id: 'tzedakah',
-        title: 'Tzedakah',
-        href: '/tzedakah',
-        category: 'tzedakah'
-      },
-      {
-        id: 'donate-beth-shalom',
-        title: 'Donate to Beth Shalom',
-        href: '/tzedakah',
-        category: 'tzedakah'
-      }
-    ]
+    category: 'tzedakah'
   },
   contact: {
     id: 'contact',

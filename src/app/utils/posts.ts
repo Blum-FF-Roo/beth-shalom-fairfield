@@ -56,21 +56,29 @@ export async function getAllPosts(): Promise<Post[]> {
 export async function getPostsByCategory(category: PostCategory, publishedOnly: boolean = false): Promise<Post[]> {
   try {
     const postsCollection = collection(db, POSTS_COLLECTION);
-    // Use simple query first, then filter in memory to avoid complex index requirements
-    const postsQuery = query(
-      postsCollection, 
-      where('category', '==', category),
-      orderBy('createdAt', 'desc')
-    );
+
+    // Build query based on whether we need published-only filtering
+    let postsQuery;
+    if (publishedOnly) {
+      // For published-only, filter at query level to align with security rules
+      postsQuery = query(
+        postsCollection,
+        where('category', '==', category),
+        where('isPublished', '==', true),
+        orderBy('createdAt', 'desc')
+      );
+    } else {
+      // For all posts (admin view), use simple query
+      postsQuery = query(
+        postsCollection,
+        where('category', '==', category),
+        orderBy('createdAt', 'desc')
+      );
+    }
 
     const snapshot = await getDocs(postsQuery);
-    let posts = snapshot.docs.map(convertFirestorePost);
-    
-    // Filter for published posts in memory if needed
-    if (publishedOnly) {
-      posts = posts.filter(post => post.isPublished);
-    }
-    
+    const posts = snapshot.docs.map(convertFirestorePost);
+
     return posts;
   } catch (error) {
     console.error('Error fetching posts by category:', error);

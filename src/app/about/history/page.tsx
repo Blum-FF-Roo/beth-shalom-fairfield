@@ -1,6 +1,8 @@
 import { getMultipleContentByKeys } from '@/app/utils/firebase-operations';
 import { formatContentAsHtml } from '@/app/utils';
 
+export const revalidate = 60;
+
 export const metadata = {
   title: 'History - Congregation Beth Shalom',
   description: 'The history of the Jewish Community in Fairfield, Iowa and Congregation Beth Shalom.',

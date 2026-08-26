@@ -4,6 +4,8 @@ import HoverButton from '@/app/components/ui/HoverButton';
 import HighHolyDaysCartSimple from '@/app/components/HighHolyDaysCartSimple';
 import AddToCartButton from '@/app/components/AddToCartButton';
 
+export const revalidate = 60;
+
 export default async function HighHolyDaysPage() {
   // Fetch content server-side with fallbacks - only dynamic sections
   const content = await getMultipleContentByKeys([

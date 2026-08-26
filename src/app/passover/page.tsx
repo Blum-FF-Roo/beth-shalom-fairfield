@@ -3,6 +3,8 @@ import { formatContentAsHtml } from '@/app/utils';
 import HoverButton from '@/app/components/ui/HoverButton';
 import PassoverCart from '@/app/components/PassoverCart';
 
+export const revalidate = 60;
+
 export default async function PassoverPage() {
   // Fetch content server-side with fallbacks
   const content = await getMultipleContentByKeys([

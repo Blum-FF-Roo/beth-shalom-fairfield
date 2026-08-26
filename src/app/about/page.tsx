@@ -2,6 +2,8 @@
 import { getMultipleContentByKeys } from '@/app/utils/firebase-operations';
 import { formatContentAsHtml } from '@/app/utils';
 
+export const revalidate = 60;
+
 export default async function AboutPage() {
   // Fetch content server-side with fallbacks
   const content = await getMultipleContentByKeys([

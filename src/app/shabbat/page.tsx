@@ -2,6 +2,8 @@ import { getMultipleContentByKeys } from '@/app/utils/firebase-operations';
 import { formatContentAsHtml } from '@/app/utils';
 import HoverButton from '@/app/components/ui/HoverButton';
 
+export const revalidate = 60;
+
 export default async function ShabbatPage() {
   // Fetch content server-side with fallbacks
   const content = await getMultipleContentByKeys([

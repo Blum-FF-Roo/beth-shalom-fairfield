@@ -25,7 +25,7 @@ export default async function AboutPage() {
 <p><strong>Secretary:</strong> Lisa Cohen</p>
 <p><strong>Treasurer:</strong> Fred Swartz</p>
 </div>`,
-    aboutBoardMembers: content.aboutBoardMembers || [
+    aboutBoardMembers: Array.isArray(content.aboutBoardMembers) ? content.aboutBoardMembers : [
       'Marc Berkowitz',
       'Dean Draznin', 
       'Sol Waksman',

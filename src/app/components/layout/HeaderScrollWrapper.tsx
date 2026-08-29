@@ -24,9 +24,51 @@ interface AuthUser {
   uid: string;
 }
 
+// Temporary placeholder logo: a Star of David with "FAIRFIELD" across the
+// middle band, used until a real logo is uploaded via the admin panel.
+const StarOfDavidPlaceholder = memo(() => (
+  <svg
+    viewBox="0 0 100 100"
+    className="w-full h-full rounded-full"
+    role="img"
+    aria-label="Beth Shalom Fairfield placeholder logo"
+  >
+    <circle cx="50" cy="50" r="50" fill="#F58C28" />
+    <polygon
+      points="50,8 88,76 12,76"
+      fill="none"
+      stroke="#ffffff"
+      strokeWidth="4"
+      strokeLinejoin="round"
+    />
+    <polygon
+      points="50,92 12,24 88,24"
+      fill="none"
+      stroke="#ffffff"
+      strokeWidth="4"
+      strokeLinejoin="round"
+    />
+    <text
+      x="50"
+      y="53"
+      textAnchor="middle"
+      dominantBaseline="middle"
+      fill="#ffffff"
+      fontFamily="system-ui, -apple-system, sans-serif"
+      fontWeight="700"
+      fontSize="11"
+      letterSpacing="0.5"
+    >
+      FAIRFIELD
+    </text>
+  </svg>
+));
+
+StarOfDavidPlaceholder.displayName = 'StarOfDavidPlaceholder';
+
 // Logo component with error handling and accessibility
-const HeaderLogo = memo(({ logoUrl }: { logoUrl?: string }) => {
-  if (!logoUrl) {
+const HeaderLogo = memo(({ logoUrl, isLoading }: { logoUrl?: string; isLoading?: boolean }) => {
+  if (isLoading) {
     return <HeaderLogoSkeleton />;
   }
 
@@ -43,14 +85,7 @@ const HeaderLogo = memo(({ logoUrl }: { logoUrl?: string }) => {
           priority
         />
       ) : (
-        <div 
-          className="w-full h-full rounded-full flex items-center justify-center" 
-          style={{backgroundColor: '#F58C28'}}
-          role="img"
-          aria-label="Beth Shalom Fairfield initials"
-        >
-          <span className="text-white font-bold text-sm lg:text-2xl xl:text-3xl">BS</span>
-        </div>
+        <StarOfDavidPlaceholder />
       )}
     </>
   );
@@ -146,11 +181,11 @@ export default function HeaderScrollWrapper() {
   const isMainPage = pathname === '/';
 
   // Use TanStack Query to get logo URL directly
-  const { data: logoSection } = useQuery({
+  const { data: logoSection, isLoading: logoLoading } = useQuery({
     queryKey: ['content', 'siteLogo'],
     queryFn: () => getContentSectionByKey('siteLogo'),
   });
-  
+
   const logoUrl = logoSection?.content as string | undefined;
   
   // Get navigation items for mobile menu
@@ -201,7 +236,7 @@ export default function HeaderScrollWrapper() {
             {/* Logo Container */}
             <div className="site-logo-wrapper relative w-12 h-12 lg:w-12 lg:h-12 xl:w-18 xl:h-18 flex-shrink-0 bg-white/80 rounded-full p-2 lg:p-3">
               <ErrorBoundary>
-                <HeaderLogo logoUrl={logoUrl} />
+                <HeaderLogo logoUrl={logoUrl} isLoading={logoLoading} />
               </ErrorBoundary>
             </div>
             
@@ -225,7 +260,7 @@ export default function HeaderScrollWrapper() {
                   fontFamily: 'system-ui, -apple-system, sans-serif'
                 }}
               >
-                A Conservative Jewish Community
+                Iowa&apos;s Rural Jewish Community
               </span>
             </div>
           </Link>

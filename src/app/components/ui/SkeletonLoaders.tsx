@@ -129,14 +129,11 @@ export const PostListSkeleton = memo(() => (
 PostListSkeleton.displayName = 'PostListSkeleton';
 
 // Header logo skeleton
+// Just the circle -- rendered inside the header's own logo wrapper, which
+// sits next to the (always-visible) site title/subtitle text, so this must
+// not duplicate that text itself.
 export const HeaderLogoSkeleton = memo(() => (
-  <div className="flex items-center space-x-2 lg:space-x-2 p-2">
-    <div className="relative w-12 h-12 lg:w-12 lg:h-12 xl:w-18 xl:h-18 flex-shrink-0 bg-gray-200 rounded-full animate-pulse" />
-    <div className="flex flex-col justify-center space-y-1">
-      <SkeletonBase className="h-6 w-48" />
-      <SkeletonBase className="h-4 w-40" />
-    </div>
-  </div>
+  <div className="w-full h-full rounded-full bg-gray-200 animate-pulse" />
 ));
 
 HeaderLogoSkeleton.displayName = 'HeaderLogoSkeleton';

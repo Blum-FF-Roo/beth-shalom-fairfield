@@ -48,19 +48,6 @@ const StarOfDavidPlaceholder = memo(() => (
       strokeWidth="4"
       strokeLinejoin="round"
     />
-    <text
-      x="50"
-      y="53"
-      textAnchor="middle"
-      dominantBaseline="middle"
-      fill="#ffffff"
-      fontFamily="system-ui, -apple-system, sans-serif"
-      fontWeight="700"
-      fontSize="11"
-      letterSpacing="0.5"
-    >
-      FAIRFIELD
-    </text>
   </svg>
 ));
 
@@ -234,7 +221,7 @@ export default function HeaderScrollWrapper() {
             aria-label="Beth Shalom Fairfield - Go to homepage"
           >
             {/* Logo Container */}
-            <div className="site-logo-wrapper relative w-12 h-12 lg:w-12 lg:h-12 xl:w-18 xl:h-18 flex-shrink-0 bg-white/80 rounded-full p-2 lg:p-3">
+            <div className="site-logo-wrapper relative w-12 h-12 lg:w-12 lg:h-12 xl:w-18 xl:h-18 flex-shrink-0 rounded-full overflow-hidden">
               <ErrorBoundary>
                 <HeaderLogo logoUrl={logoUrl} isLoading={logoLoading} />
               </ErrorBoundary>

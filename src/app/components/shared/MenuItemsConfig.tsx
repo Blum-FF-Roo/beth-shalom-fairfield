@@ -21,7 +21,21 @@ export const menuConfig: MenuSection = {
     id: 'about',
     title: 'About Us',
     href: '/about',
-    category: 'about'
+    category: 'about',
+    subItems: [
+      {
+        id: 'about',
+        title: 'General',
+        href: '/about',
+        category: 'about'
+      },
+      {
+        id: 'history',
+        title: 'History',
+        href: '/about/history',
+        category: 'history'
+      }
+    ]
   },
   services: {
     id: 'services',
@@ -60,12 +74,6 @@ export const menuConfig: MenuSection = {
         title: 'High Holy Days Sermons',
         href: '/high-holy-days-sermons',
         category: 'sermons'
-      },
-      {
-        id: 'history',
-        title: 'History',
-        href: '/about/history',
-        category: 'media'
       },
       {
         id: 'videos-audio',

@@ -47,30 +47,18 @@ export default function MenuItem({
   const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
     if (toggle === 'header') {
       if (item.subMenu) onDropdownEnter?.(item.id);
-      if (item.id === 'donate') {
-        e.currentTarget.style.backgroundColor = '#F58C28';
-        e.currentTarget.style.color = 'white';
-      }
     }
   };
 
-  const handleMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
-    if (toggle === 'header' && item.id === 'donate') {
-      e.currentTarget.style.backgroundColor = 'transparent';
-      e.currentTarget.style.color = '';
-    }
-  };
+  const handleMouseLeave = () => {};
 
   // Header mode styling
   const headerClasses = cn(
     "text-md font-medium transition-colors duration-200 flex items-center py-2 font-[500] text-shadow-xs",
     textColorClass,
-    isMainPage && !isScrolled 
-      ? 'hover:text-orange-200' 
-      : 'hover:text-orange-600',
-    // Special styling for Donate button
-    item.id === 'donate' && 'px-4 py-2 border-2 rounded-sm',
-    item.id === 'donate' && (isMainPage && !isScrolled ? 'border-orange-400' : 'border-orange-500')
+    isMainPage && !isScrolled
+      ? 'hover:text-orange-200'
+      : 'hover:text-orange-600'
   );
 
   // Filter mode styling
@@ -83,10 +71,7 @@ export default function MenuItem({
     item.id === 'donate' && !isSelected && 'border-2 rounded-sm border-orange-500'
   );
 
-  const headerStyle = item.id === 'donate' ? {
-    borderColor: '#F58C28',
-    ...(isMainPage && !isScrolled ? {} : {})
-  } : {};
+  const headerStyle = {};
 
   const filterStyle = isSelected ? {
     backgroundColor: '#F58C28'

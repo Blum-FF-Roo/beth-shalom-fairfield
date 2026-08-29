@@ -66,33 +66,19 @@ export default function MenuItem({
     "text-md font-medium transition-colors duration-200 flex items-center py-2 px-3 rounded-md",
     isSelected
       ? 'text-white shadow-sm'
-      : 'text-gray-900 hover:text-orange-600',
-    // Special styling for Donate button in filter mode
-    item.id === 'donate' && !isSelected && 'border-2 rounded-sm border-orange-500'
+      : 'text-gray-900 hover:text-orange-600'
   );
 
   const headerStyle = {};
 
   const filterStyle = isSelected ? {
     backgroundColor: '#F58C28'
-  } : item.id === 'donate' ? {
-    borderColor: '#F58C28'
   } : {};
 
-  // Filter mode hover handlers
-  const filterMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (item.id === 'donate' && !isSelected) {
-      e.currentTarget.style.backgroundColor = '#F58C28';
-      e.currentTarget.style.color = 'white';
-    }
-  };
+  // Filter mode hover handlers (no special-casing; same for every item)
+  const filterMouseEnter = () => {};
 
-  const filterMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (item.id === 'donate' && !isSelected) {
-      e.currentTarget.style.backgroundColor = 'transparent';
-      e.currentTarget.style.color = '';
-    }
-  };
+  const filterMouseLeave = () => {};
 
   return (
     <div className={cn("relative group", className)}>

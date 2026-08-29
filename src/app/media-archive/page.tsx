@@ -11,7 +11,9 @@ interface VideoData {
   description: string;
   date: string;
   speaker: string;
-  youtubeId: string;
+  youtubeId?: string;
+  /** For recordings not on YouTube -- a file under public/, e.g. "/media/foo.mp4" */
+  videoSrc?: string;
 }
 
 const videos: VideoData[] = [
@@ -62,6 +64,14 @@ const videos: VideoData[] = [
     date: 'October 21, 2012',
     speaker: 'Gedaliah Gurfein',
     youtubeId: 'WrcI_hiRU6A'
+  },
+  {
+    id: '7',
+    title: 'Fairfield Cares Program',
+    description: 'A presentation on the Fairfield Cares Program.',
+    date: 'December 7, 2020',
+    speaker: 'Jennifer Hamilton',
+    videoSrc: '/media/jennifer-hamilton-fairfield-cares-2020-12-07.mp4'
   }
 ];
 
@@ -69,11 +79,23 @@ function VideoCard({ video }: { video: VideoData }) {
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
       <div className="aspect-video relative">
-        <LazyYouTubeEmbed
-          videoId={video.youtubeId}
-          title={video.title}
-          className="w-full h-full"
-        />
+        {video.videoSrc ? (
+          <video
+            controls
+            preload="none"
+            className="w-full h-full bg-black"
+            aria-label={video.title}
+          >
+            <source src={video.videoSrc} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        ) : (
+          <LazyYouTubeEmbed
+            videoId={video.youtubeId as string}
+            title={video.title}
+            className="w-full h-full"
+          />
+        )}
       </div>
       <div className="p-6">
         <h3 className="text-xl font-semibold text-gray-900 mb-2">

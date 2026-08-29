@@ -71,7 +71,7 @@ export const menuConfig: MenuSection = {
     subItems: [
       {
         id: 'sermons',
-        title: 'Sermons',
+        title: 'High Holy Days Sermons',
         href: '/high-holy-days-sermons',
         category: 'sermons'
       },

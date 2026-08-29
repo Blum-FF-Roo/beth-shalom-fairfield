@@ -70,8 +70,8 @@ export const menuConfig: MenuSection = {
     category: 'media',
     subItems: [
       {
-        id: 'high-holy-days-sermons',
-        title: 'High Holy Days Sermons',
+        id: 'sermons',
+        title: 'Sermons',
         href: '/high-holy-days-sermons',
         category: 'sermons'
       },
@@ -189,7 +189,7 @@ export const mapContentCategoryToNav = (contentCategory: string): string => {
     'high-holy-days': 'services',
     'passover': 'services',
     'media': 'media-archive',
-    'sermons': 'high-holy-days-sermons', // Map sermons to the specific submenu item
+    'sermons': 'sermons', // Map sermons to the specific submenu item
     'history': 'history',
     'articles': 'articles', // Map to the specific submenu item
     'judaism': 'judaism',

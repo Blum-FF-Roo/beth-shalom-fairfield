@@ -55,10 +55,24 @@ export default function AdminDashboard() {
       : allSections.filter(section => userPermissions?.includes(section.id));
 
   // Calculate authorized post categories
-  const authorizedPostCategories: PostCategory[] = 
-    userData?.role === 'super-admin' 
+  const authorizedPostCategories: PostCategory[] =
+    userData?.role === 'super-admin'
       ? POST_CATEGORIES.map(cat => cat.category)
       : userPostPermissions || [];
+
+  // Maps each post category to the nav filter it belongs under, so the
+  // Posts panel scopes to the selected tab the same way Website Sections
+  // does, instead of always showing every post category on every tab.
+  const postCategoryToNav: Record<PostCategory, string> = {
+    'parshah': 'parashah',
+    'high-holy-day': 'sermons',
+    'articles': 'articles',
+  };
+
+  const filteredPostCategories: PostCategory[] =
+    selectedCategory === 'all'
+      ? authorizedPostCategories
+      : authorizedPostCategories.filter(cat => postCategoryToNav[cat] === selectedCategory);
 
   const loading = sectionsLoading || (userData?.role !== 'super-admin' && (permissionsLoading || postPermissionsLoading));
 
@@ -184,7 +198,7 @@ export default function AdminDashboard() {
             />
           </div>
 
-          {filteredSections.length === 0 && authorizedPostCategories.length === 0 ? (
+          {filteredSections.length === 0 && filteredPostCategories.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-gray-400 text-6xl mb-4">📄</div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">No content sections found</h3>
@@ -197,7 +211,7 @@ export default function AdminDashboard() {
             </div>
           ) : (
             <div className="bg-white rounded-lg shadow">
-              <div className={`grid grid-cols-1 ${authorizedPostCategories.length > 0 ? 'lg:grid-cols-2 divide-x divide-gray-200' : ''}`}>
+              <div className={`grid grid-cols-1 ${filteredPostCategories.length > 0 ? 'lg:grid-cols-2 divide-x divide-gray-200' : ''}`}>
                 
                 {/* Website Sections Column */}
                 <div className="p-6">
@@ -239,19 +253,19 @@ export default function AdminDashboard() {
                   )}
                 </div>
 
-                {/* Posts Column - Only show if user has post permissions */}
-                {authorizedPostCategories.length > 0 && (
+                {/* Posts Column - Only show if user has post permissions for this filter */}
+                {filteredPostCategories.length > 0 && (
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-4">
                       <h2 className="text-xl font-semibold text-gray-900 flex items-center">
                         <span className="text-2xl mr-2">📝</span>
                         Posts
                       </h2>
-                      <span className="text-sm text-gray-500">{authorizedPostCategories.length} categories</span>
+                      <span className="text-sm text-gray-500">{filteredPostCategories.length} categories</span>
                     </div>
-                    
+
                     <div className="space-y-3">
-                      {authorizedPostCategories.map(category => {
+                      {filteredPostCategories.map(category => {
                         const postInfo = POST_CATEGORIES.find(p => p.category === category);
                         if (!postInfo) return null;
                         

@@ -79,7 +79,7 @@ export default function HighHolyDaysSermonsPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{color: '#F58C28'}}>
-            High Holy Days Sermons
+            Sermons
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Meaningful sermons and teachings from our High Holy Days services

@@ -22,7 +22,7 @@ function AboutSectionRefresh() {
           {/* Section Header */}
           <div className="text-center mb-8">
             <h2 id="about-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              About
+              Welcome
             </h2>
           </div>
 

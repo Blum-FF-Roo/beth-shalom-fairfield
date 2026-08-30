@@ -6,45 +6,58 @@ import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import { getContentSectionByKey } from '@/app/utils/firebase-operations';
 
+// All possible programs. Which ones actually show (and in what order) is
+// controlled independently from the admin panel (Home tab -> Programs Toggle).
+const ALL_PROGRAMS = [
+  {
+    id: 'shabbat',
+    title: 'Shabbat Services',
+    imageUrl: '/images/pexels-cottonbro-5986499.jpg',
+    linkUrl: '/shabbat'
+  },
+  {
+    id: 'highHolyDays',
+    title: 'High Holy Days',
+    imageUrl: '/images/gettyimages-1869577249-612x612.jpg',
+    linkUrl: '/high-holy-days'
+  },
+  {
+    id: 'passover',
+    title: 'Passover',
+    imageUrl: '/images/pexels-cottonbro-5974866.jpg',
+    linkUrl: '/passover'
+  },
+  {
+    id: 'temp',
+    title: 'Temp',
+    imageUrl: '/images/pexels-cottonbro-5985982.jpg',
+    linkUrl: '/'
+  }
+] as const;
+
+// Matches the site's current default appearance (Shabbat + High Holy Days
+// shown, Passover off) so nothing changes visually until an admin opts in.
+const DEFAULT_ENABLED_IDS = ['shabbat', 'highHolyDays'];
+
+const GRID_CLASS_BY_COUNT: Record<number, string> = {
+  1: 'grid-cols-1 max-w-sm',
+  2: 'grid-cols-1 md:grid-cols-2 max-w-2xl',
+  3: 'grid-cols-1 md:grid-cols-3 max-w-4xl',
+  4: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4 max-w-5xl'
+};
+
 function ProgramsSection() {
-  // Static programs data (like main branch)
-  const programs = [
-    {
-      id: "1",
-      title: "Shabbat Services",
-      imageUrl: "/images/pexels-cottonbro-5986499.jpg",
-      linkUrl: "/shabbat"
-    }
-  ];
-
-  // Default program options for the toggleable second program (like main branch)
-  const toggleablePrograms = {
-    highHolyDays: {
-      id: "2-hh",
-      title: "High Holy Days",
-      imageUrl: "/images/gettyimages-1869577249-612x612.jpg",
-      linkUrl: "/high-holy-days"
-    },
-    passover: {
-      id: "2-passover", 
-      title: "Passover",
-      imageUrl: "/images/pexels-cottonbro-5974866.jpg",
-      linkUrl: "/passover"
-    }
-  };
-
   // Use TanStack Query to get the programs toggle setting directly
   const { data: toggleSection, isLoading: loading } = useQuery({
     queryKey: ['content', 'programsToggle'],
     queryFn: () => getContentSectionByKey('programsToggle'),
   });
 
-  // Select the second program based on toggle setting (like main branch)
-  const currentToggle = (toggleSection?.content as string) || 'highHolyDays';
-  const secondProgram = currentToggle === 'passover' ? toggleablePrograms.passover : toggleablePrograms.highHolyDays;
-  
-  // Create the programs array with the toggle selection (like main branch)
-  const displayPrograms = [programs[0], secondProgram];
+  const enabledIds = Array.isArray(toggleSection?.content)
+    ? (toggleSection.content as string[])
+    : DEFAULT_ENABLED_IDS;
+
+  const displayPrograms = ALL_PROGRAMS.filter(program => enabledIds.includes(program.id));
 
   if (loading) {
     return (
@@ -55,7 +68,7 @@ function ProgramsSection() {
               Programs
             </h2>
           </div>
-          <div 
+          <div
             className="flex items-center justify-center py-8"
             role="status"
             aria-label="Loading programs"
@@ -69,6 +82,10 @@ function ProgramsSection() {
     );
   }
 
+  if (displayPrograms.length === 0) {
+    return null;
+  }
+
   return (
     <section className="py-12 bg-gray-50" role="region" aria-labelledby="programs-heading">
       <div className="max-w-6xl mx-auto px-4">
@@ -79,8 +96,8 @@ function ProgramsSection() {
           </h2>
         </div>
 
-        {/* Programs Grid - Limited to 2 programs in a centered layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
+        {/* Programs Grid - adapts to however many are enabled (1-3) */}
+        <div className={`grid ${GRID_CLASS_BY_COUNT[displayPrograms.length]} gap-8 mx-auto`}>
           {displayPrograms.map((program) => (
             <div key={program.id} className="group">
               <Link
@@ -90,15 +107,15 @@ function ProgramsSection() {
               >
                 {/* Image Container */}
                 <div className="relative h-48 overflow-hidden">
-                  <Image 
+                  <Image
                     src={program.imageUrl}
                     alt={`${program.title} program image`}
                     fill
                     className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 50vw"
+                    sizes="(max-width: 768px) 100vw, 33vw"
                   />
                 </div>
-                
+
                 {/* Content */}
                 <div className="p-6 text-center">
                   <h3 className="text-xl font-bold text-gray-900 group-hover:text-orange-600 transition-colors duration-200">

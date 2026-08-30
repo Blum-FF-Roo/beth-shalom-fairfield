@@ -55,7 +55,7 @@ export default function EditContentPage({ params }: Props) {
   const [listContent, setListContent] = useState<string[]>([]);
   const [contactContent, setContactContent] = useState<ContactInfo | null>(null);
   const [slideContent, setSlideContent] = useState<SlideItem[]>([]);
-  const [toggleContent, setToggleContent] = useState('');
+  const [toggleContent, setToggleContent] = useState<string[]>([]);
   const [imageContent, setImageContent] = useState('');
 
   useEffect(() => {
@@ -96,7 +96,7 @@ export default function EditContentPage({ params }: Props) {
           setSlideContent(section.content as SlideItem[]);
           break;
         case 'toggle':
-          setToggleContent(section.content as string);
+          setToggleContent(Array.isArray(section.content) ? section.content as string[] : []);
           break;
         case 'image':
           setImageContent(section.content as string);
@@ -555,31 +555,31 @@ export default function EditContentPage({ params }: Props) {
                     {contentSection.title}
                   </label>
                   <div className="space-y-2">
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="toggle-option"
-                        value="highHolyDays"
-                        checked={toggleContent === 'highHolyDays'}
-                        onChange={(e) => setToggleContent(e.target.value)}
-                        className="mr-3 h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300"
-                      />
-                      <span className="text-sm font-medium text-gray-900">High Holy Days</span>
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="toggle-option"
-                        value="passover"
-                        checked={toggleContent === 'passover'}
-                        onChange={(e) => setToggleContent(e.target.value)}
-                        className="mr-3 h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300"
-                      />
-                      <span className="text-sm font-medium text-gray-900">Passover</span>
-                    </label>
+                    {[
+                      { id: 'shabbat', label: 'Shabbat Services' },
+                      { id: 'highHolyDays', label: 'High Holy Days' },
+                      { id: 'passover', label: 'Passover' },
+                      { id: 'temp', label: 'Temp (placeholder, links to Home)' },
+                    ].map(({ id, label }) => (
+                      <label key={id} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={toggleContent.includes(id)}
+                          onChange={(e) => {
+                            setToggleContent(prev =>
+                              e.target.checked
+                                ? [...prev, id]
+                                : prev.filter(v => v !== id)
+                            );
+                          }}
+                          className="mr-3 h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+                        />
+                        <span className="text-sm font-medium text-gray-900">{label}</span>
+                      </label>
+                    ))}
                   </div>
                   <p className="mt-2 text-xs text-gray-500">
-                    This controls which program appears in the Programs section of the home page.
+                    Controls which programs appear (and in what order) in the Programs section of the home page. Each can be turned on or off independently.
                   </p>
                 </div>
               )}

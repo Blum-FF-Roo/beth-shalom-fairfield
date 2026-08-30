@@ -247,7 +247,7 @@ export default function HeaderScrollWrapper() {
                   fontFamily: 'system-ui, -apple-system, sans-serif'
                 }}
               >
-                Iowa&apos;s Rural Jewish Community
+                A rural Iowa Jewish community
               </span>
             </div>
           </Link>

@@ -10,7 +10,8 @@ export default async function PassoverPage() {
   const content = await getMultipleContentByKeys([
     'passoverIntro',
     'passoverDetails',
-    'passoverReservation'
+    'passoverReservation',
+    'join_us'
   ]);
   
   // Set fallbacks for any missing content
@@ -62,6 +63,16 @@ export default async function PassoverPage() {
             dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.passoverReservation as string) }}
           />
         </div>
+
+        {/* Join Us */}
+        {content.join_us && typeof content.join_us === 'string' && (
+          <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+            <div
+              className="prose prose-lg max-w-none"
+              dangerouslySetInnerHTML={{ __html: formatContentAsHtml(content.join_us) }}
+            />
+          </div>
+        )}
 
         {/* Links */}
         <div className="bg-white rounded-lg shadow-lg p-8">

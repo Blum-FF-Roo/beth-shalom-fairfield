@@ -24,6 +24,8 @@ export default async function PassoverPage() {
 <p>Please make your reservation in advance to ensure we have adequate seating and food for everyone.</p>`
   };
 
+  const joinUsContent = typeof content.join_us === 'string' ? content.join_us : null;
+
   return (
     <div className="min-h-screen bg-gray-50 pt-32 pb-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -65,11 +67,11 @@ export default async function PassoverPage() {
         </div>
 
         {/* Join Us */}
-        {content.join_us && typeof content.join_us === 'string' && (
+        {joinUsContent && (
           <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
             <div
               className="prose prose-lg max-w-none"
-              dangerouslySetInnerHTML={{ __html: formatContentAsHtml(content.join_us) }}
+              dangerouslySetInnerHTML={{ __html: formatContentAsHtml(joinUsContent) }}
             />
           </div>
         )}

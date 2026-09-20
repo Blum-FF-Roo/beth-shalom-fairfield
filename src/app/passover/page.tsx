@@ -11,7 +11,9 @@ export default async function PassoverPage() {
     'passoverIntro',
     'passoverDetails',
     'passoverReservation',
-    'join_us'
+    'join_us',
+    'passoverCartHeading',
+    'passoverCartSubheading'
   ]);
   
   // Fall back to default text only when a section has never been set in
@@ -35,6 +37,12 @@ export default async function PassoverPage() {
     : (content.passoverReservation as string);
 
   const joinUsContent = typeof content.join_us === 'string' ? content.join_us : null;
+
+  // undefined (not null) when the key was never set, so PassoverCart's own
+  // default prop text is used; an empty string is passed through as-is so
+  // a deliberate clear correctly hides that line instead of reverting.
+  const passoverCartHeading = content.passoverCartHeading === null ? undefined : (content.passoverCartHeading as string);
+  const passoverCartSubheading = content.passoverCartSubheading === null ? undefined : (content.passoverCartSubheading as string);
 
   return (
     <div className="min-h-screen bg-gray-50 pt-32 pb-12">
@@ -70,7 +78,7 @@ export default async function PassoverPage() {
         )}
 
         {/* PayPal Cart Integration */}
-        <PassoverCart />
+        <PassoverCart heading={passoverCartHeading} subheading={passoverCartSubheading} />
 
         {/* Reservation Information */}
         {passoverReservation && (

@@ -44,7 +44,15 @@ interface PayPalOrderDetails {
   [key: string]: unknown; // Allow other PayPal properties
 }
 
-export default function PassoverCart() {
+interface PassoverCartProps {
+  heading?: string;
+  subheading?: string;
+}
+
+export default function PassoverCart({
+  heading = 'Reserve Your Seder Seats',
+  subheading = 'Join us for our Community Passover Seder - $20 per person',
+}: PassoverCartProps) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showCart, setShowCart] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>('cart');
@@ -219,8 +227,8 @@ export default function PassoverCart() {
       {paymentStatus === 'cart' && (
         <div className="bg-white rounded-lg shadow-lg p-8">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Reserve Your Seder Seats</h2>
-        <p className="text-gray-600">Join us for our Community Passover Seder - $20 per person</p>
+        {heading && <h2 className="text-2xl font-bold text-gray-900 mb-4">{heading}</h2>}
+        {subheading && <p className="text-gray-600">{subheading}</p>}
       </div>
 
       {/* Ticket Option */}

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import { Plus, Minus, ShoppingCart, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { useToast } from '@/app/utils/ToastContext';
+import { usePayPalConfig } from '@/app/utils/usePayPalConfig';
 
 interface PassoverTicket {
   id: string;
@@ -51,6 +52,7 @@ export default function PassoverCart() {
   const [isMounted, setIsMounted] = useState(false);
   const [customText, setCustomText] = useState('');
   const { showSuccess, showError } = useToast();
+  const { isConfigured: paypalIsConfigured } = usePayPalConfig();
 
   useEffect(() => {
     setIsMounted(true);
@@ -328,7 +330,7 @@ export default function PassoverCart() {
             
             {/* PayPal Checkout */}
             <div className="max-w-md mx-auto">
-              {isMounted && process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID && process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID !== "test-mock-client-id" ? (
+              {isMounted && paypalIsConfigured ? (
                 <PayPalButtons
                   style={{
                     layout: "vertical",

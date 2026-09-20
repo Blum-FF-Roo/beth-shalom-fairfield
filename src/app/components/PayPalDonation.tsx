@@ -3,6 +3,7 @@
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import { useState, useEffect } from "react";
 import { useToast } from '@/app/utils/ToastContext';
+import { usePayPalConfig } from '@/app/utils/usePayPalConfig';
 
 interface PayPalDonationProps {
   defaultAmount?: string;
@@ -14,6 +15,7 @@ export default function PayPalDonation({ defaultAmount = "25.00" }: PayPalDonati
   const [personalMessage, setPersonalMessage] = useState("");
   const [isMounted, setIsMounted] = useState(false);
   const { showSuccess, showError } = useToast();
+  const { isConfigured: paypalIsConfigured } = usePayPalConfig();
 
   useEffect(() => {
     setIsMounted(true);
@@ -127,7 +129,7 @@ export default function PayPalDonation({ defaultAmount = "25.00" }: PayPalDonati
       </div>
 
       {/* PayPal Buttons */}
-      {isMounted && process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID && process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID !== "test-mock-client-id" ? (
+      {isMounted && paypalIsConfigured ? (
         <PayPalButtons
         style={{
           layout: "vertical",

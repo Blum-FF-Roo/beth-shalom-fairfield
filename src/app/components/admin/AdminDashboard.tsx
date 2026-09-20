@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, Users, Edit } from 'lucide-react';
+import { Plus, Users, Edit, CreditCard } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import ProtectedRoute from '@/app/components/auth/ProtectedRoute';
 import { useAuth } from '@/app/utils/AuthContext';
@@ -172,6 +172,17 @@ export default function AdminDashboard() {
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     New Section
+                  </Link>
+                )}
+
+                {userData?.role === 'super-admin' && (
+                  <Link
+                    href="/admin/settings/payments"
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white shadow-sm hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200"
+                    style={{ backgroundColor: '#F58C28' }}
+                  >
+                    <CreditCard className="h-4 w-4 mr-2" />
+                    Payment Settings
                   </Link>
                 )}
 

@@ -2,6 +2,7 @@
 
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { useEffect, useState } from "react";
+import { usePayPalConfig } from "@/app/utils/usePayPalConfig";
 
 interface PayPalProviderProps {
   children: React.ReactNode;
@@ -9,6 +10,7 @@ interface PayPalProviderProps {
 
 export default function PayPalProvider({ children }: PayPalProviderProps) {
   const [isMounted, setIsMounted] = useState(false);
+  const { clientId } = usePayPalConfig();
 
   useEffect(() => {
     setIsMounted(true);
@@ -21,7 +23,7 @@ export default function PayPalProvider({ children }: PayPalProviderProps) {
   return (
     <PayPalScriptProvider
       options={{
-        clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "test",
+        clientId,
         currency: "USD",
         intent: "capture"
       }}

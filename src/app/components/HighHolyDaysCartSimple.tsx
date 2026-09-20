@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import { Plus, Minus, ShoppingCart, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { useToast } from '@/app/utils/ToastContext';
+import { usePayPalConfig } from '@/app/utils/usePayPalConfig';
 
 interface ProductOption {
   id: string;
@@ -137,6 +138,7 @@ export default function HighHolyDaysCartSimple({ onAddToCart }: HighHolyDaysCart
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>('cart');
   const [paymentDetails, setPaymentDetails] = useState<PayPalOrderDetails | null>(null);
   const { showSuccess, showError } = useToast();
+  const { isConfigured: paypalIsConfigured } = usePayPalConfig();
 
   const allProducts = useMemo(() => [...membershipOptions, ...ticketOptions], []);
 
@@ -416,7 +418,7 @@ export default function HighHolyDaysCartSimple({ onAddToCart }: HighHolyDaysCart
             
             {/* PayPal Checkout */}
             <div className="max-w-md mx-auto paypal-buttons">
-              {isMounted && process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID && process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID !== "test-mock-client-id" ? (
+              {isMounted && paypalIsConfigured ? (
                 <PayPalButtons
                   style={{
                     layout: "vertical",

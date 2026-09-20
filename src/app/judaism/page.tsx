@@ -14,7 +14,7 @@ export default async function JudaismPage() {
   // from the admin panel, rather than several separate sections.
   const content = await getMultipleContentByKeys(['judaismContent']);
 
-  const judaismContent = content.judaismContent || `<h2>Who is a Jew?</h2>
+  const judaismContent = content.judaismContent === null ? `<h2>Who is a Jew?</h2>
 <p>For more information, visit: <a href="http://www.jewishvirtuallibrary.org/jsource/Judaism/whojew1.html" class="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">Jewish Virtual Library</a></p>
 
 <h2>Siddur Audio – Free Learning Resource</h2>
@@ -145,7 +145,7 @@ export default async function JudaismPage() {
 <p>Because, unlike those Jewish children who are not allowed to learn and practice Judaism in some countries, you are lucky enough to live in freedom with the right to study your religion openly.</p>
 <p>Because Judaism has survived all kinds of persecution and disasters throughout the ages, but it cannot survive indifference and neglect by its own people.</p>
 <p>Because the only way for you to continue the unbroken chain of Judaism is to study it, know it, and pass it along to your children. You are a precious link in this chain, which stretches back through generations, and while you may add to it, you should not break it.</p>
-<p class="font-semibold">That way, someday years from now when your children ask you, "Why do I have to go to Hebrew School?" you can smile at them very knowingly and answer, "Because."</p>`;
+<p class="font-semibold">That way, someday years from now when your children ask you, "Why do I have to go to Hebrew School?" you can smile at them very knowingly and answer, "Because."</p>` : (content.judaismContent as string);
 
   return (
     <div className="min-h-screen pt-32 pb-12 bg-gray-50">
@@ -161,12 +161,14 @@ export default async function JudaismPage() {
         </div>
 
         {/* Judaism (single rich-HTML document) */}
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <div
-            className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-4"
-            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(judaismContent as string) }}
-          />
-        </div>
+        {judaismContent && (
+          <div className="bg-white rounded-lg shadow-lg p-8">
+            <div
+              className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-4"
+              dangerouslySetInnerHTML={{ __html: formatContentAsHtml(judaismContent) }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

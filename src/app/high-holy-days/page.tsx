@@ -13,13 +13,18 @@ export default async function HighHolyDaysPage() {
     'highHolyDaysInfo'
   ]);
   
-  // Set fallbacks for any missing content
-  const contentWithFallbacks = {
-    highHolyDaysCalendar: content.highHolyDaysCalendar || `<h2>Rosh Hashanah & Yom Kippur</h2>
-<p>The High Holy Days, also known as the Days of Awe, are the holiest time of the Jewish year. At Beth Shalom Fairfield, we observe these sacred days with meaningful services, reflection, and community celebration.</p>`,
-    highHolyDaysInfo: content.highHolyDaysInfo || `<h3>Service Information</h3>
+  // Fall back to default text only when a section has never been set in
+  // Firestore (null). An empty string means an admin deliberately cleared
+  // it, which must hide the section, not silently revert to the old text.
+  const highHolyDaysCalendar = content.highHolyDaysCalendar === null
+    ? `<h2>Rosh Hashanah & Yom Kippur</h2>
+<p>The High Holy Days, also known as the Days of Awe, are the holiest time of the Jewish year. At Beth Shalom Fairfield, we observe these sacred days with meaningful services, reflection, and community celebration.</p>`
+    : (content.highHolyDaysCalendar as string);
+
+  const highHolyDaysInfo = content.highHolyDaysInfo === null
+    ? `<h3>Service Information</h3>
 <p>All are welcome to join us for High Holy Day services. Please contact us for specific service times and any special arrangements.</p>`
-  };
+    : (content.highHolyDaysInfo as string);
 
   return (
     <div className="min-h-screen bg-gray-50 pt-32 pb-12">
@@ -35,20 +40,24 @@ export default async function HighHolyDaysPage() {
         </div>
 
         {/* Calendar */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <div 
-            className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.highHolyDaysCalendar as string) }}
-          />
-        </div>
+        {highHolyDaysCalendar && (
+          <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+            <div
+              className="prose prose-lg max-w-none"
+              dangerouslySetInnerHTML={{ __html: formatContentAsHtml(highHolyDaysCalendar) }}
+            />
+          </div>
+        )}
 
         {/* Service Information */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <div 
-            className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.highHolyDaysInfo as string) }}
-          />
-        </div>
+        {highHolyDaysInfo && (
+          <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+            <div
+              className="prose prose-lg max-w-none"
+              dangerouslySetInnerHTML={{ __html: formatContentAsHtml(highHolyDaysInfo) }}
+            />
+          </div>
+        )}
 
         {/* Static Membership Section with Embedded PayPal */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">

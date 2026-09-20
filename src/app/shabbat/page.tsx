@@ -12,18 +12,27 @@ export default async function ShabbatPage() {
     'shabbatTimes'
   ]);
   
-  // Set fallbacks for any missing content
-  const contentWithFallbacks = {
-    shabbatIntro: content.shabbatIntro || `<h2>Welcome to Shabbat</h2>
-<p>Shabbat is the cornerstone of Jewish life, a weekly celebration that begins at sundown on Friday and continues until nightfall on Saturday. At Beth Shalom Fairfield, we welcome you to join us for this sacred time of rest, reflection, and community.</p>`,
-    shabbatServices: content.shabbatServices || `<h3>Friday Evening Services</h3>
+  // Fall back to default text only when a section has never been set in
+  // Firestore (null). An empty string means an admin deliberately cleared
+  // it, which must hide the section, not silently revert to the old text.
+  const shabbatIntro = content.shabbatIntro === null
+    ? `<h2>Welcome to Shabbat</h2>
+<p>Shabbat is the cornerstone of Jewish life, a weekly celebration that begins at sundown on Friday and continues until nightfall on Saturday. At Beth Shalom Fairfield, we welcome you to join us for this sacred time of rest, reflection, and community.</p>`
+    : (content.shabbatIntro as string);
+
+  const shabbatServices = content.shabbatServices === null
+    ? `<h3>Friday Evening Services</h3>
 <p>Our Friday evening services welcome the Shabbat with prayers, songs, and the lighting of Shabbat candles. This intimate service creates a peaceful transition from the week's activities to the sanctity of Shabbat.</p>
 
 <h3>Saturday Morning Services</h3>
-<p>Saturday morning services include Torah reading, prayers, and often feature special celebrations such as Bar/Bat Mitzvahs, baby namings, and other lifecycle events. All are welcome to participate in this meaningful worship experience.</p>`,
-    shabbatTimes: content.shabbatTimes || `<h3>Service Times & Information</h3>
+<p>Saturday morning services include Torah reading, prayers, and often feature special celebrations such as Bar/Bat Mitzvahs, baby namings, and other lifecycle events. All are welcome to participate in this meaningful worship experience.</p>`
+    : (content.shabbatServices as string);
+
+  const shabbatTimes = content.shabbatTimes === null
+    ? `<h3>Service Times & Information</h3>
 <p>Service times may vary throughout the year. Please contact us for current schedule information and any special Shabbat programs or events.</p>`
-  };
+    : (content.shabbatTimes as string);
+
   return (
     <div className="min-h-screen bg-gray-50 pt-32 pb-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -38,25 +47,31 @@ export default async function ShabbatPage() {
         </div>
 
         {/* Introduction */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <div 
-            className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.shabbatIntro as string) }}
-          />
-        </div>
+        {shabbatIntro && (
+          <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+            <div
+              className="prose prose-lg max-w-none"
+              dangerouslySetInnerHTML={{ __html: formatContentAsHtml(shabbatIntro) }}
+            />
+          </div>
+        )}
 
         {/* Services */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <div 
-            className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.shabbatServices as string) }}
-          />
-        </div>
+        {shabbatServices && (
+          <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+            <div
+              className="prose prose-lg max-w-none"
+              dangerouslySetInnerHTML={{ __html: formatContentAsHtml(shabbatServices) }}
+            />
+          </div>
+        )}
 
         {/* Times */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
           <div className="prose prose-lg max-w-none">
-            <div dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.shabbatTimes as string) }} />
+            {shabbatTimes && (
+              <div dangerouslySetInnerHTML={{ __html: formatContentAsHtml(shabbatTimes) }} />
+            )}
 
             {/* Links */}
             <div className="mt-8 pt-6 border-t border-gray-200">

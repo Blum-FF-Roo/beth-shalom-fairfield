@@ -14,7 +14,7 @@ export default async function HistoryPage() {
   // from the admin panel, rather than several separate sections.
   const content = await getMultipleContentByKeys(['historyContent']);
 
-  const historyContent = content.historyContent || `<p>In 2006, Margo Baum collected reminiscences of a number of members of Congregation Beth Shalom who have been here since the "early days." Collectively they make up, if not a history, at least an impression of what the Jewish community and Congregation Beth Shalom were like from the mid-1970s to 2007.</p>
+  const historyContent = content.historyContent === null ? `<p>In 2006, Margo Baum collected reminiscences of a number of members of Congregation Beth Shalom who have been here since the "early days." Collectively they make up, if not a history, at least an impression of what the Jewish community and Congregation Beth Shalom were like from the mid-1970s to 2007.</p>
 
 <h2>Early Days</h2>
 <p>"A group of ten or twelve of us went to Rosh Hashanah services in Ottumwa. None of us had been in Iowa before. These older people — in their 50's and 60's — were so excited to see a group of young people. They fought over who would take us for Rosh Hashanah and break fast for Yom Kippur," reminisces June Schindler of her first touch of Judaism in Iowa in 1974.</p>
@@ -76,7 +76,7 @@ export default async function HistoryPage() {
 
 <p>From the 1½ Jewish families in Fairfield and then the original 15 members of Congregation Beth Shalom in Barhydt Chapel at Maharishi International University, the Fairfield Jewish community has grown to more than 150 families with their own synagogue at 308 South B Street in Fairfield, and a vibrant collective consciousness.</p>
 
-<p><strong>Gai Gezunthayt.</strong></p>`;
+<p><strong>Gai Gezunthayt.</strong></p>` : (content.historyContent as string);
 
   return (
     <div className="min-h-screen pt-32 pb-12 bg-gray-50">
@@ -92,12 +92,14 @@ export default async function HistoryPage() {
         </div>
 
         {/* History (single rich-HTML document) */}
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <div
-            className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-6"
-            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(historyContent as string) }}
-          />
-        </div>
+        {historyContent && (
+          <div className="bg-white rounded-lg shadow-lg p-8">
+            <div
+              className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-6"
+              dangerouslySetInnerHTML={{ __html: formatContentAsHtml(historyContent) }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

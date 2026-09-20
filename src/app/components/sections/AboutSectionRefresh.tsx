@@ -13,7 +13,10 @@ function AboutSectionRefresh() {
     queryFn: () => getContentSectionByKey('aboutText'),
   });
 
-  const aboutText = (section?.content as string) || '';
+  // Distinguish "section never created" (show the built-in default copy)
+  // from "admin cleared it to empty" (respect that and show nothing) --
+  // otherwise a deliberate clear would silently revert to the default text.
+  const aboutText = section ? (section.content as string) : null;
 
   return (
     <section className="py-12 bg-white" role="region" aria-labelledby="about-heading">
@@ -43,7 +46,7 @@ function AboutSectionRefresh() {
                 className="text-gray-700 leading-relaxed prose prose-lg max-w-none"
                 dangerouslySetInnerHTML={{ __html: formatContentAsHtml(aboutText) }}
               />
-            ) : (
+            ) : aboutText === null ? (
               <div className="text-gray-700 leading-relaxed space-y-4">
                 <p className="mb-4">
                   Welcome to Beth Shalom Fairfield, a warm and welcoming Conservative Jewish community located in the heart of Fairfield, Iowa. Our congregation has been serving the spiritual, educational, and social needs of Jewish families in southeastern Iowa for many years.
@@ -55,7 +58,7 @@ function AboutSectionRefresh() {
                   (This content can be customized through the admin panel)
                 </p>
               </div>
-            )}
+            ) : null}
             
             {/* Read More Link */}
             <div className="mt-8 pt-6 border-t border-gray-200">

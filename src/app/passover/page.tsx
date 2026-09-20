@@ -14,15 +14,25 @@ export default async function PassoverPage() {
     'join_us'
   ]);
   
-  // Set fallbacks for any missing content
-  const contentWithFallbacks = {
-    passoverIntro: content.passoverIntro || `<h2>Chag Pesach Sameach</h2>
-<p>Passover (Pesach) is one of the most significant holidays in the Jewish calendar, commemorating the liberation of the Israelites from slavery in Egypt. At Beth Shalom Fairfield, we celebrate this festival of freedom with community Seders and meaningful observances.</p>`,
-    passoverDetails: content.passoverDetails || `<h3>Community Seder</h3>
-<p>Join us for our annual community Seder, where we gather to retell the Passover story, enjoy traditional foods, and celebrate together as one family. Our Seder welcomes people of all backgrounds and levels of Jewish knowledge.</p>`,
-    passoverReservation: content.passoverReservation || `<h3>Reservations Required</h3>
+  // Fall back to default text only when a section has never been set in
+  // Firestore (null). An admin can also deliberately clear a section to an
+  // empty string to remove it from the page entirely -- that must not be
+  // treated the same as "missing" or their edit would silently revert to
+  // the old default text.
+  const passoverIntro = content.passoverIntro === null
+    ? `<h2>Chag Pesach Sameach</h2>
+<p>Passover (Pesach) is one of the most significant holidays in the Jewish calendar, commemorating the liberation of the Israelites from slavery in Egypt. At Beth Shalom Fairfield, we celebrate this festival of freedom with community Seders and meaningful observances.</p>`
+    : (content.passoverIntro as string);
+
+  const passoverDetails = content.passoverDetails === null
+    ? `<h3>Community Seder</h3>
+<p>Join us for our annual community Seder, where we gather to retell the Passover story, enjoy traditional foods, and celebrate together as one family. Our Seder welcomes people of all backgrounds and levels of Jewish knowledge.</p>`
+    : (content.passoverDetails as string);
+
+  const passoverReservation = content.passoverReservation === null
+    ? `<h3>Reservations Required</h3>
 <p>Please make your reservation in advance to ensure we have adequate seating and food for everyone.</p>`
-  };
+    : (content.passoverReservation as string);
 
   const joinUsContent = typeof content.join_us === 'string' ? content.join_us : null;
 
@@ -40,31 +50,37 @@ export default async function PassoverPage() {
         </div>
 
         {/* Introduction */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <div 
-            className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.passoverIntro as string) }}
-          />
-        </div>
+        {passoverIntro && (
+          <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+            <div
+              className="prose prose-lg max-w-none"
+              dangerouslySetInnerHTML={{ __html: formatContentAsHtml(passoverIntro) }}
+            />
+          </div>
+        )}
 
         {/* Event Details */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <div 
-            className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.passoverDetails as string) }}
-          />
-        </div>
+        {passoverDetails && (
+          <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+            <div
+              className="prose prose-lg max-w-none"
+              dangerouslySetInnerHTML={{ __html: formatContentAsHtml(passoverDetails) }}
+            />
+          </div>
+        )}
 
         {/* PayPal Cart Integration */}
         <PassoverCart />
 
         {/* Reservation Information */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <div 
-            className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: formatContentAsHtml(contentWithFallbacks.passoverReservation as string) }}
-          />
-        </div>
+        {passoverReservation && (
+          <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+            <div
+              className="prose prose-lg max-w-none"
+              dangerouslySetInnerHTML={{ __html: formatContentAsHtml(passoverReservation) }}
+            />
+          </div>
+        )}
 
         {/* Join Us */}
         {joinUsContent && (

@@ -55,6 +55,16 @@ export async function setContent(key: string, value: unknown): Promise<void> {
   }
 }
 
+export async function deleteContent(key: string): Promise<void> {
+  try {
+    const docRef = doc(db, CONTENT_COLLECTION, key);
+    await deleteDoc(docRef);
+  } catch (error) {
+    console.error(`Error deleting content for key ${key}:`, error);
+    throw error;
+  }
+}
+
 export async function getMultipleContentByKeys(keys: string[]): Promise<Record<string, unknown>> {
   try {
     const results: Record<string, unknown> = {};

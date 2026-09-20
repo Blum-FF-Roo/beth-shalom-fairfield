@@ -11,7 +11,7 @@ import { useAuth } from '@/app/utils/AuthContext';
 import { useToast } from '@/app/utils/ToastContext';
 import { ContactInfo, SlideItem } from '@/app/utils';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ContentSection, getContentSectionById, updateContentSection, setContent } from '@/app/utils/firebase-operations';
+import { ContentSection, getContentSectionById, updateContentSection, deleteContentSection, setContent, deleteContent } from '@/app/utils/firebase-operations';
 
 interface Props {
   params: Promise<{
@@ -48,6 +48,31 @@ export default function EditContentPage({ params }: Props) {
       showError('Update Failed', 'Failed to update content. Please try again.');
     },
   });
+
+  const deleteContentMutation = useMutation({
+    mutationFn: async ({ id, key }: { id: string; key: string }) => {
+      await deleteContentSection(id);
+      await deleteContent(key);
+      return { success: true };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['content-sections'] });
+      showSuccess('Section Deleted', 'The content section has been deleted.');
+      router.push('/admin');
+    },
+    onError: (error) => {
+      console.error('Error deleting content section:', error);
+      showError('Delete Failed', 'Failed to delete the content section. Please try again.');
+    },
+  });
+
+  const handleDelete = () => {
+    if (!contentSection) return;
+    if (!confirm(`Delete "${contentSection.title}"? This cannot be undone, and will remove it from any page it appears on.`)) {
+      return;
+    }
+    deleteContentMutation.mutate({ id: contentSection.id, key: contentSection.key });
+  };
 
   // Form state for different content types
   const [textContent, setTextContent] = useState('');
@@ -237,15 +262,27 @@ export default function EditContentPage({ params }: Props) {
                 <h1 className="text-3xl font-bold text-gray-900">Edit: {contentSection.title}</h1>
                 <p className="mt-2 text-gray-600">{contentSection.description}</p>
               </div>
-              <button
-                onClick={handleSave}
-                disabled={updateContentMutation.isPending}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-                style={{backgroundColor: '#F58C28'}}
-              >
-                <Save className="h-4 w-4 mr-2" />
-                {updateContentMutation.isPending ? 'Saving...' : 'Save Changes'}
-              </button>
+              <div className="flex items-center space-x-3">
+                {userData?.role === 'super-admin' && (
+                  <button
+                    onClick={handleDelete}
+                    disabled={deleteContentMutation.isPending || updateContentMutation.isPending}
+                    className="inline-flex items-center px-4 py-2 border border-red-300 text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    {deleteContentMutation.isPending ? 'Deleting...' : 'Delete Section'}
+                  </button>
+                )}
+                <button
+                  onClick={handleSave}
+                  disabled={updateContentMutation.isPending || deleteContentMutation.isPending}
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                  style={{backgroundColor: '#F58C28'}}
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  {updateContentMutation.isPending ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
             </div>
           </div>
 

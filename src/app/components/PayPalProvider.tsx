@@ -10,18 +10,24 @@ interface PayPalProviderProps {
 
 export default function PayPalProvider({ children }: PayPalProviderProps) {
   const [isMounted, setIsMounted] = useState(false);
-  const { clientId } = usePayPalConfig();
+  const { clientId, isLoading } = usePayPalConfig();
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  if (!isMounted) {
+  // Wait for the real clientId to resolve before ever mounting the PayPal
+  // SDK -- PayPalScriptProvider loads its <script> tag once on mount and
+  // does not reload it if options change afterward, so mounting early with
+  // a placeholder "test" id would lock the page into sandbox mode even
+  // after the real id loads a moment later.
+  if (!isMounted || isLoading) {
     return <>{children}</>;
   }
 
   return (
     <PayPalScriptProvider
+      key={clientId}
       options={{
         clientId,
         currency: "USD",

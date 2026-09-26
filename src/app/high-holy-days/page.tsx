@@ -59,65 +59,18 @@ export default async function HighHolyDaysPage() {
           </div>
         )}
 
-        {/* Static Membership Section with Embedded PayPal */}
+        {/* Membership Section */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">RENEW or BECOME A MEMBER</h2>
-          <p className="text-gray-700 mb-4"><strong>E-MAIL or MAIL YOUR MEMBERSHIP INFORMATION TO:</strong></p>
-          
           <p className="text-gray-700 mb-6">
-            <strong>Address:</strong> Congregation Beth Shalom, c/o 200 W. Washington, Fairfield, Iowa 52556.<br/>
-            <strong>E-Mail:</strong> <a href="mailto:bethshalomfairfield@gmail.com" className="text-orange-600 hover:text-orange-700">bethshalomfairfield@gmail.com</a>
+            High Holiday seating is a benefit of membership. Non-members and visiting students are warmly welcome to join us with a ticket. Choose a ticket only, or add the catered Break-fast that follows Yom Kippur.
           </p>
-
-          <div className="bg-gray-50 p-4 rounded-lg mb-6">
-            <p className="text-gray-700 space-y-1">
-              <strong>MEMBERSHIP CATEGORY:</strong><br/>
-              <strong>NAME OF MEMBER(s):</strong><br/>
-              <strong>AMOUNT PAID:</strong><br/>
-              <strong>YOUR MAILING ADDRESS:</strong><br/>
-              <strong>YOUR E-MAIL ADDRESS:</strong>
-            </p>
-          </div>
-
-          <p className="text-gray-700 mb-6 font-semibold">INCLUDE PAYMENT or USE PAYPAL BELOW</p>
-
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Membership Category</h3>
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse border border-gray-300">
-              <tbody>
-                <tr className="border-b border-gray-300">
-                  <td className="p-3 border-r border-gray-300">Sustaining Membership</td>
-                  <td className="p-3 border-r border-gray-300 font-bold">$1000</td>
-                  <td className="p-3"><AddToCartButton productId="sustaining" /></td>
-                </tr>
-                <tr className="border-b border-gray-300">
-                  <td className="p-3 border-r border-gray-300">Sponsoring Membership</td>
-                  <td className="p-3 border-r border-gray-300 font-bold">$500</td>
-                  <td className="p-3"><AddToCartButton productId="sponsoring" /></td>
-                </tr>
-                <tr className="border-b border-gray-300">
-                  <td className="p-3 border-r border-gray-300">Family Membership</td>
-                  <td className="p-3 border-r border-gray-300 font-bold">$295</td>
-                  <td className="p-3"><AddToCartButton productId="family" /></td>
-                </tr>
-                <tr className="border-b border-gray-300">
-                  <td className="p-3 border-r border-gray-300">Single Membership</td>
-                  <td className="p-3 border-r border-gray-300 font-bold">$165</td>
-                  <td className="p-3"><AddToCartButton productId="single" /></td>
-                </tr>
-                <tr className="border-b border-gray-300">
-                  <td className="p-3 border-r border-gray-300">College Faculty, Staff Family</td>
-                  <td className="p-3 border-r border-gray-300 font-bold">$145</td>
-                  <td className="p-3"><AddToCartButton productId="faculty-family" /></td>
-                </tr>
-                <tr>
-                  <td className="p-3 border-r border-gray-300">College Faculty, Staff Single</td>
-                  <td className="p-3 border-r border-gray-300 font-bold">$95</td>
-                  <td className="p-3"><AddToCartButton productId="faculty-single" /></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <HoverButton href="/membership" variant="primary">
+            Join
+            <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </HoverButton>
         </div>
 
         {/* Static Tickets Section with Embedded PayPal */}

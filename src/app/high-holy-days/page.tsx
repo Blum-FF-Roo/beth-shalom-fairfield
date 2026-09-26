@@ -61,12 +61,11 @@ export default async function HighHolyDaysPage() {
 
         {/* Membership Section */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">RENEW or BECOME A MEMBER</h2>
           <p className="text-gray-700 mb-6">
             High Holiday seating is a benefit of membership. Non-members and visiting students are warmly welcome to join us with a ticket. Choose a ticket only, or add the catered Break-fast that follows Yom Kippur.
           </p>
           <HoverButton href="/membership" variant="primary">
-            Join
+            Renew or Become a member
             <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>

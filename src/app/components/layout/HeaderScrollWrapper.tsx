@@ -211,7 +211,7 @@ export default function HeaderScrollWrapper() {
       "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
       headerBgClass
     )}>
-      <div className="mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4">
         {/* Header Layout: Logo Left, Menus Right */}
         <div className="flex items-center justify-between">
           {/* Logo and Site Title - Upper Left */}

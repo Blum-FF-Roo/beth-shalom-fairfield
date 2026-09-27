@@ -15,12 +15,6 @@ export const LazyUserManagement = lazy(() => import('@/app/components/admin/User
 export const LazyPostForm = lazy(() => import('@/app/components/admin/PostForm'));
 export const LazyRichTextEditor = lazy(() => import('@/app/components/admin/RichTextEditor'));
 
-// Payment components
-export const LazyPayPalDonation = lazy(() => import('@/app/components/PayPalDonation'));
-export const LazyMembershipCart = lazy(() => import('@/app/components/MembershipCart'));
-export const LazyHighHolyDaysCart = lazy(() => import('@/app/components/HighHolyDaysCart'));
-export const LazyPassoverCart = lazy(() => import('@/app/components/PassoverCart'));
-
 // Media components
 export const LazyYouTubeEmbed = lazy(() => import('@/app/components/LazyYouTubeEmbed'));
 
@@ -61,22 +55,6 @@ export function UserManagementWithSuspense() {
   return (
     <SuspenseWrapper fallback={<AdminCardSkeleton />}>
       <LazyUserManagement />
-    </SuspenseWrapper>
-  );
-}
-
-export function PayPalDonationWithSuspense(props: Record<string, unknown>) {
-  return (
-    <SuspenseWrapper>
-      <LazyPayPalDonation {...props} />
-    </SuspenseWrapper>
-  );
-}
-
-export function MembershipCartWithSuspense() {
-  return (
-    <SuspenseWrapper>
-      <LazyMembershipCart />
     </SuspenseWrapper>
   );
 }

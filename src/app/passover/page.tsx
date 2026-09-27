@@ -1,7 +1,7 @@
 import { getMultipleContentByKeys } from '@/app/utils/firebase-operations';
 import { formatContentAsHtml } from '@/app/utils';
 import HoverButton from '@/app/components/ui/HoverButton';
-import PassoverCart from '@/app/components/PassoverCart';
+import AddToCartButton from '@/app/components/AddToCartButton';
 
 export const revalidate = 60;
 
@@ -38,11 +38,12 @@ export default async function PassoverPage() {
 
   const joinUsContent = typeof content.join_us === 'string' ? content.join_us : null;
 
-  // undefined (not null) when the key was never set, so PassoverCart's own
-  // default prop text is used; an empty string is passed through as-is so
-  // a deliberate clear correctly hides that line instead of reverting.
-  const passoverCartHeading = content.passoverCartHeading === null ? undefined : (content.passoverCartHeading as string);
-  const passoverCartSubheading = content.passoverCartSubheading === null ? undefined : (content.passoverCartSubheading as string);
+  const passoverCartHeading = content.passoverCartHeading === null
+    ? 'Reserve Your Seder Seats'
+    : (content.passoverCartHeading as string);
+  const passoverCartSubheading = content.passoverCartSubheading === null
+    ? 'Join us for our Community Passover Seder - $20 per person'
+    : (content.passoverCartSubheading as string);
 
   return (
     <div className="min-h-screen bg-gray-50 pt-32 pb-12">
@@ -77,8 +78,34 @@ export default async function PassoverPage() {
           </div>
         )}
 
-        {/* PayPal Cart Integration */}
-        <PassoverCart heading={passoverCartHeading} subheading={passoverCartSubheading} />
+        {/* Passover Seder Ticket */}
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
+          <div className="p-8 pb-6">
+            {passoverCartHeading && (
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">{passoverCartHeading}</h2>
+            )}
+            {passoverCartSubheading && (
+              <p className="text-gray-700">{passoverCartSubheading}</p>
+            )}
+          </div>
+
+          <div className="hidden sm:flex px-8 py-3 text-xs font-semibold uppercase tracking-wide text-white" style={{ backgroundColor: '#F58C28' }}>
+            <span className="flex-1">Ticket</span>
+            <span>Price</span>
+          </div>
+
+          <div className="divide-y divide-gray-100">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-8 py-4">
+              <span className="text-gray-900 font-medium">Passover Seder Ticket</span>
+              <div className="flex items-center gap-4 bg-gray-50 rounded-full pl-4 pr-2 py-2 self-start sm:self-auto">
+                <span className="font-semibold text-gray-900">$20.00</span>
+                <AddToCartButton
+                  product={{ id: 'seder-ticket', name: 'Passover Seder Ticket', price: 20, category: 'ticket' }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* Reservation Information */}
         {passoverReservation && (

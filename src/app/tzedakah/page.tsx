@@ -1,6 +1,85 @@
 'use client';
 
-import PayPalDonation from '@/app/components/PayPalDonation';
+import { useState } from 'react';
+import AddToCartButton from '@/app/components/AddToCartButton';
+
+const predefinedAmounts = ['18', '36', '50', '100', '180'];
+
+function DonationSection() {
+  const [amount, setAmount] = useState('18');
+  const [isCustom, setIsCustom] = useState(false);
+  const numericAmount = parseFloat(amount) || 0;
+
+  return (
+    <div className="max-w-md mx-auto">
+      <h3 className="text-lg font-semibold text-gray-900 mb-3">Select Donation Amount</h3>
+
+      <div className="grid grid-cols-3 gap-2 mb-4">
+        {predefinedAmounts.map((preset) => (
+          <button
+            key={preset}
+            onClick={() => { setAmount(preset); setIsCustom(false); }}
+            className={`px-4 py-2 rounded-lg border-2 font-medium transition-colors duration-200 ${
+              amount === preset && !isCustom
+                ? 'border-orange-500 bg-orange-50 text-orange-700'
+                : 'border-gray-300 hover:border-orange-300'
+            }`}
+          >
+            ${preset}
+          </button>
+        ))}
+      </div>
+
+      <div className="mb-4">
+        <button
+          onClick={() => setIsCustom(true)}
+          className={`w-full px-4 py-2 rounded-lg border-2 font-medium transition-colors duration-200 ${
+            isCustom ? 'border-orange-500 bg-orange-50 text-orange-700' : 'border-gray-300 hover:border-orange-300'
+          }`}
+        >
+          Custom Amount
+        </button>
+
+        {isCustom && (
+          <div className="mt-2 relative">
+            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+            <input
+              type="number"
+              min="1"
+              step="0.01"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+              placeholder="Enter amount"
+            />
+          </div>
+        )}
+      </div>
+
+      <div className="text-center mb-6">
+        <p className="text-gray-600">
+          Donation Amount: <span className="font-semibold text-lg" style={{ color: '#F58C28' }}>${numericAmount.toFixed(2)}</span>
+        </p>
+      </div>
+
+      <AddToCartButton
+        disabled={numericAmount <= 0}
+        fullWidth
+        product={{
+          id: `donation-${numericAmount}`,
+          name: 'Donation to Congregation Beth Shalom',
+          price: numericAmount,
+          category: 'donation',
+        }}
+      />
+
+      <div className="mt-4 text-sm text-gray-600 text-center">
+        <p>Secure donation processing through PayPal</p>
+        <p className="mt-1">Congregation Beth Shalom is a registered 501(c)(3) organization</p>
+      </div>
+    </div>
+  );
+}
 
 export default function TzedakahPage() {
   return (
@@ -39,7 +118,7 @@ export default function TzedakahPage() {
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Donate Now</h2>
             <p className="text-gray-600">Support our congregation with a secure online donation through PayPal</p>
           </div>
-          <PayPalDonation defaultAmount="18" />
+          <DonationSection />
         </div>
 
         {/* Donation Funds */}

@@ -1,6 +1,13 @@
-'use client';
+import AddToCartButton from '@/app/components/AddToCartButton';
 
-import MembershipCart from '@/app/components/MembershipCart';
+const membershipOptions = [
+  { id: 'sustaining', name: 'Sustaining Membership', price: 1000, description: 'Full support membership with all benefits' },
+  { id: 'sponsoring', name: 'Sponsoring Membership', price: 500, description: 'Supporting membership with all benefits' },
+  { id: 'family', name: 'Family Membership', price: 295, description: 'Full family membership' },
+  { id: 'single', name: 'Single Membership', price: 165, description: 'Individual membership' },
+  { id: 'faculty-family', name: 'College Faculty, Staff Family', price: 145, description: 'Family membership for college staff' },
+  { id: 'faculty-single', name: 'College Faculty, Staff Single', price: 95, description: 'Individual membership for college staff' },
+];
 
 export default function MembershipPage() {
   return (
@@ -25,8 +32,35 @@ export default function MembershipPage() {
           </div>
         </div>
 
-        {/* Membership Cart */}
-        <MembershipCart />
+        {/* Membership Levels */}
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
+          <div className="p-8 pb-6">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Select Your Membership</h2>
+            <p className="text-gray-700">Choose your membership level below. Dues can be paid in installments.</p>
+          </div>
+
+          <div className="hidden sm:flex px-8 py-3 text-xs font-semibold uppercase tracking-wide text-white" style={{ backgroundColor: '#F58C28' }}>
+            <span className="flex-1">Membership Level</span>
+            <span>Price</span>
+          </div>
+
+          <div className="divide-y divide-gray-100">
+            {membershipOptions.map((option) => (
+              <div key={option.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-8 py-4">
+                <div>
+                  <span className="text-gray-900 font-medium block">{option.name}</span>
+                  <span className="text-sm text-gray-500">{option.description}</span>
+                </div>
+                <div className="flex items-center gap-4 bg-gray-50 rounded-full pl-4 pr-2 py-2 self-start sm:self-auto">
+                  <span className="font-semibold text-gray-900">${option.price.toFixed(2)}</span>
+                  <AddToCartButton
+                    product={{ id: option.id, name: option.name, price: option.price, category: 'membership', description: option.description }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* Membership Information */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">

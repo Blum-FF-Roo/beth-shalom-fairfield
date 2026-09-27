@@ -4,7 +4,6 @@ import "./globals.css";
 import Header from "@/app/components/layout/Header";
 import Footer from "@/app/components/layout/Footer";
 import { AuthProvider } from "@/app/utils/AuthContext";
-import PayPalProvider from "@/app/components/PayPalProvider";
 import { ToastProvider } from "@/app/utils/ToastContext";
 import ToastContainer from "@/app/components/ui/ToastContainer";
 import QueryProvider from "@/app/components/providers/QueryProvider";
@@ -40,19 +39,17 @@ export default function RootLayout({
       <body className={`${inter.variable} font-sans antialiased`}>
         <QueryProvider>
           <ToastProvider>
-            <PayPalProvider>
-              <AuthProvider>
-                <CartProvider>
-                  <Header />
-                  <ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
-                    <main role="main">{children}</main>
-                  </ErrorBoundary>
-                  <Footer />
-                  <CartDrawer />
-                  <ToastContainer />
-                </CartProvider>
-              </AuthProvider>
-            </PayPalProvider>
+            <AuthProvider>
+              <CartProvider>
+                <Header />
+                <ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
+                  <main role="main">{children}</main>
+                </ErrorBoundary>
+                <Footer />
+                <CartDrawer />
+                <ToastContainer />
+              </CartProvider>
+            </AuthProvider>
           </ToastProvider>
         </QueryProvider>
       </body>

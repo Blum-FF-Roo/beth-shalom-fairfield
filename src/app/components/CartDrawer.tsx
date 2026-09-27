@@ -1,43 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import { PayPalButtons } from '@paypal/react-paypal-js';
 import { X, ShoppingCart, Trash2 } from 'lucide-react';
 import { useCart } from '@/app/utils/CartContext';
-import { useToast } from '@/app/utils/ToastContext';
-import { usePayPalConfig } from '@/app/utils/usePayPalConfig';
-
-interface PayPalOrderDetails {
-  id?: string;
-  status?: string;
-  payer?: { name?: { given_name?: string } };
-  purchase_units?: Array<{ amount?: { value?: string } }>;
-  [key: string]: unknown;
-}
-
-type CheckoutStatus = 'cart' | 'success' | 'error';
+import { usePayPalBusinessEmail } from '@/app/utils/usePayPalConfig';
 
 export default function CartDrawer() {
   const { items, isOpen, itemCount, subtotal, removeItem, updateQuantity, clearCart, closeCart } = useCart();
-  const { showSuccess, showError } = useToast();
-  const { isConfigured: paypalIsConfigured } = usePayPalConfig();
+  const { businessEmail, checkoutUrl, isConfigured: paypalIsConfigured } = usePayPalBusinessEmail();
 
   const [names, setNames] = useState('');
-  const [status, setStatus] = useState<CheckoutStatus>('cart');
-  const [orderDetails, setOrderDetails] = useState<PayPalOrderDetails | null>(null);
 
   const hasMembership = items.some(item => item.category === 'membership');
   const namesLabel = hasMembership ? 'Member Name(s)' : 'Name(s) for this Order';
 
   const handleClose = () => {
-    closeCart();
-  };
-
-  const resetAfterSuccess = () => {
-    clearCart();
-    setNames('');
-    setStatus('cart');
-    setOrderDetails(null);
     closeCart();
   };
 
@@ -77,50 +54,7 @@ export default function CartDrawer() {
         </div>
 
         <div className="flex-1 overflow-y-auto px-6 py-4">
-          {status === 'success' && orderDetails ? (
-            <div className="text-center py-8">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Purchase Successful!</h3>
-              <p className="text-gray-600 mb-4">
-                Thank you {orderDetails.payer?.name?.given_name || 'for your purchase'}!
-              </p>
-              <div className="bg-green-50 rounded-lg p-4 mb-6 text-left">
-                <p className="text-sm text-green-800 mb-1"><strong>Transaction ID:</strong> {orderDetails.id}</p>
-                <p className="text-sm text-green-800"><strong>Amount:</strong> ${orderDetails.purchase_units?.[0]?.amount?.value || 'N/A'}</p>
-              </div>
-              <p className="text-sm text-gray-600 mb-6">You&apos;ll receive a confirmation email shortly.</p>
-              <button
-                onClick={resetAfterSuccess}
-                className="px-6 py-3 rounded-lg text-white font-medium"
-                style={{ backgroundColor: '#F58C28' }}
-              >
-                Continue Browsing
-              </button>
-            </div>
-          ) : status === 'error' ? (
-            <div className="text-center py-8">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Purchase Failed</h3>
-              <p className="text-sm text-gray-600 mb-6">
-                No charges were made. You can try again or contact us for help.
-              </p>
-              <button
-                onClick={() => setStatus('cart')}
-                className="px-6 py-3 rounded-lg text-white font-medium"
-                style={{ backgroundColor: '#F58C28' }}
-              >
-                Try Again
-              </button>
-            </div>
-          ) : items.length === 0 ? (
+          {items.length === 0 ? (
             <div className="text-center py-16">
               <ShoppingCart className="w-12 h-12 text-gray-300 mx-auto mb-4" />
               <p className="text-gray-500">Your cart is empty.</p>
@@ -180,60 +114,36 @@ export default function CartDrawer() {
                 <p className="text-xs text-gray-500 mt-1">These names will be included in the PayPal order details.</p>
               </div>
 
-              <div className="paypal-buttons">
-                {paypalIsConfigured ? (
-                  <PayPalButtons
-                    style={{ layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay' }}
-                    createOrder={(_data, actions) => {
-                      const namesForPaypal = names.trim() ? ` | ${namesLabel}: ${names.trim()}` : '';
-                      return actions.order.create({
-                        purchase_units: [{
-                          amount: {
-                            value: subtotal.toString(),
-                            currency_code: 'USD',
-                            breakdown: { item_total: { currency_code: 'USD', value: subtotal.toString() } }
-                          },
-                          items: items.map(item => ({
-                            name: item.name,
-                            unit_amount: { currency_code: 'USD', value: item.price.toString() },
-                            quantity: item.quantity.toString(),
-                            description: item.description || ''
-                          })),
-                          description: `Congregation Beth Shalom${namesForPaypal}`,
-                          custom_id: names.trim() || undefined
-                        }],
-                        intent: 'CAPTURE'
-                      });
-                    }}
-                    onApprove={async (_data, actions) => {
-                      if (!actions.order) return;
-                      try {
-                        const details = await actions.order.capture();
-                        setOrderDetails(details);
-                        setStatus('success');
-                        showSuccess(
-                          'Purchase Successful!',
-                          `Thank you ${details.payer?.name?.given_name || 'Anonymous'}! Transaction ID: ${details.id}.`,
-                          8000
-                        );
-                      } catch (error) {
-                        console.error('Error capturing order:', error);
-                        setStatus('error');
-                        showError('Payment Processing Error', 'There was an error processing your purchase. Please try again or contact us.');
-                      }
-                    }}
-                    onError={(err) => {
-                      console.error('PayPal error:', err);
-                      setStatus('error');
-                      showError('PayPal Error', 'There was an error with PayPal. Please try again or contact us directly.');
-                    }}
-                  />
-                ) : (
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
-                    <p className="text-sm text-yellow-800">PayPal isn&apos;t configured yet. Please contact the administrator.</p>
-                  </div>
-                )}
-              </div>
+              {paypalIsConfigured ? (
+                <form action={checkoutUrl} method="post" target="_blank">
+                  <input type="hidden" name="cmd" value="_cart" />
+                  <input type="hidden" name="upload" value="1" />
+                  <input type="hidden" name="business" value={businessEmail} />
+                  <input type="hidden" name="currency_code" value="USD" />
+                  <input type="hidden" name="no_shipping" value="1" />
+                  {names.trim() && (
+                    <input type="hidden" name="custom" value={`${namesLabel}: ${names.trim()}`} />
+                  )}
+                  {items.flatMap((item, index) => [
+                    <input key={`name-${item.id}`} type="hidden" name={`item_name_${index + 1}`} value={item.name} />,
+                    <input key={`amount-${item.id}`} type="hidden" name={`amount_${index + 1}`} value={item.price.toFixed(2)} />,
+                    <input key={`qty-${item.id}`} type="hidden" name={`quantity_${index + 1}`} value={item.quantity.toString()} />,
+                  ])}
+                  <button
+                    type="submit"
+                    className="w-full py-3 rounded-full text-white font-semibold transition-colors duration-200"
+                    style={{ backgroundColor: '#F58C28' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#E67C1F')}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#F58C28')}
+                  >
+                    Checkout with PayPal
+                  </button>
+                </form>
+              ) : (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
+                  <p className="text-sm text-yellow-800">PayPal isn&apos;t configured yet. Please contact the administrator.</p>
+                </div>
+              )}
 
               <button
                 onClick={clearCart}
@@ -243,7 +153,7 @@ export default function CartDrawer() {
               </button>
 
               <p className="text-xs text-gray-500 text-center mt-4">
-                Secure checkout through PayPal. You do not need a PayPal account &mdash; you can pay with any major card.
+                You&apos;ll be taken to PayPal in a new tab to complete your payment securely. No PayPal account is required &mdash; you can pay with any major card.
               </p>
             </>
           )}

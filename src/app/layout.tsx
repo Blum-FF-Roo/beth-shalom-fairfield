@@ -9,6 +9,8 @@ import { ToastProvider } from "@/app/utils/ToastContext";
 import ToastContainer from "@/app/components/ui/ToastContainer";
 import QueryProvider from "@/app/components/providers/QueryProvider";
 import ErrorBoundary from "@/app/components/ui/ErrorBoundary";
+import { CartProvider } from "@/app/utils/CartContext";
+import CartDrawer from "@/app/components/CartDrawer";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -40,12 +42,15 @@ export default function RootLayout({
           <ToastProvider>
             <PayPalProvider>
               <AuthProvider>
-                <Header />
-                <ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
-                  <main role="main">{children}</main>
-                </ErrorBoundary>
-                <Footer />
-                <ToastContainer />
+                <CartProvider>
+                  <Header />
+                  <ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
+                    <main role="main">{children}</main>
+                  </ErrorBoundary>
+                  <Footer />
+                  <CartDrawer />
+                  <ToastContainer />
+                </CartProvider>
               </AuthProvider>
             </PayPalProvider>
           </ToastProvider>

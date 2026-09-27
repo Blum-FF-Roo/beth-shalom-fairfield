@@ -5,7 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { Settings, LogOut, Users, Menu as MenuIcon, X } from 'lucide-react';
+import { Settings, LogOut, Users, Menu as MenuIcon, X, ShoppingCart } from 'lucide-react';
+import { useCart } from '@/app/utils/CartContext';
 import { cn } from '@/app/utils/utils';
 import Menu from '@/app/components/shared/Menu';
 import { getNavigationMenuItems } from '@/app/components/shared/MenuItemsConfig';
@@ -164,6 +165,7 @@ export default function HeaderScrollWrapper() {
   });
   
   const { user, userData, logout } = useAuth();
+  const { itemCount, openCart } = useCart();
   const pathname = usePathname();
   const isMainPage = pathname === '/';
 
@@ -264,16 +266,33 @@ export default function HeaderScrollWrapper() {
               />
             </div>
 
-            {/* Bottom Row: Main Navigation Menu */}
-            <Menu
-              mode="header"
-              className="space-x-4"
-              textColorClass={textColorClass}
-              isMainPage={isMainPage}
-              isScrolled={isScrolled}
-              onDropdownEnter={handleDropdownEnter}
-              onDropdownLeave={handleDropdownLeave}
-            />
+            {/* Bottom Row: Main Navigation Menu + Cart */}
+            <div className="flex items-center gap-3">
+              <Menu
+                mode="header"
+                className="space-x-4"
+                textColorClass={textColorClass}
+                isMainPage={isMainPage}
+                isScrolled={isScrolled}
+                onDropdownEnter={handleDropdownEnter}
+                onDropdownLeave={handleDropdownLeave}
+              />
+
+              {/* Cart Button */}
+              <button
+                onClick={openCart}
+                className="hidden lg:flex relative items-center justify-center w-9 h-9 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-colors duration-200"
+                style={{ backgroundColor: '#F58C28' }}
+                aria-label={itemCount > 0 ? `Open cart, ${itemCount} item${itemCount === 1 ? '' : 's'}` : 'Open cart'}
+              >
+                <ShoppingCart className="w-4 h-4 text-white" aria-hidden="true" />
+                {itemCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-white text-[11px] font-bold" style={{ color: '#F58C28' }}>
+                    {itemCount}
+                  </span>
+                )}
+              </button>
+            </div>
 
             {/* Mobile Menu Button */}
             <button
@@ -328,13 +347,31 @@ export default function HeaderScrollWrapper() {
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
               <h2 id="mobile-menu-title" className="text-lg font-semibold text-gray-900">Menu</h2>
-              <button
-                onClick={closeMobileMenu}
-                className="p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
-                aria-label="Close mobile menu"
-              >
-                <X className="h-5 w-5" aria-hidden="true" />
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    closeMobileMenu();
+                    openCart();
+                  }}
+                  className="relative flex items-center justify-center w-9 h-9 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                  style={{ backgroundColor: '#F58C28' }}
+                  aria-label={itemCount > 0 ? `Open cart, ${itemCount} item${itemCount === 1 ? '' : 's'}` : 'Open cart'}
+                >
+                  <ShoppingCart className="w-4 h-4 text-white" aria-hidden="true" />
+                  {itemCount > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-white text-[11px] font-bold" style={{ color: '#F58C28' }}>
+                      {itemCount}
+                    </span>
+                  )}
+                </button>
+                <button
+                  onClick={closeMobileMenu}
+                  className="p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                  aria-label="Close mobile menu"
+                >
+                  <X className="h-5 w-5" aria-hidden="true" />
+                </button>
+              </div>
             </div>
 
             {/* Navigation */}

@@ -1,8 +1,17 @@
 import { getMultipleContentByKeys } from '@/app/utils/firebase-operations';
 import { formatContentAsHtml } from '@/app/utils';
 import HoverButton from '@/app/components/ui/HoverButton';
-import HighHolyDaysCartSimple from '@/app/components/HighHolyDaysCartSimple';
 import AddToCartButton from '@/app/components/AddToCartButton';
+
+const highHolyDaysTickets = [
+  { id: 'both-holidays', name: 'Rosh Hashanah and Yom Kippur', price: 80, category: 'ticket' },
+  { id: 'rosh-hashanah', name: 'Rosh Hashanah', price: 40, category: 'ticket' },
+  { id: 'yom-kippur', name: 'Yom Kippur', price: 50, category: 'ticket' },
+  { id: 'college-both', name: 'College / IA — Rosh Hashanah and Yom Kippur', price: 50, category: 'ticket' },
+  { id: 'college-rosh', name: 'College / IA — Rosh Hashanah', price: 25, category: 'ticket' },
+  { id: 'college-yom', name: 'College / IA — Yom Kippur', price: 35, category: 'ticket' },
+  { id: 'break-fast', name: 'Yom Kippur break-fast meal', price: 15, category: 'ticket' },
+];
 
 export const revalidate = 60;
 
@@ -72,69 +81,42 @@ export default async function HighHolyDaysPage() {
           </HoverButton>
         </div>
 
-        {/* Static Tickets Section with Embedded PayPal */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">TICKETS for NON-MEMBERS</h2>
-          <p className="text-gray-700 mb-4"><strong>E-MAIL or MAIL YOUR HIGH HOLY DAY TICKET INFORMATION TO:</strong></p>
-          
-          <p className="text-gray-700 mb-6">
-            <strong>Address:</strong> Congregation Beth Shalom, c/o 200 W. Washington, Fairfield, Iowa 52556.<br/>
-            <strong>E-Mail:</strong> <a href="mailto:bethshalomfairfield@gmail.com" className="text-orange-600 hover:text-orange-700">bethshalomfairfield@gmail.com</a>
-          </p>
-
-          <div className="bg-gray-50 p-4 rounded-lg mb-6">
-            <p className="text-gray-700 space-y-1">
-              <strong>TICKET CATEGORY:</strong><br/>
-              <strong>NAME(S) of Ticket Holders:</strong><br/>
-              <strong>AMOUNT PAID:</strong><br/>
-              <strong>YOUR MAILING ADDRESS:</strong><br/>
-              <strong>YOUR E-MAIL ADDRESS:</strong>
+        {/* Tickets for Non-Members */}
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
+          <div className="p-8 pb-6">
+            <p className="text-sm font-semibold tracking-wide uppercase" style={{ color: '#F58C28' }}>
+              Tickets for Non-Members
+            </p>
+            <h2 className="text-3xl font-bold text-gray-900 mt-1 mb-4">Reserve your seats.</h2>
+            <p className="text-gray-700">
+              High Holiday seating is a benefit of membership. Non-members and visiting students are warmly welcome to join us with a ticket. Choose a ticket only, or add the catered Break-fast that follows Yom Kippur.
             </p>
           </div>
 
-          <p className="text-gray-700 mb-6 font-semibold">INCLUDE PAYMENT or USE PAYPAL BELOW</p>
+          <div className="hidden sm:flex px-8 py-3 text-xs font-semibold uppercase tracking-wide text-white" style={{ backgroundColor: '#F58C28' }}>
+            <span className="flex-1">Ticket Category</span>
+            <span>Price</span>
+          </div>
 
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Ticket Category</h3>
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse border border-gray-300">
-              <tbody>
-                <tr className="border-b border-gray-300">
-                  <td className="p-3 border-r border-gray-300">Rosh Hashanah and Yom Kippur</td>
-                  <td className="p-3 border-r border-gray-300 font-bold">$72</td>
-                  <td className="p-3"><AddToCartButton productId="both-holidays" /></td>
-                </tr>
-                <tr className="border-b border-gray-300">
-                  <td className="p-3 border-r border-gray-300">Rosh Hashanah</td>
-                  <td className="p-3 border-r border-gray-300 font-bold">$36</td>
-                  <td className="p-3"><AddToCartButton productId="rosh-hashanah" /></td>
-                </tr>
-                <tr className="border-b border-gray-300">
-                  <td className="p-3 border-r border-gray-300">Yom Kippur</td>
-                  <td className="p-3 border-r border-gray-300 font-bold">$42</td>
-                  <td className="p-3"><AddToCartButton productId="yom-kippur" /></td>
-                </tr>
-                <tr className="border-b border-gray-300">
-                  <td className="p-3 border-r border-gray-300">College/IA-Rosh Hashanah and Yom Kippur</td>
-                  <td className="p-3 border-r border-gray-300 font-bold">$42</td>
-                  <td className="p-3"><AddToCartButton productId="college-both" /></td>
-                </tr>
-                <tr className="border-b border-gray-300">
-                  <td className="p-3 border-r border-gray-300">College/IA-Rosh Hashanah</td>
-                  <td className="p-3 border-r border-gray-300 font-bold">$19</td>
-                  <td className="p-3"><AddToCartButton productId="college-rosh" /></td>
-                </tr>
-                <tr>
-                  <td className="p-3 border-r border-gray-300">College/IA-Yom Kippur</td>
-                  <td className="p-3 border-r border-gray-300 font-bold">$25</td>
-                  <td className="p-3"><AddToCartButton productId="college-yom" /></td>
-                </tr>
-              </tbody>
-            </table>
+          <div className="divide-y divide-gray-100">
+            {highHolyDaysTickets.map((ticket) => (
+              <div key={ticket.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-8 py-4">
+                <span className="text-gray-900 font-medium">{ticket.name}</span>
+                <div className="flex items-center gap-4 bg-gray-50 rounded-full pl-4 pr-2 py-2 self-start sm:self-auto">
+                  <span className="font-semibold text-gray-900">${ticket.price.toFixed(2)}</span>
+                  <AddToCartButton product={ticket} />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="px-8 py-6 bg-gray-50 text-sm text-gray-600">
+            Please include the name(s) of each ticket holder when you check out or contact us. Prefer to pay by mail? Send ticket category, name(s) of ticket holders, amount, and your mailing and email address to Congregation Beth Shalom, c/o 200 W. Washington, Fairfield, Iowa 52556, or email{' '}
+            <a href="mailto:bethshalomfairfield@gmail.com" className="text-orange-600 hover:text-orange-700 font-medium">
+              bethshalomfairfield@gmail.com
+            </a>.
           </div>
         </div>
-
-        {/* PayPal Cart Integration */}
-        <HighHolyDaysCartSimple />
 
         {/* Links */}
         <div className="bg-white rounded-lg shadow-lg p-8">

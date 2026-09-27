@@ -47,18 +47,20 @@ export default function MenuItem({
   const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
     if (toggle === 'header') {
       if (item.subMenu) onDropdownEnter?.(item.id);
+      e.currentTarget.style.color = '#E67C1F';
     }
   };
 
-  const handleMouseLeave = () => {};
+  const handleMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
+    if (toggle === 'header') {
+      e.currentTarget.style.color = '#F58C28';
+    }
+  };
 
-  // Header mode styling
+  // Header mode styling -- solid brand orange, bold, regardless of page/
+  // scroll state, for stronger contrast than the previous white/gray text.
   const headerClasses = cn(
-    "text-md font-medium transition-colors duration-200 flex items-center py-2 font-[500] text-shadow-xs",
-    textColorClass,
-    isMainPage && !isScrolled
-      ? 'hover:text-orange-200'
-      : 'hover:text-orange-600'
+    "text-md font-bold transition-colors duration-200 flex items-center py-2 text-shadow-xs"
   );
 
   // Filter mode styling
@@ -69,7 +71,7 @@ export default function MenuItem({
       : 'text-gray-900 hover:text-orange-600'
   );
 
-  const headerStyle = {};
+  const headerStyle = { color: '#F58C28' };
 
   const filterStyle = isSelected ? {
     backgroundColor: '#F58C28'

@@ -61,7 +61,12 @@ export default function HeroSliderClient({ slides }: HeroSliderClientProps) {
                   <div className="space-y-4">
                     <h2
                       className="text-4xl md:text-5xl lg:text-6xl font-bold"
-                      style={{ color: "#F58C28" }}
+                      style={{
+                        color: "#4A6A8C",
+                        // Soft light glow so the slate blue reads over any photo
+                        textShadow:
+                          "0 0 8px rgba(255,255,255,0.9), 0 0 20px rgba(255,255,255,0.75), 0 0 36px rgba(255,255,255,0.5)",
+                      }}
                     >
                       {slide.title}
                     </h2>

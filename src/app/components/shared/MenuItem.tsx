@@ -47,18 +47,18 @@ export default function MenuItem({
   const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
     if (toggle === 'header') {
       if (item.subMenu) onDropdownEnter?.(item.id);
-      e.currentTarget.style.color = '#E67C1F';
+      e.currentTarget.style.color = '#2F4A66';
     }
   };
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
     if (toggle === 'header') {
-      e.currentTarget.style.color = '#F58C28';
+      e.currentTarget.style.color = '#4A6A8C';
     }
   };
 
-  // Header mode styling -- solid brand orange, bold, regardless of page/
-  // scroll state, for stronger contrast than the previous white/gray text.
+  // Header mode styling -- bold slate blue, which reads well on the
+  // stone-texture header background.
   const headerClasses = cn(
     "text-md font-bold transition-colors duration-200 flex items-center py-2 text-shadow-xs"
   );
@@ -71,7 +71,7 @@ export default function MenuItem({
       : 'text-gray-900 hover:text-orange-600'
   );
 
-  const headerStyle = { color: '#F58C28' };
+  const headerStyle = { color: '#4A6A8C' };
 
   const filterStyle = isSelected ? {
     backgroundColor: '#F58C28'

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Libre_Baskerville } from "next/font/google";
 import "./globals.css";
 import Header from "@/app/components/layout/Header";
 import Footer from "@/app/components/layout/Footer";
@@ -13,6 +13,13 @@ import CartDrawer from "@/app/components/CartDrawer";
 
 const inter = Inter({
   variable: "--font-inter",
+  subsets: ["latin"],
+});
+
+// Serif used for the "Beth Shalom" wordmark in the header
+const libreBaskerville = Libre_Baskerville({
+  variable: "--font-serif",
+  weight: ["400", "700"],
   subsets: ["latin"],
 });
 
@@ -36,7 +43,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${libreBaskerville.variable} font-sans antialiased`}>
         <QueryProvider>
           <ToastProvider>
             <AuthProvider>

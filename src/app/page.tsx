@@ -7,7 +7,7 @@ import {
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pt-[var(--header-height,5.5rem)]">
       {/* Hero Section */}
       <SectionErrorBoundary>
         <HeroSliderWithSuspense />

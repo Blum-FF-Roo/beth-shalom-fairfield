@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useCallback, memo, useRef } from 'react';
+import { useState, useCallback, memo, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { Settings, LogOut, Users, Menu as MenuIcon, X, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/app/utils/CartContext';
@@ -12,7 +11,6 @@ import Menu from '@/app/components/shared/Menu';
 import { getNavigationMenuItems } from '@/app/components/shared/MenuItemsConfig';
 import { useAuth } from '@/app/utils/AuthContext';
 import { getContentSectionByKey } from '@/app/utils/firebase-operations';
-import { useScrollBehavior } from '@/app/hooks/useScrollBehavior';
 import { useMobileMenu } from '@/app/hooks/useMobileMenu';
 import { HeaderLogoSkeleton } from '@/app/components/ui/SkeletonLoaders';
 import ErrorBoundary from '@/app/components/ui/ErrorBoundary';
@@ -25,34 +23,35 @@ interface AuthUser {
   uid: string;
 }
 
-// Temporary placeholder logo: a Star of David with "FAIRFIELD" across the
-// middle band, used until a real logo is uploaded via the admin panel.
-const StarOfDavidPlaceholder = memo(() => (
+// Default logo: a gold arched doorway on navy with a small eternal-light
+// symbol, used unless a logo is uploaded via the admin panel.
+const ArchEmblem = memo(() => (
   <svg
-    viewBox="0 0 100 100"
-    className="w-full h-full rounded-full"
+    viewBox="0 0 40 52"
+    className="w-full h-full"
     role="img"
-    aria-label="Beth Shalom Fairfield placeholder logo"
+    aria-label="Beth Shalom Fairfield logo"
   >
-    <circle cx="50" cy="50" r="50" fill="#F58C28" />
-    <polygon
-      points="50,8 88,76 12,76"
+    <path d="M1,51 V20 A19,19 0 0 1 39,20 V51 Z" fill="#2E4C80" />
+    <path
+      d="M4.5,48 V20 A15.5,15.5 0 0 1 35.5,20 V48 Z"
       fill="none"
-      stroke="#ffffff"
-      strokeWidth="4"
+      stroke="#D9B26A"
+      strokeWidth="1.8"
+    />
+    <circle cx="20" cy="10" r="1.9" fill="#D9B26A" />
+    <polygon
+      points="20,13.5 27.5,25.5 12.5,25.5"
+      fill="none"
+      stroke="#D9B26A"
+      strokeWidth="1.5"
       strokeLinejoin="round"
     />
-    <polygon
-      points="50,92 12,24 88,24"
-      fill="none"
-      stroke="#ffffff"
-      strokeWidth="4"
-      strokeLinejoin="round"
-    />
+    <polygon points="20,14.5 23.2,20 20,25.5 16.8,20" fill="#D9B26A" />
   </svg>
 ));
 
-StarOfDavidPlaceholder.displayName = 'StarOfDavidPlaceholder';
+ArchEmblem.displayName = 'ArchEmblem';
 
 // Logo component with error handling and accessibility
 const HeaderLogo = memo(({ logoUrl, isLoading }: { logoUrl?: string; isLoading?: boolean }) => {
@@ -68,12 +67,12 @@ const HeaderLogo = memo(({ logoUrl, isLoading }: { logoUrl?: string; isLoading?:
           src={logoUrl}
           alt="Beth Shalom Fairfield Logo"
           fill
-          className="rounded-full object-cover p-1 shadow-md"
-          sizes="(max-width: 1024px) 48px, (max-width: 1280px) 96px, 112px"
+          className="object-contain"
+          sizes="(max-width: 1280px) 48px, 72px"
           priority
         />
       ) : (
-        <StarOfDavidPlaceholder />
+        <ArchEmblem />
       )}
     </>
   );
@@ -154,9 +153,23 @@ AuthMenu.displayName = 'AuthMenu';
 export default function HeaderScrollWrapper() {
   const [, setActiveDropdown] = useState<string | null>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
-  
+  const headerRef = useRef<HTMLElement>(null);
+
+  // Publish the header's height as --header-height so content (e.g. the
+  // homepage hero slider) can sit directly below the fixed header.
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const update = () => {
+      document.documentElement.style.setProperty('--header-height', `${header.offsetHeight}px`);
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, []);
+
   // Custom hooks
-  const { isScrolled } = useScrollBehavior({ threshold: 10 });
   const { isOpen: isMobileMenuOpen, toggleMenu: toggleMobileMenu, closeMenu: closeMobileMenu } = useMobileMenu({
     containerRef: mobileMenuRef,
     closeOnRouteChange: true,
@@ -166,8 +179,6 @@ export default function HeaderScrollWrapper() {
   
   const { user, userData, logout } = useAuth();
   const { itemCount, openCart } = useCart();
-  const pathname = usePathname();
-  const isMainPage = pathname === '/';
 
   // Use TanStack Query to get logo URL directly
   const { data: logoSection, isLoading: logoLoading } = useQuery({
@@ -196,60 +207,46 @@ export default function HeaderScrollWrapper() {
     setActiveDropdown(null);
   }, []);
 
-  const headerBgClass = isMainPage && !isScrolled 
-    ? 'bg-transparent' 
-    : 'bg-white shadow-sm';
-
-  const textColorClass = isMainPage && !isScrolled 
-    ? 'text-white' 
-    : 'text-gray-900';
-
-  const logoColorStyle = isMainPage && !isScrolled 
-    ? { color: '#fff' } 
-    : { color: '#F58C28' };
+  // The header has a solid stone-texture background on every page
+  const textColorClass = 'text-gray-900';
 
   return (
-    <header className={cn(
-      "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-      headerBgClass
-    )}>
+    <header
+      ref={headerRef}
+      className="fixed top-0 left-0 right-0 z-50 header-stone shadow-sm"
+    >
       <div className="max-w-7xl mx-auto px-4">
         {/* Header Layout: Logo Left, Menus Right */}
         <div className="flex items-center justify-between">
           {/* Logo and Site Title - Upper Left */}
           <Link 
             href="/" 
-            className="flex items-center space-x-2 lg:space-x-2 p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 rounded-lg"
+            className="flex items-center space-x-3 p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 rounded-lg"
             aria-label="Beth Shalom Fairfield - Go to homepage"
           >
             {/* Logo Container */}
-            <div className="site-logo-wrapper relative w-12 h-12 lg:w-12 lg:h-12 xl:w-18 xl:h-18 flex-shrink-0 rounded-full overflow-hidden">
+            <div className="site-logo-wrapper relative w-10 h-13 xl:w-14 xl:h-18 flex-shrink-0">
               <ErrorBoundary>
                 <HeaderLogo logoUrl={logoUrl} isLoading={logoLoading} />
               </ErrorBoundary>
             </div>
-            
+
             {/* Site Title */}
             <div className="site-title-container flex flex-col justify-center">
-              <h1 
-                className="site-title text-lg md:text-xl lg:text-2xl xl:text-3xl font-[500] text-shadow-xs" 
+              <h1
+                className="site-title text-2xl xl:text-3xl leading-tight font-bold"
                 style={{
-                  ...logoColorStyle,
-                  fontFamily: 'system-ui, -apple-system, sans-serif',
-                  textTransform: 'uppercase',
-                  fontWeight: '700'
+                  color: '#2E4C80',
+                  fontFamily: 'var(--font-serif), Georgia, serif'
                 }}
               >
-                Beth Shalom Fairfield
+                Beth Shalom
               </h1>
-              <span 
-                className="site-subtitle text-xs md:text-sm lg:text-base xl:text-lg opacity-75 font-medium tracking-wide" 
-                style={{
-                  ...logoColorStyle,
-                  fontFamily: 'system-ui, -apple-system, sans-serif'
-                }}
+              <span
+                className="site-subtitle text-[10px] xl:text-xs font-semibold uppercase tracking-[0.25em]"
+                style={{ color: '#8C6A2A' }}
               >
-                A rural Iowa Jewish community
+                Fairfield, Iowa
               </span>
             </div>
           </Link>
@@ -272,8 +269,6 @@ export default function HeaderScrollWrapper() {
                 mode="header"
                 className="space-x-4"
                 textColorClass={textColorClass}
-                isMainPage={isMainPage}
-                isScrolled={isScrolled}
                 onDropdownEnter={handleDropdownEnter}
                 onDropdownLeave={handleDropdownLeave}
               />
@@ -300,9 +295,7 @@ export default function HeaderScrollWrapper() {
               className={cn(
                 "lg:hidden p-2 rounded-md transition-colors duration-200 self-end focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2",
                 textColorClass,
-                isMainPage && !isScrolled 
-                  ? 'hover:bg-white hover:bg-opacity-20' 
-                  : 'hover:bg-gray-100'
+                'hover:bg-gray-100'
               )}
               aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={isMobileMenuOpen}

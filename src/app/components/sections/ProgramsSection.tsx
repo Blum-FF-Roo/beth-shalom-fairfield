@@ -61,7 +61,7 @@ function ProgramsSection() {
 
   if (loading) {
     return (
-      <section className="py-12 bg-gray-50" role="region" aria-labelledby="programs-heading">
+      <section className="py-12 section-stone" role="region" aria-labelledby="programs-heading">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
             <h2 id="programs-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -87,7 +87,7 @@ function ProgramsSection() {
   }
 
   return (
-    <section className="py-12 bg-gray-50" role="region" aria-labelledby="programs-heading">
+    <section className="py-12 section-stone" role="region" aria-labelledby="programs-heading">
       <div className="max-w-6xl mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-12">

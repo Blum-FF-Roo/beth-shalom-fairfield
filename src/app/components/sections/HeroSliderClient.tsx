@@ -85,19 +85,17 @@ export default function HeroSliderClient({ slides }: HeroSliderClientProps) {
                       <Link
                         href={slide.linkUrl}
                         target={slide.linkTarget || "_self"}
-                        className="px-4 py-2 border-2 rounded-sm border-orange-400 text-2xl  transition-colors duration-200 shadow-lg hover:shadow-xl"
-                        // className="inline-block text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
-                        style={{ backgroundColor: "transparent" }}
-                        onMouseEnter={(e) =>{
-                          e.currentTarget.style.backgroundColor = "#E67C1F"
-                            e.currentTarget.style.color = 'white';
-                        }
-                        }
+                        className="px-4 py-2 border-2 rounded-sm text-2xl text-white transition-colors duration-200 shadow-lg hover:shadow-xl"
+                        // Slate blue to match the header menu text; darker on hover
+                        style={{ backgroundColor: "#4A6A8C", borderColor: "#4A6A8C" }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = "#2F4A66";
+                          e.currentTarget.style.borderColor = "#2F4A66";
+                        }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = "transparent"
-                          e.currentTarget.style.color = '';
-                        }
-                        }
+                          e.currentTarget.style.backgroundColor = "#4A6A8C";
+                          e.currentTarget.style.borderColor = "#4A6A8C";
+                        }}
                       >
                         {slide.linkText}
                       </Link>

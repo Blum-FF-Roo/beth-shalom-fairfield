@@ -5,7 +5,7 @@ export default function Footer() {
   const contactInfo = {
     name: "Beth Shalom Fairfield",
     address: {
-      street: "1023 3rd Avenue",
+      street: "308 South B Street",
       city: "Fairfield",
       state: "IA",
       zip: "52556"

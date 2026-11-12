@@ -19,7 +19,7 @@ function AboutSectionRefresh() {
   const aboutText = section ? (section.content as string) : null;
 
   return (
-    <section className="py-12 section-stone" role="region" aria-labelledby="about-heading">
+    <section className="py-12 marble-bg" role="region" aria-labelledby="about-heading">
       <div className="max-w-4xl mx-auto px-4">
         <div className="p-8 md:p-12">
           {/* Section Header */}

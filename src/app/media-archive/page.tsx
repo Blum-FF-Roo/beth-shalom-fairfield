@@ -116,7 +116,7 @@ function VideoCard({ video }: { video: VideoData }) {
 
 export default function MediaArchivePage() {
   return (
-    <div className="min-h-screen pt-32 pb-12 bg-gray-50">
+    <div className="min-h-screen pt-32 pb-12 marble-bg marble-fixed">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
         <div className="text-center mb-12">

@@ -58,7 +58,7 @@ export default function MenuItem({
   };
 
   // Header mode styling -- bold slate blue, which reads well on the
-  // stone-texture header background.
+  // marble header background.
   const headerClasses = cn(
     "text-md font-bold transition-colors duration-200 flex items-center py-2 text-shadow-xs"
   );

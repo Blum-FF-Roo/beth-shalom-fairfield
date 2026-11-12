@@ -148,7 +148,7 @@ export default async function JudaismPage() {
 <p class="font-semibold">That way, someday years from now when your children ask you, "Why do I have to go to Hebrew School?" you can smile at them very knowingly and answer, "Because."</p>` : (content.judaismContent as string);
 
   return (
-    <div className="min-h-screen pt-32 pb-12 bg-gray-50">
+    <div className="min-h-screen pt-32 pb-12 marble-bg marble-fixed">
       <div className="max-w-4xl mx-auto px-4">
         {/* Page Header */}
         <div className="text-center mb-12">

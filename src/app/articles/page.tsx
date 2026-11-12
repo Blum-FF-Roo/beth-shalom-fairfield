@@ -52,7 +52,7 @@ export default function ArticlesPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-32 pb-12">
+      <div className="min-h-screen marble-bg marble-fixed pt-32 pb-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-300 rounded w-1/3 mb-4"></div>
@@ -74,7 +74,7 @@ export default function ArticlesPage() {
   }
 
   return (
-    <div className="min-h-screen pt-32 pb-12 bg-gray-50">
+    <div className="min-h-screen pt-32 pb-12 marble-bg marble-fixed">
       <div className="max-w-4xl mx-auto px-4">
         {/* Page Header */}
         <div className="text-center mb-12">

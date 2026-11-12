@@ -81,7 +81,7 @@ export default async function AboutPage() {
 <p>Thank you to those of you who have already become members this year, and we invite everyone else to please join us in preserving what we enjoy here on all of these special occasions.</p>`
     : (content.aboutCommunityMessage as string);
   return (
-    <div className="min-h-screen pt-32 pb-12 bg-gray-50">
+    <div className="min-h-screen pt-32 pb-12 marble-bg marble-fixed">
       <div className="max-w-4xl mx-auto px-4">
         {/* Page Header */}
         <div className="text-center mb-12">

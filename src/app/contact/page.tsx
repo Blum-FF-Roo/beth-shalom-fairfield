@@ -9,7 +9,7 @@ export default function ContactPage() {
   const contactInfo = {
     name: "Beth Shalom Fairfield",
     address: {
-      street: "1023 3rd Avenue",
+      street: "308 South B Street",
       city: "Fairfield",
       state: "IA",
       zip: "52556"
@@ -58,7 +58,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen pt-32 pb-12 bg-gray-50">
+    <div className="min-h-screen pt-32 pb-12 marble-bg marble-fixed">
       <div className="max-w-6xl mx-auto px-4">
         {/* Page Header */}
         <div className="text-center mb-12">

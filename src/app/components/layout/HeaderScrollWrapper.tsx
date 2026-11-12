@@ -207,13 +207,13 @@ export default function HeaderScrollWrapper() {
     setActiveDropdown(null);
   }, []);
 
-  // The header has a solid stone-texture background on every page
+  // The header has a solid marble background on every page
   const textColorClass = 'text-gray-900';
 
   return (
     <header
       ref={headerRef}
-      className="fixed top-0 left-0 right-0 z-50 header-stone shadow-sm"
+      className="fixed top-0 left-0 right-0 z-50 marble-bg shadow-sm"
     >
       <div className="max-w-7xl mx-auto px-4">
         {/* Header Layout: Logo Left, Menus Right */}
